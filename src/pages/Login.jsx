@@ -12,7 +12,7 @@ const Login = ({ setIsLoggedIn }) => {
     <article className="form">
       <div className='loginForm'>
         <img id='loginIMG' src={require('../imgs/IncidenTracker.png')}></img>
-        <h1 id='LoginH1'>Darragh Nolan Site</h1>
+        <h1 id='LoginH1'>Darragh Nolan</h1>
         <br/>
         <input 
           required type="text" 
