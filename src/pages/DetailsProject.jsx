@@ -30,7 +30,13 @@ const DetailsProject = () => {
     <div className="container mx-auto p-8">
       <h1 className="text-4xl font-bold mb-8">{project.title}</h1>
       <p>{project.description}</p>
-      <img src={project.imageURL} alt={project.title} className="my-4" />
+      <img src={project.imageURL} alt={project.title} className="my-4 w-4/12" />
+      <iframe src={project.videoURL} className="my-4 w-4/12"/>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {project.contentURL.map((content, index) => (
+          <img key={index} src={content} alt={`Project ${index + 2}`} className="my-4 w-full" />
+        ))}
+      </div>
       {/* Add more project details as needed */}
     </div>
   );
