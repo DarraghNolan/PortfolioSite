@@ -3,35 +3,48 @@ import projectsData from '../data/projects';
 import '../index.css';
 
 const DetailsProject = () => {
+  const projectId = location.pathname.split("/")[2];
+  const [project, setProject] = useState(null);
 
-    const projectId = location.pathname.split("/")[2];
-    const [project, setProject] = useState(null);
+  useEffect(() => {
+    const fetchProject = async () => {
+      // Find the project with the matching id
+      const selectedProject = projectsData.find(proj => proj.id === parseInt(projectId, 10));
 
-    useEffect(() => {
-        const fetchProject = async () => {
-            // Find the project with the matching id
-            const selectedProject = projectsData.find(proj => proj.id === parseInt(projectId, 10));
-      
-            // Set the found project to the state
-            setProject(selectedProject);
-        };
-        fetchProject();
-    }, [projectId]);
+      // Set the found project to the state
+      setProject(selectedProject);
+    };
+    fetchProject();
+  }, [projectId]);
 
-    if (!project) {
-        return (
-          <div className="container mx-auto p-8">
-            <h1 className="text-4xl font-bold mb-8">Project not found</h1>
-          </div>
-        );
-      }
+  if (!project) {
+    return (
+      <div className="container mx-auto p-8">
+        <h1 className="text-4xl font-bold mb-8">Project not found</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-4xl font-bold mb-8">{project.title}</h1>
       <p>{project.description}</p>
-      <img src={project.imageURL} alt={project.title} className="my-4 w-4/12" />
-      <iframe src={project.videoURL} className="my-4 w-4/12"/>
+      
+      {project.videoURL ? (
+      <iframe 
+        width="560" 
+        height="315" 
+        src={project.videoURL}
+        title="YouTube video player" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen
+      />
+        //<iframe src={project.videoURL} className="my-4 w-4/12 h-96" title={`Video for ${project.title}`} />
+      ) : (
+        <img src={project.imageURL} alt={project.title} className="my-4 w-4/12" />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {project.contentURL.map((content, index) => (
           <img key={index} src={content} alt={`Project ${index + 2}`} className="my-4 w-full" />

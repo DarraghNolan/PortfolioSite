@@ -9,7 +9,6 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/012/510/large/darragh-nolan-theft.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg'    
     ],
-    videoURL: 'https://www.youtube.com/watch?v=gXPXQvk9A_4&t=20s',
     tags: ['UI Art'],
     // Add more project details as needed
   },
@@ -24,7 +23,6 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
       'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774'
     ],
-    videoURL: 'https://www.youtube.com/watch?v=gXPXQvk9A_4&t=20s',
     tags: ['Illustration'],
     // Add more project details as needed
   },
@@ -39,7 +37,7 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
       'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
     ],
-    videoURL: 'https://www.youtube.com/watch?v=gXPXQvk9A_4&t=20s',
+    videoURL: 'https://www.youtube.com/embed/gXPXQvk9A_4?si=ktVG7Uxk5pbMpPLb',
     tags: ['3D Animation'],
   },
   {
@@ -53,7 +51,6 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
       'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
     ],
-    videoURL: 'https://www.youtube.com/watch?v=gXPXQvk9A_4&t=20s',
     tags: ['3D Animation'],
   },
   // Add more projects as needed
