@@ -42,7 +42,7 @@ const DetailsProject = () => {
         className="lg:w-6/12 h-6/12 w-full h-4/12 my-4"
     />
   ) : (
-    <img src={project.imageURL} alt={project.title} className="lg:w-4/12 lg:h-4/12 w-full my-4" />
+    <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
   )}
 
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
