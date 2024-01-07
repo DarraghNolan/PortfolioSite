@@ -4,13 +4,13 @@ import '../index.css';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
-  const [selectedTag, setSelectedTag] = useState('all'); // Initial tag is 'all'
+  const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
 
-  const filteredProjects = selectedTag === 'all' 
+  const filteredProjects = selectedTag === 'All' 
     ? projectsData 
     : projectsData.filter((project) => project.tags.includes(selectedTag));
 
-  const tags = ['all', 'UI Art', '3D Animation', '3D Modeling', 'Game Development', 'UX', 'Web Development'];
+  const tags = ['All', 'UI Art', '3D Animation', 'Illustration', '3D Modeling', 'Game Development', 'UX', 'Web Development'];
 
   return (
     <div className="container mx-auto p-8">
