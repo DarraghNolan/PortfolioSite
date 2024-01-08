@@ -49,69 +49,25 @@ function Navbar(){
     return(
         <div>
             <header className="searchBar">
-                {/* <div id="navbarContent">
-                    <button onClick={toggleSidebar}><img src={require('../imgs/Sidebar.png')}></img></button>
-                </div>
-                <h1>Hello {user.Name}!</h1> */}
             </header>
-            {/* <div id="overlay" style={{display: showSidebar ? 'block' : 'none'}}>
-                <div id="sidebar">
-                    <h2>
-                        <Link to="/driveoffs" onClick={toggleHome}>
-                            HOME
-                            <img className='HomeOutline' src={require('../imgs/HomeOutline.png')} style={{ display: showHome ? 'none' : 'block' }}></img>
-                            <img className='HomePressed' src={require('../imgs/Home.png')} style={{ display: showHome ? 'block' : 'none' }}></img>
-                        </Link>
-                    </h2>
-                    <h2>
-                        <Link to="/searchdriveoffs" onClick={toggleSearch}>
-                            SEARCH
-                            <img className='SearchOutline' src={require('../imgs/Search2Outline.png')} style={{ display: showSearch ? 'none' : 'block' }}></img>
-                            <img className='SearchPressed' src={require('../imgs/Search2.png')} style={{ display: showSearch ? 'block' : 'none' }}></img>
-                        </Link>
-                    </h2>
-                    <h2>
-                        <Link to="/usersmenu" onClick={toggleUsers}>
-                            <div>
-                                USERS MENU
-                            </div>
-                            <div>
-                                <img className='UsersOutline' src={require('../imgs/UsersOutline.png')} style={{ display: showUsers ? 'none' : 'block' }}></img>
-                                <img className='UsersPressed' src={require('../imgs/Users.png')} style={{ display: showUsers ? 'block' : 'none' }}></img>
-                            </div>                            
-                        </Link>
-                    </h2>
-                    <h2>
-                        <Link to={`detailsshop/${shopId}`} onClick={toggleShop}>
-                            SHOP DETAILS
-                            <img className='ShopOutline' src={require('../imgs/ShopOutline.png')} style={{ display: showShop ? 'none' : 'block' }}></img>
-                            <img className='ShopPressed' src={require('../imgs/Shop3.png')} style={{ display: showShop ? 'block' : 'none' }}></img>
-                        </Link>
-                    </h2>
-                    <h2 onClick={logOut}>
-                        LOG OUT
-                        <img src={require('../imgs/LogOut.png')}></img>
-                    </h2>
-                </div>
-            </div> */}
             <div id="BottomNavbar">
                 <h3></h3>
                 <h2>
                     <Link to="/searchdriveoffs" onClick={toggleHome}>
-                        <img className='HomeOutline' src={require('../imgs/HomeOutline.png')} style={{ display: showHome ? 'none' : 'block' }}></img>
-                        <img className='HomePressed' src={require('../imgs/Home.png')} style={{ display: showHome ? 'block' : 'none' }}></img>
+                        <img className='HomeOutline' src={require('../imgs/D-O.png')} style={{ display: showHome ? 'none' : 'block' }}></img>
+                        <img className='HomePressed' src={require('../imgs/D-O.png')} style={{ display: showHome ? 'block' : 'none' }}></img>
                     </Link>
                 </h2>
                 <h2>
                     <Link to="/usersmenu" onClick={toggleUsers}>
-                        <img className='UsersOutline' src={require('../imgs/UsersOutline.png')} style={{ display: showUsers ? 'none' : 'block' }}></img>
-                        <img className='UsersPressed' src={require('../imgs/Users.png')} style={{ display: showUsers ? 'block' : 'none' }}></img>                           
+                        <img className='UsersOutline' src={require('../imgs/D-O.png')} style={{ display: showUsers ? 'none' : 'block' }}></img>
+                        <img className='UsersPressed' src={require('../imgs/D-O.png')} style={{ display: showUsers ? 'block' : 'none' }}></img>                           
                     </Link>
                 </h2>
                 <h2>
                     <Link to={`/detailsshop/${shopId}`} onClick={toggleShop}>
-                        <img className='HomeOutline' src={require('../imgs/AccountOutline.png')} style={{ display: showShop ? 'none' : 'block' }}></img>
-                        <img className='HomePressed' src={require('../imgs/Account.png')} style={{ display: showShop ? 'block' : 'none' }}></img>
+                        <img className='HomeOutline' src={require('../imgs/D-O.png')} style={{ display: showShop ? 'none' : 'block' }}></img>
+                        <img className='HomePressed' src={require('../imgs/D-O.png')} style={{ display: showShop ? 'block' : 'none' }}></img>
                     </Link>
                 </h2>
             </div>
@@ -120,34 +76,34 @@ function Navbar(){
                     <h2>
                         <Link to="/searchdriveoffs" onClick={toggleHome}>
                             HOME
-                            <img className='HomeOutline' src={require('../imgs/HomeOutline.png')} style={{ display: showHome ? 'none' : 'block' }}></img>
-                            <img className='HomePressed' src={require('../imgs/Home.png')} style={{ display: showHome ? 'block' : 'none' }}></img>
+                            <img className='HomeOutline' src={require('../imgs/D-O.png')} style={{ display: showHome ? 'none' : 'block' }}></img>
+                            <img className='HomePressed' src={require('../imgs/D-O.png')} style={{ display: showHome ? 'block' : 'none' }}></img>
                         </Link>
                     </h2>
                     <h2>
                         <Link to="/usersmenu" onClick={toggleUsers}>
                             USERS
-                            <img className='UsersOutline' src={require('../imgs/UsersOutline.png')} style={{ display: showUsers ? 'none' : 'block' }}></img>
-                            <img className='UsersPressed' src={require('../imgs/Users.png')} style={{ display: showUsers ? 'block' : 'none' }}></img>                           
+                            <img className='UsersOutline' src={require('../imgs/D-O.png')} style={{ display: showUsers ? 'none' : 'block' }}></img>
+                            <img className='UsersPressed' src={require('../imgs/D-O.png')} style={{ display: showUsers ? 'block' : 'none' }}></img>                           
                         </Link>
                     </h2>
                     <h2>
                         <Link to={`detailsshop/${shopId}`} onClick={toggleShop}>
                             ACCOUNT
-                            <img className='ShopOutline' src={require('../imgs/AccountOutline.png')} style={{ display: showShop ? 'none' : 'block' }}></img>
-                            <img className='ShopPressed' src={require('../imgs/Account.png')} style={{ display: showShop ? 'block' : 'none' }}></img>
+                            <img className='ShopOutline' src={require('../imgs/D-O.png')} style={{ display: showShop ? 'none' : 'block' }}></img>
+                            <img className='ShopPressed' src={require('../imgs/D-O.png')} style={{ display: showShop ? 'block' : 'none' }}></img>
                         </Link>
                     </h2>
                     <br/>
                     <h2>
                         <Link onClick={logOut}>
                             LOG OUT
-                            <img src={require('../imgs/LogOut.png')}></img>
+                            <img src={require('../imgs/D-O.png')}></img>
                         </Link>
                     </h2>
                     <h2>
                         <button className='WIDESCREEN_scrollToTop' onClick={() => {window.scrollTo({top: 0, left: 0, behavior: 'smooth'});}}>
-                            <img src={require('../imgs/ToTop.png')}></img>
+                            <img src={require('../imgs/D-O.png')}></img>
                             <h3>SCROLL TO TOP</h3>
                         </button>
                     </h2>

@@ -1,8 +1,8 @@
 const projects = [
   {
     id: 1,
-    title: 'Project 1',
-    description: 'Description of Project 1',
+    title: 'IncidenTracker',
+    description: 'UI for the app IncidenTracker, an app for storing and tracking theft incidents for petrol stations.',
     imageURL: 'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg?1704241034',
     contentURL: [
       'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg',
@@ -15,10 +15,9 @@ const projects = [
   {
     id: 2,
     title: 'Illustrations',
-    description: 'Description of Project 2',
+    description: 'Various 2D illustrations and renders I have doen over the years.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
     contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
       'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
       'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774'
@@ -29,11 +28,10 @@ const projects = [
   {
     id: 3,
     title: 'Deft Hands like the Wings of a Butterfly',
-    description: 'Description of Project 2',
+    description: 'A cinemetic I made in 2019.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
     contentURL: [
       'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
-      //'https://cdn.artstation.com/p/video_sources/000/436/993/butterflyinajar.mp4',
       'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
       'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
     ],
@@ -42,16 +40,16 @@ const projects = [
   },
   {
     id: 4,
-    title: 'Deft Hands like the Wings of a Butterfly',
-    description: 'Description of Project 2',
-    imageURL: 'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
+    title: 'Maguire`s Whiskey Website',
+    description: 'HTML design for a hypothtical Artisian Irish Whiskey website that delivers drink kits to customers.',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
     contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
-      //'https://cdn.artstation.com/p/video_sources/000/436/993/butterflyinajar.mp4',
-      'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
-      'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
+      'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
+      'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg',
+      'https://cdna.artstation.com/p/assets/images/images/071/198/762/large/darragh-nolan-mw-mobilelandingpage.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg'
     ],
-    tags: ['3D Animation'],
+    tags: ['UI Art'],
   },
   // Add more projects as needed
 ];

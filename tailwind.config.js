@@ -5,6 +5,20 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      'white': '#ffffff',
+      'white2': '#d1d5db',
+      'white3': '#475569',
+      'purple': '#3f3cbb',
+      'midnight': '#030113',
+      'metal': '#565584',
+      'tahiti': '#3ab7bf',
+      'silver': '#ecebff',
+      'bubble-gum': '#ff77e9',
+      'bermuda': '#78dcca',
+    },
   },
   plugins: [],
 }
