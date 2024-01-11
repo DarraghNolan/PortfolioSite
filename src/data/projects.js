@@ -9,7 +9,8 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/012/510/large/darragh-nolan-theft.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg'    
     ],
-    tags: ['UI Art'],
+    videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
+    tags: ['UI Art', 'Web Development'],
     // Add more project details as needed
   },
   {
@@ -20,7 +21,10 @@ const projects = [
     contentURL: [
       'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
-      'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774'
+      'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774',
+      'https://cdna.artstation.com/p/assets/images/images/037/999/974/large/darragh-nolan-jordanstreetware.jpg?1621900481',
+      'https://cdna.artstation.com/p/assets/images/images/031/472/320/large/darragh-nolan-ejmugcqxyaale4s.jpg?1603735730',
+      'https://cdnb.artstation.com/p/assets/images/images/031/472/317/large/darragh-nolan-20201003-164613.jpg?1603735971'
     ],
     tags: ['Illustration'],
     // Add more project details as needed
@@ -35,7 +39,7 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
       'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
     ],
-    videoURL: 'https://www.youtube.com/embed/gXPXQvk9A_4?si=ktVG7Uxk5pbMpPLb',
+    videoURL: 'https://www.youtube.com/embed/TXBZrwJOOq8?si=BuOOmhM_3IGzAICd',
     tags: ['3D Animation'],
   },
   {
@@ -49,7 +53,17 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/198/762/large/darragh-nolan-mw-mobilelandingpage.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg'
     ],
-    tags: ['UI Art'],
+    tags: ['UI Art', 'Web Development'],
+  },
+  {
+    id: 5,
+    title: 'GrangeMobile App',
+    description: 'A prototype app I made for storing infromation about lectures, classes, sudents and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to store data and was made with ANgular using Android Studio and Ionic.',
+    imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
+    contentURL: [
+    ],
+    videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
+    tags: ['UI Art', 'Web Development'],
   },
   // Add more projects as needed
 ];
