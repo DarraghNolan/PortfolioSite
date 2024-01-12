@@ -3,14 +3,14 @@ const projects = [
     id: 1,
     title: 'IncidenTracker',
     description: 'UI for the app IncidenTracker, an app for storing and tracking theft incidents for petrol stations.',
-    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg?1704241034',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/375/016/large/darragh-nolan-incidentracker-imgurl.jpg?1705039305',
     contentURL: [
       'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg',
       'https://cdna.artstation.com/p/assets/images/images/071/012/510/large/darragh-nolan-theft.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg'    
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
-    tags: ['UI Art', 'Web Development'],
+    tags: ['UI Art', 'Web Development', 'UX'],
     // Add more project details as needed
   },
   {
@@ -53,7 +53,8 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/198/762/large/darragh-nolan-mw-mobilelandingpage.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg'
     ],
-    tags: ['UI Art', 'Web Development'],
+    videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
+    tags: ['UI Art', 'Web Development', 'UX'],
   },
   {
     id: 5,
@@ -63,7 +64,34 @@ const projects = [
     contentURL: [
     ],
     videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
-    tags: ['UI Art', 'Web Development'],
+    tags: ['UI Art', 'Web Development', 'UX'],
+  },
+  {
+    id: 6,
+    title: 'Post-Apocalyptic Platformer',
+    description: 'A platformer made for Android mobile devices made with Unity that I programmed. Art by Sonali Mathur and design by Karan Gupta.',
+    imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
+    contentURL: [
+      'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png'
+    ],
+    videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
+    tags: ['Game Development', 'UX'],
+  },
+  {
+    id: 7,
+    title: 'Neon Demon Illustrations',
+    description: 'Collection of illustrations I made for Neon Demon: A 3D first person shooter I made in college. Made with James Bryan, Shane Carrol, Conor Jepson and Eoin McSharry',
+    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
+    contentURL: [
+      'https://cdna.artstation.com/p/assets/images/images/036/062/402/large/darragh-nolan-billboardaddescend.jpg?1616620233',
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/409/large/darragh-nolan-billboardadtranscend.jpg?1616620239',
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
+      'https://cdna.artstation.com/p/assets/images/images/037/052/334/large/darragh-nolan-nightclubaddone.jpg?1619363166',
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/419/large/darragh-nolan-duanconecptdark-2.jpg?1616620246',
+      'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'
+    ],
+    videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
+    tags: ['Game Development', 'Illustration'],
   },
   // Add more projects as needed
 ];
