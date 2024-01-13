@@ -45,7 +45,7 @@ const projects = [
   {
     id: 4,
     title: 'Maguire`s Whiskey Website',
-    description: 'HTML design for a hypothtical Artisian Irish Whiskey website that delivers drink kits to customers.',
+    description: 'HTML design for a hypothetical artisian Irish Whiskey website that delivers drink kits to customers.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
     contentURL: [
       'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
@@ -59,7 +59,7 @@ const projects = [
   {
     id: 5,
     title: 'GrangeMobile App',
-    description: 'A prototype app I made for storing infromation about lectures, classes, sudents and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to store data and was made with ANgular using Android Studio and Ionic.',
+    description: 'A prototype app I made for storing information about lectures, classes, sudents and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
     imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
     contentURL: [
     ],
@@ -69,7 +69,7 @@ const projects = [
   {
     id: 6,
     title: 'Post-Apocalyptic Platformer',
-    description: 'A platformer made for Android mobile devices made with Unity that I programmed. Art by Sonali Mathur and design by Karan Gupta.',
+    description: 'A 2D platformer made for Android mobile devices made with Unity that I programmed. Art by Sonali Mathur and design by Karan Gupta.',
     imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
     contentURL: [
       'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png'
