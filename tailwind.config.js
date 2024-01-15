@@ -8,6 +8,11 @@ module.exports = {
     height: {
       '100': '24rem',
       '120': '30rem',
+      '0': '0',
+      '1/4': '25%',
+      '1/2': '50%',
+      '3/4': '75%',
+      'full': '100%',
     },
     colors: {
       transparent: 'transparent',

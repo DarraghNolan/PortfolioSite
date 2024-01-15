@@ -24,11 +24,11 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
       'https://pbs.twimg.com/media/E1cjmxaXoAEWqxi?format=jpg&name=4096x4096',
       'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
-      'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/031/472/317/large/darragh-nolan-20201003-164613.jpg?1603735971',
       'https://cdna.artstation.com/p/assets/images/images/031/472/320/large/darragh-nolan-ejmugcqxyaale4s.jpg?1603735730',
+      'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
       'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774',
-      'https://pbs.twimg.com/media/Eb3ifBTWoAAFaXm?format=jpg&name=4096x4096',
+      'https://pbs.twimg.com/media/EV2L1JPXgAIeZ8X?format=jpg&name=4096x4096',
     ],
     tags: ['Illustration'],
     // Add more project details as needed
@@ -81,6 +81,7 @@ const projects = [
       'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE0OS5qcGc=/347x500/xteN%2Bb.jpg',
       'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MC5qcGc=/347x500/U17K8Q.jpg',
       'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MS5qcGc=/347x500/BEA4lf.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY3NTc2My5qcGc=/347x500/l9Ln1q.jpg',
     ],
     videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
     tags: ['Game Development', 'UX'],
@@ -100,6 +101,17 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
     tags: ['Game Development', 'Illustration'],
+  },
+  {
+    id: 8,
+    title: 'Personal 3D Animations',
+    description: 'Collection of 3D animations I made for over the years',
+    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
+    contentURL: [
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',      //Belial
+    ],
+    videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
+    tags: ['Game Development', '3D Animation'],
   },
   // Add more projects as needed
 ];

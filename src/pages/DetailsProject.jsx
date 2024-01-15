@@ -55,7 +55,7 @@ const DetailsProject = () => {
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
           alt={`Project ${index + 2}`}
-          className="my-4 flex-auto object-cover sm:h-full w-fit lg:max-h-[30rem] lg:max-w-[70rem]"
+          className="my-4 flex-auto object-cover sm:h-full w-fit lg:min-h-[50%] lg:max-h-[30rem] lg:max-w-[70rem] "
         >
           
         </img>
