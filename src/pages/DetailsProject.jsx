@@ -6,6 +6,8 @@ const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
 
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
   useEffect(() => {
     const fetchProject = async () => {
       // Find the project with the matching id
@@ -40,7 +42,7 @@ const DetailsProject = () => {
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="lg:w-6/12 h-6/12 w-full h-4/12 my-4"
+          className="lg:w-full lg:h-[40rem] w-full h-[12rem] my-4"
       />
     ) : (
       <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
@@ -50,9 +52,13 @@ const DetailsProject = () => {
         <img
           key={index}
           src={content}
+          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseLeave={() => setHoveredIndex(null)}
           alt={`Project ${index + 2}`}
-          className="my-4 flex-auto object-cover lg:max-h-[30rem] w-fit sm:h-full"
-        />
+          className="my-4 flex-auto object-cover sm:h-full w-fit lg:max-h-[30rem] lg:max-w-[70rem]"
+        >
+          
+        </img>
       ))}
     </div>
         {/* Add more project details as needed */}

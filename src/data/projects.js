@@ -20,11 +20,15 @@ const projects = [
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
     contentURL: [
       'https://cdna.artstation.com/p/assets/images/images/037/999/974/large/darragh-nolan-jordanstreetware.jpg?1621900481',
+      'https://cdna.artstation.com/p/assets/images/images/071/478/662/large/darragh-nolan-uudualscreensaverfinalcropped.jpg?1705293096',
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
-      'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774',
+      'https://pbs.twimg.com/media/E1cjmxaXoAEWqxi?format=jpg&name=4096x4096',
       'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
+      'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/031/472/317/large/darragh-nolan-20201003-164613.jpg?1603735971',
       'https://cdna.artstation.com/p/assets/images/images/031/472/320/large/darragh-nolan-ejmugcqxyaale4s.jpg?1603735730',
-      'https://cdnb.artstation.com/p/assets/images/images/031/472/317/large/darragh-nolan-20201003-164613.jpg?1603735971'
+      'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774',
+      'https://pbs.twimg.com/media/Eb3ifBTWoAAFaXm?format=jpg&name=4096x4096',
     ],
     tags: ['Illustration'],
     // Add more project details as needed
@@ -49,9 +53,9 @@ const projects = [
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
     contentURL: [
       'https://cdna.artstation.com/p/assets/images/images/071/197/056/medium/darragh-nolan-mw-favicon.jpg?1704675978',
-      'https://cdnb.artstation.com/p/assets/images/images/071/474/953/medium/darragh-nolan-mw-mobilelandingpage.jpg?1705280292',
       'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/071/474/953/medium/darragh-nolan-mw-mobilelandingpage.jpg?1705280292',
       'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg'
     ],
     videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
@@ -84,12 +88,12 @@ const projects = [
     description: 'Collection of illustrations I made for Neon Demon: A 3D first person shooter I made in college. Made with James Bryan, Shane Carrol, Conor Jepson and Eoin McSharry',
     imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
     contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/036/062/402/large/darragh-nolan-billboardaddescend.jpg?1616620233',
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/409/large/darragh-nolan-billboardadtranscend.jpg?1616620239',
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
-      'https://cdna.artstation.com/p/assets/images/images/037/052/334/large/darragh-nolan-nightclubaddone.jpg?1619363166',
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/419/large/darragh-nolan-duanconecptdark-2.jpg?1616620246',
-      'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',               //NeonDemonBanner
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/409/large/darragh-nolan-billboardadtranscend.jpg?1616620239',   //ConzUmerCola
+      'https://cdna.artstation.com/p/assets/images/images/036/062/402/large/darragh-nolan-billboardaddescend.jpg?1616620233',     //YouAbsoluteTrog
+      'https://cdna.artstation.com/p/assets/images/images/037/052/334/large/darragh-nolan-nightclubaddone.jpg?1619363166',         //NineCircles
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/419/large/darragh-nolan-duanconecptdark-2.jpg?1616620246',       //DuaneSmoking
+      'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'         //Belial
     ],
     videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
     tags: ['Game Development', 'Illustration'],

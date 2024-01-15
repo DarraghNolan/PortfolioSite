@@ -16,6 +16,8 @@ module.exports = {
       'white2': '#d1d5db',
       'white3': '#475569',
       'purple': '#3f3cbb',
+      'pink': '#d615cd',
+      'blueLIGHT': '#15d3d6',
       'midnight': '#030113',
       'metal': '#565584',
       'tahiti': '#3ab7bf',
