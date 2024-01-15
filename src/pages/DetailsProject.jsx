@@ -45,10 +45,14 @@ const DetailsProject = () => {
     ) : (
       <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
     )}
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="flex flex-wrap gap-8">
       {project.contentURL.map((content, index) => (
-        <img key={index} src={content} alt={`Project ${index + 2}`} className="my-4 w-full" />
+        <img
+          key={index}
+          src={content}
+          alt={`Project ${index + 2}`}
+          className="my-4 flex-auto object-cover lg:max-h-[30rem] w-fit sm:h-full"
+        />
       ))}
     </div>
         {/* Add more project details as needed */}

@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    height: {
+      '100': '24rem',
+      '120': '30rem',
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',

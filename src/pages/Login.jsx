@@ -10,18 +10,18 @@ const Login = () => {
     ? projectsData 
     : projectsData.filter((project) => project.tags.includes(selectedTag));
 
-  const tags = ['All', 'UI Art', '3D Animation', 'Illustration', '3D Modeling', 'Game Development', 'UX', 'Web Development'];
+  const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', '3D Modeling', 'Illustration', '3D Animation'];
 
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
         <h1 className="text-4xl font-bold mb-8">Darragh Nolan</h1>
-        <div className="mb-4">
+        <div className="mb-4 flex-auto content-center">
           {/* Display filter buttons */}
           {tags.map((tag) => (
             <button
               key={tag}
-              className={`mr-4 px-4 py-2 rounded-full ${selectedTag === tag ? 'bg-blue-500 text-white2' : 'bg-white2 text-white3'}`}
+              className={`mr-4 px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-blue-500 text-white2' : 'bg-white2 text-white3'}`}
               onClick={() => setSelectedTag(tag)}
             >
               {tag}
@@ -34,7 +34,7 @@ const Login = () => {
               <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px' }}>
                 <h2 className="text-xl font-semibold mb-4">{project.title}</h2>
                 <p className="mb-4 ">{project.description}</p>
-                <img src={project.imageURL} alt={project.title} className="w-full h-48 object-cover mb-4" />
+                <img src={project.imageURL} alt={project.title} className="w-full min-h-32 max-h-48 object-cover mb-4" />
               </div>
             </Link>
           ))}

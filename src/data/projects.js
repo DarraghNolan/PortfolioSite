@@ -19,10 +19,10 @@ const projects = [
     description: 'Various 2D illustrations and renders I have doen over the years.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
     contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
+      'https://cdna.artstation.com/p/assets/images/images/037/999/974/large/darragh-nolan-jordanstreetware.jpg?1621900481',
       'https://cdnb.artstation.com/p/assets/images/images/040/807/347/large/darragh-nolan-smokebreak.jpg?1629922558',
       'https://cdna.artstation.com/p/assets/images/images/040/807/420/large/darragh-nolan-dwanorendernobackground.jpg?1629922774',
-      'https://cdna.artstation.com/p/assets/images/images/037/999/974/large/darragh-nolan-jordanstreetware.jpg?1621900481',
+      'https://cdna.artstation.com/p/assets/images/images/043/093/628/large/darragh-nolan-cynthiagarchompstarplatinum-1.jpg?1636302190',
       'https://cdna.artstation.com/p/assets/images/images/031/472/320/large/darragh-nolan-ejmugcqxyaale4s.jpg?1603735730',
       'https://cdnb.artstation.com/p/assets/images/images/031/472/317/large/darragh-nolan-20201003-164613.jpg?1603735971'
     ],
@@ -48,10 +48,11 @@ const projects = [
     description: 'HTML design for a hypothetical artisian Irish Whiskey website that delivers drink kits to customers.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
     contentURL: [
+      'https://cdna.artstation.com/p/assets/images/images/071/197/056/medium/darragh-nolan-mw-favicon.jpg?1704675978',
+      'https://cdnb.artstation.com/p/assets/images/images/071/474/953/medium/darragh-nolan-mw-mobilelandingpage.jpg?1705280292',
       'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
-      'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg',
-      'https://cdna.artstation.com/p/assets/images/images/071/198/762/large/darragh-nolan-mw-mobilelandingpage.jpg',
-      'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg'
+      'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg',
+      'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg'
     ],
     videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
     tags: ['UI Art', 'Web Development', 'UX'],
