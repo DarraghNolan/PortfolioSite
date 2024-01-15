@@ -77,7 +77,10 @@ const projects = [
     description: 'A 2D platformer made for Android mobile devices made with Unity that I programmed. Art by Sonali Mathur and design by Karan Gupta.',
     imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
     contentURL: [
-      'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png'
+      'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE0OS5qcGc=/347x500/xteN%2Bb.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MC5qcGc=/347x500/U17K8Q.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MS5qcGc=/347x500/BEA4lf.jpg',
     ],
     videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
     tags: ['Game Development', 'UX'],
