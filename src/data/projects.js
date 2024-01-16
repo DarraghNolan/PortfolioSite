@@ -104,7 +104,7 @@ const projects = [
   },
   {
     id: 8,
-    title: 'Personal 3D Animations',
+    title: 'Animation Reel',
     description: 'Collection of 3D animations I made for over the years',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/508/742/large/darragh-nolan-darragh-nolan-portfolio-shot.jpg?1705346521',
     contentURL: [

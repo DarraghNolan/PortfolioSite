@@ -16,8 +16,12 @@ const Login = () => {
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
-        <h1 className="text-4xl font-bold mb-8">Darragh Nolan</h1>
-        <ThreeDScene />
+        <h1 className="text-6xl font-bold lg:mb-[-5rem] mb-[-6rem] lg:ml-5rem">
+          Darragh Nolan
+        </h1>
+        <div className='ml-[65vw]'>
+          <ThreeDScene/>
+        </div>
         <div className="mb-4 flex-auto content-center">
           {/* Display filter buttons */}
           {tags.map((tag) => (

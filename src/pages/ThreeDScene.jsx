@@ -45,6 +45,7 @@ const ThreeDScene = () => {
 
       // Update the mixer in the animation loop
       const animate = () => {
+        fbxModel.rotation.z -= 0.005;
         mixer.update(0.0175); // You can adjust the time delta here
         requestAnimationFrame(animate);
       };
@@ -66,8 +67,8 @@ const ThreeDScene = () => {
 
       {/* Model */}
       <primitive object={fbxModel} ref={fbxRef}
-       rotation={[-Math.PI / 2, -Math.PI / 25, -Math.PI / 5]} 
-      position={[0, 275, -550]}
+       rotation={[-Math.PI / 2, -Math.PI / 25, 0]} 
+      position={[0, 275, -650]}
       />
     </Canvas>
   );
