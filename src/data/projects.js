@@ -106,9 +106,9 @@ const projects = [
     id: 8,
     title: 'Personal 3D Animations',
     description: 'Collection of 3D animations I made for over the years',
-    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/508/742/large/darragh-nolan-darragh-nolan-portfolio-shot.jpg?1705346521',
     contentURL: [
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',      //Belial
+      'https://cdna.artstation.com/p/assets/images/images/071/508/742/large/darragh-nolan-darragh-nolan-portfolio-shot.jpg?1705346521',
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
     tags: ['Game Development', '3D Animation'],
