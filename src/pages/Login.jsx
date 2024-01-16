@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import projectsData from '../data/projects';
 import '../index.css';
 import { Link } from 'react-router-dom';
+import ThreeDScene from './ThreeDScene';
 
 const Login = () => {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
@@ -16,6 +17,7 @@ const Login = () => {
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
         <h1 className="text-4xl font-bold mb-8">Darragh Nolan</h1>
+        <ThreeDScene />
         <div className="mb-4 flex-auto content-center">
           {/* Display filter buttons */}
           {tags.map((tag) => (
