@@ -111,6 +111,14 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/508/742/large/darragh-nolan-darragh-nolan-portfolio-shot.jpg?1705346521',
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
+    ThreeDModels: [
+      '../mdls/FlyFella.fbx',
+      '../mdls/Squirtle.fbx',
+    ],
+    ThreeDAlbedos: [
+      'https://cdnb.artstation.com/p/assets/images/images/071/657/323/medium/darragh-nolan-flyfellaalbedo.jpg?1705644186',
+      'https://cdnb.artstation.com/p/assets/images/images/071/657/325/medium/darragh-nolan-squirtlealbedo.jpg?1705644193',
+    ],
     tags: ['Game Development', '3D Animation'],
   },
   // Add more projects as needed

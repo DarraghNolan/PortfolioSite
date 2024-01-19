@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import projectsData from '../data/projects';
 import '../index.css';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,14 @@ import ThreeDScene from './ThreeDScene';
 
 const Login = () => {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
+  const [featuredProject, setFeaturedProject] = useState(null);
+
+  useEffect(() => {
+    // Fetch the project you want to feature (replace 'projectId' with the actual project ID)
+    const projectId = 8; // Replace with the actual project ID
+    const project = projectsData.find((proj) => proj.id === projectId);
+    setFeaturedProject(project);
+  }, []);
 
   const filteredProjects = selectedTag === 'All' 
     ? projectsData 
@@ -16,11 +24,17 @@ const Login = () => {
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
-        <h1 className="text-6xl font-bold lg:mb-[-5rem] mb-[-6rem] lg:ml-5rem">
+        <h1 className="text-6xl font-bold lg:mb-[5rem] mb-[6rem] lg:ml-5rem">
           Darragh Nolan
         </h1>
         <div className='ml-[65vw]'>
-          <ThreeDScene/>
+          {featuredProject && (
+            <ThreeDScene
+              key={featuredProject.id}
+              model={featuredProject.ThreeDModels[0]}
+              albedo={featuredProject.ThreeDAlbedos[0]}
+            />
+          )}
         </div>
         <div className="mb-4 flex-auto content-center">
           {/* Display filter buttons */}

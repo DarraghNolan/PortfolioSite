@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import projectsData from '../data/projects';
-import '../index.css';
+import ThreeDScene from './ThreeDScene'; // Import the modified ThreeDScene component
 
 const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
 
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-
   useEffect(() => {
     const fetchProject = async () => {
-      // Find the project with the matching id
       const selectedProject = projectsData.find(proj => proj.id === parseInt(projectId, 10));
-
-      // Set the found project to the state
       setProject(selectedProject);
     };
     fetchProject();
@@ -28,7 +23,7 @@ const DetailsProject = () => {
   }
 
   return (
-    <div className="bg-midnight">      
+    <div className="bg-midnight">
       <div className="container mx-auto p-8 text-white2">
         <h1 className="text-4xl font-bold mb-8">{project.title}</h1>
         <p>{project.description}</p>
@@ -52,16 +47,17 @@ const DetailsProject = () => {
         <img
           key={index}
           src={content}
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}
           alt={`Project ${index + 2}`}
           className="my-4 flex-auto object-cover sm:h-full w-fit lg:min-h-[50%] lg:max-h-[30rem] lg:max-w-[70rem] "
-        >
-          
-        </img>
+        />
       ))}
-    </div>
-        {/* Add more project details as needed */}
+      </div>
+        {/* Canvas */}
+        {project.ThreeDModels && project.ThreeDAlbedos && (
+          project.ThreeDModels.map((model, index) => (
+            <ThreeDScene key={index} model={model} albedo={project.ThreeDAlbedos[index]} />
+          ))
+        )}
       </div>
     </div>
   );
