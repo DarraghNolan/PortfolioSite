@@ -4,7 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import * as THREE from 'three';
 
-const ThreeDScene = ({ model, albedo }) => {
+const ThreeDScene = ({ model, albedo, rotX, rotY, rotZ, posX, posY, posZ }) => {
   const fbxRef = useRef();
 
   const fbxModel = useLoader(FBXLoader, model);
@@ -53,8 +53,12 @@ const ThreeDScene = ({ model, albedo }) => {
         <primitive
           object={fbxModel}
           ref={fbxRef}
-          rotation={[-Math.PI / 2, -Math.PI / 25, 0]}
-          position={[0, 275, -650]}
+
+          rotation={[rotX, rotY, rotZ]}
+          position={[posX, posY, posZ]}
+
+          // rotation={[-Math.PI / 2, -Math.PI / 25, 0]}
+          // position={[0, 275, -650]}
         />
       )}
     </Canvas>
