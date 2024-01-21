@@ -52,7 +52,7 @@ const DetailsProject = () => {
         />
       ))}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
+      {/* <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
         {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
           project.ThreeDModels.map((model, index) => (
             <ThreeDScene 
@@ -68,11 +68,10 @@ const DetailsProject = () => {
               rotZ={project.modelProperties[index].rotZ}
               scale={project.modelProperties[index].scale}
               animSpeed={project.modelProperties[index].animSpeed}
-
               className="h-[20rem] w-fit"
             />
           ))
-        )}</div>
+        )}</div> */}
       </div>
     </div>
   );

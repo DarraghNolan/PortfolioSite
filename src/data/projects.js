@@ -112,16 +112,16 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
     ThreeDModels: [
-      '../mdls/Squirtle.fbx',
-      '../mdls/FlyFella.fbx',
+      './mdls/Squirtle.fbx',
+      './mdls/FlyFella.fbx',
     ],
     ThreeDAlbedos: [
-      'https://cdnb.artstation.com/p/assets/images/images/071/657/325/medium/darragh-nolan-squirtlealbedo.jpg?1705644193',
-      'https://cdnb.artstation.com/p/assets/images/images/071/657/323/medium/darragh-nolan-flyfellaalbedo.jpg?1705644186',
+      './txtrs/SquirtleAlbedo.png',
+      './txtrs/FlyFellaAlbedo.png',
     ],
     ThreeDOpacitys: [
-      'https://cdnb.artstation.com/p/assets/images/images/071/725/461/medium/darragh-nolan-squirtleopacity.jpg?1705809431',
-      'https://cdna.artstation.com/p/assets/images/images/071/724/956/medium/darragh-nolan-flyfellaopacity.jpg?1705806935',
+      './txtrs/SquirtleOpacity.png',
+      './txtrs/FlyFellaOpacity.png',
     ],
     modelProperties: [
       { posX: 0, posY: 100, posZ: -1300, rotX: -Math.PI / 60, rotY: Math.PI / -1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.02 },
