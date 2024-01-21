@@ -24,10 +24,26 @@ const Login = () => {
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
-        <h1 className="text-6xl font-bold lg:mb-[-4rem] mb-[-3rem] lg:ml-5rem">
+        <h1 className="text-6xl font-bold w-[10rem] mt-[10rem] mb-[-15rem] lg:mb-[-15rem] lg:mt-[8rem] lg:ml-5rem">
           Darragh Nolan
         </h1>
-        <div className='ml-[65vw] w-48'>
+        <div className="grid grid-cols-2 gap-[1rem] w-[25rem] h-[15rem] ml-[-1rem] lg:gap-2 lg:mb-[2rem] lg:ml-[2vw] lg:w-[30rem] ">
+          {featuredProject && (
+            <ThreeDScene
+              key={featuredProject.id}
+              model={featuredProject.ThreeDModels[0]}
+              albedo={featuredProject.ThreeDAlbedos[0]}
+              opacity={featuredProject.ThreeDOpacitys[0]}
+              posX={featuredProject.modelProperties[0].posX}
+              posY={featuredProject.modelProperties[0].posY}
+              posZ={featuredProject.modelProperties[0].posZ}
+              rotX={featuredProject.modelProperties[0].rotX}
+              rotY={featuredProject.modelProperties[0].rotY}
+              rotZ={featuredProject.modelProperties[0].rotZ}
+              scale={featuredProject.modelProperties[0].scale}
+              animSpeed={featuredProject.modelProperties[0].animSpeed}
+            />
+          )}
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
@@ -45,7 +61,7 @@ const Login = () => {
             />
           )}
         </div>
-        <div className="mb-4 flex-auto content-center">
+        <div className="mb-4 flex-auto content-center mt-[1.5rem]">
           {/* Display filter buttons */}
           {tags.map((tag) => (
             <button
