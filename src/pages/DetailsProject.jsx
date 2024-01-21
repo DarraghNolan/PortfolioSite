@@ -52,12 +52,27 @@ const DetailsProject = () => {
         />
       ))}
       </div>
-        {/* Canvas */}
-        {project.ThreeDModels && project.ThreeDAlbedos && (
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
+        {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
           project.ThreeDModels.map((model, index) => (
-            <ThreeDScene key={index} model={model} albedo={project.ThreeDAlbedos[index]} />
+            <ThreeDScene 
+              key={index}
+              model={model}
+              albedo={project.ThreeDAlbedos[index]}
+              opacity={project.ThreeDOpacitys[index]}
+              posX={project.modelProperties[index].posX}
+              posY={project.modelProperties[index].posY}
+              posZ={project.modelProperties[index].posZ}
+              rotX={project.modelProperties[index].rotX}
+              rotY={project.modelProperties[index].rotY}
+              rotZ={project.modelProperties[index].rotZ}
+              scale={project.modelProperties[index].scale}
+              animSpeed={project.modelProperties[index].animSpeed}
+
+              className="h-[20rem] w-fit"
+            />
           ))
-        )}
+        )}</div>
       </div>
     </div>
   );

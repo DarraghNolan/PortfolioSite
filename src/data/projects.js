@@ -112,12 +112,21 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
     ThreeDModels: [
-      '../mdls/FlyFella.fbx',
       '../mdls/Squirtle.fbx',
+      '../mdls/FlyFella.fbx',
     ],
     ThreeDAlbedos: [
-      'https://cdnb.artstation.com/p/assets/images/images/071/657/323/medium/darragh-nolan-flyfellaalbedo.jpg?1705644186',
       'https://cdnb.artstation.com/p/assets/images/images/071/657/325/medium/darragh-nolan-squirtlealbedo.jpg?1705644193',
+      'https://cdnb.artstation.com/p/assets/images/images/071/657/323/medium/darragh-nolan-flyfellaalbedo.jpg?1705644186',
+    ],
+    ThreeDOpacitys: [
+      'https://cdnb.artstation.com/p/assets/images/images/071/725/461/medium/darragh-nolan-squirtleopacity.jpg?1705809431',
+      'https://cdna.artstation.com/p/assets/images/images/071/724/956/medium/darragh-nolan-flyfellaopacity.jpg?1705806935',
+    ],
+    modelProperties: [
+      { posX: 0, posY: 100, posZ: -1300, rotX: -Math.PI / 60, rotY: Math.PI / -1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.02 },
+      { posX: 0, posY: 500, posZ: -1500, rotX: -Math.PI / 2, rotY: -Math.PI / 60, rotZ: -Math.PI / 5, scale: 2, animSpeed: 0.0187 },
+      // Add properties for other models
     ],
     tags: ['Game Development', '3D Animation'],
   },

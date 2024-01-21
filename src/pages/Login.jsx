@@ -24,15 +24,24 @@ const Login = () => {
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
-        <h1 className="text-6xl font-bold lg:mb-[5rem] mb-[6rem] lg:ml-5rem">
+        <h1 className="text-6xl font-bold lg:mb-[-4rem] mb-[-3rem] lg:ml-5rem">
           Darragh Nolan
         </h1>
-        <div className='ml-[65vw]'>
+        <div className='ml-[65vw] w-48'>
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
-              model={featuredProject.ThreeDModels[0]}
-              albedo={featuredProject.ThreeDAlbedos[0]}
+              model={featuredProject.ThreeDModels[1]}
+              albedo={featuredProject.ThreeDAlbedos[1]}
+              opacity={featuredProject.ThreeDOpacitys[1]}
+              posX={featuredProject.modelProperties[1].posX}
+              posY={featuredProject.modelProperties[1].posY}
+              posZ={featuredProject.modelProperties[1].posZ}
+              rotX={featuredProject.modelProperties[1].rotX}
+              rotY={featuredProject.modelProperties[1].rotY}
+              rotZ={featuredProject.modelProperties[1].rotZ}
+              scale={featuredProject.modelProperties[1].scale}
+              animSpeed={featuredProject.modelProperties[1].animSpeed}
             />
           )}
         </div>
