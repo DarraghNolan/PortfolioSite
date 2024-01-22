@@ -67,9 +67,10 @@ const Login = () => {
           )}
         </div>
         <div className='lg:mb-[20rem] md:mb-[20rem] mb-[15rem]'>
-          <img src='./imgs/BluBox.png' className='absolute lg:mt-[5rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:mt-[5rem] mt-[4rem] w-[12.5rem] h-[8rem]'/>
-          <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:ml-[15rem] ml-[9rem] w-[12.5rem] h-[8rem]'/>
-          <img src='./gifs/Signature.gif' className='absolute mt-[2.25rem] ml-[0]'/>
+          {/* <img src='./imgs/BluBox.png' className='absolute lg:mt-[5rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:mt-[5rem] mt-[4rem] w-[12.5rem] h-[8rem]'/>
+          <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:ml-[15rem] ml-[9rem] w-[12.5rem] h-[8rem]'/> */}
+          <img src='./imgs/BluNPinkBox.png' className='absolute w-[85vw] sm:h-[25vh] h-[20vh] md:w-[35rem]'/>
+          <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
         <div className='hidden ml-[57vw] mt-[-45vh] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
