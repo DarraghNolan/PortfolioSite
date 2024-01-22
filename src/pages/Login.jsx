@@ -71,11 +71,11 @@ const Login = () => {
           <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:ml-[15rem] ml-[9rem] w-[12.5rem] h-[8rem]'/>
           <img src='./gifs/Signature.gif' className='absolute mt-[2.25rem] ml-[0]'/>
         </div>
-        <div className='hidden ml-[50vw] mt-[-45vh] justify-end md:block absolute'>
+        <div className='hidden ml-[57vw] mt-[-45vh] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
             <Link key={social.id} to={social.URL}>
               <div className='flex'>
-                <div className='mx-[1rem] w-[20vw] text-right'>
+                <div className='mx-[1rem] w-[13vw] text-right'>
                   <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
                   <p className="mb-4 ">{social.description}</p>
                 </div>
@@ -88,7 +88,8 @@ const Login = () => {
           My Work
         </h1>
         <div className="mb-4 flex-auto content-center mt-[1.5rem]">
-          {/* Display filter buttons */}<a> Filter By : </a>
+          {/* Display filter buttons */}
+          <a> Filter By : </a>
           {tags.map((tag) => (
             <button
               key={tag}

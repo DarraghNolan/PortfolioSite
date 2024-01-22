@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import projectsData from '../data/projects';
 import ThreeDScene from './ThreeDScene'; // Import the modified ThreeDScene component
+import { useNavigate } from 'react-router-dom';
 
 const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -22,10 +25,24 @@ const DetailsProject = () => {
     );
   }
 
+  const backToHome = async (e) =>{
+    e.preventDefault();
+    try {
+      navigate('/login');
+    } catch (err) {
+      console.log("Could not get back to home...");
+    }
+  };
+
   return (
     <div className="bg-midnight">
+      <button className='fixed w-[10rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' onClick={backToHome}>
+        <h1>
+          Back To Home
+        </h1>
+      </button>
       <div className="container mx-auto p-8 text-white2">
-        <h1 className="text-4xl font-bold mb-8">{project.title}</h1>
+        <h1 className="text-4xl text-blueLIGHT font-bold mt-[5rem] mb-8">{project.title}</h1>
         <p>{project.description}</p>
         
         {project.videoURL ? (

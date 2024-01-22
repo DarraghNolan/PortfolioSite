@@ -16,7 +16,7 @@ const projects = [
   {
     id: 2,
     title: 'Illustrations',
-    description: 'Various 2D illustrations and renders I have doen over the years.',
+    description: 'Various 2D illustrations and renders I have done over the years.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/036/061/810/medium/darragh-nolan-milovjordancolour.jpg',
     contentURL: [
       'https://cdna.artstation.com/p/assets/images/images/037/999/974/large/darragh-nolan-jordanstreetware.jpg?1621900481',
