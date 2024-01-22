@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import projectsData from '../data/projects';
+import socialsData from '../data/socials';
 import '../index.css';
 import { Link } from 'react-router-dom';
 import ThreeDScene from './ThreeDScene';
@@ -7,12 +8,16 @@ import ThreeDScene from './ThreeDScene';
 const Login = () => {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
   const [featuredProject, setFeaturedProject] = useState(null);
+  const [featuredSocial, setFeaturedSocial] = useState([]);
 
   useEffect(() => {
     // Fetch the project you want to feature (replace 'projectId' with the actual project ID)
     const projectId = 8; // Replace with the actual project ID
     const project = projectsData.find((proj) => proj.id === projectId);
     setFeaturedProject(project);
+
+    const social = socialsData;  // Corrected usage
+    setFeaturedSocial(social);
   }, []);
 
   const filteredProjects = selectedTag === 'All' 
@@ -61,17 +66,33 @@ const Login = () => {
             />
           )}
         </div>
-        <div className='lg:mb-[20rem] mb-[15rem]'>
-          <img src='./imgs/BluBox.png' className='absolute lg:mt-[5rem] lg:w-[23rem] lg:h-[12rem] mt-[4rem] w-[12.5rem] h-[8rem]'/>
-          <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] ml-[9rem] w-[12.5rem] h-[8rem]'/>
+        <div className='lg:mb-[20rem] md:mb-[20rem] mb-[15rem]'>
+          <img src='./imgs/BluBox.png' className='absolute lg:mt-[5rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:mt-[5rem] mt-[4rem] w-[12.5rem] h-[8rem]'/>
+          <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:ml-[15rem] ml-[9rem] w-[12.5rem] h-[8rem]'/>
           <img src='./gifs/Signature.gif' className='absolute mt-[2.25rem] ml-[0]'/>
         </div>
+        <div className='hidden ml-[50vw] mt-[-45vh] justify-end md:block absolute'>
+          {featuredSocial.map((social) => (
+            <Link key={social.id} to={social.URL}>
+              <div className='flex'>
+                <div className='mx-[1rem] w-[20vw] text-right'>
+                  <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
+                  <p className="mb-4 ">{social.description}</p>
+                </div>
+                <img src={social.imageURL} alt={social.title} className="w-[6rem] h-[6rem] object-cover mb-4" />
+              </div>              
+            </Link>
+          ))}
+        </div>
+        <h1 className="text-5xl font-bold mb-[2.5rem]">
+          My Work
+        </h1>
         <div className="mb-4 flex-auto content-center mt-[1.5rem]">
           {/* Display filter buttons */}<a> Filter By : </a>
           {tags.map((tag) => (
             <button
               key={tag}
-              className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-white2 text-midnight border-[1px] border-blueLIGHT' : 'bg-blue-500 text-white2 border-[1px] border-pink'}`}
+              className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-midnight text-white2 border-[1px] border-blueLIGHT' : 'bg-blue-500 text-white2 border-[1px] border-pink'}`}
               onClick={() => setSelectedTag(tag)}
             >
               {tag}
