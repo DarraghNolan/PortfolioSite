@@ -24,7 +24,7 @@ const Login = () => {
     ? projectsData 
     : projectsData.filter((project) => project.tags.includes(selectedTag));
 
-  const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation'];
+  const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications'];
 
   return (
     <div className="bg-midnight">

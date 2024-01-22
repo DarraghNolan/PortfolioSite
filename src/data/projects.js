@@ -10,7 +10,7 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg'    
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
-    tags: ['UI Art', 'Web Development', 'UX'],
+    tags: ['UI Art', 'Web Development', 'UX', 'Mobile Applications'],
     // Add more project details as needed
   },
   {
@@ -69,7 +69,7 @@ const projects = [
     contentURL: [
     ],
     videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
-    tags: ['UI Art', 'Web Development', 'UX'],
+    tags: ['Web Development', 'UX', 'Mobile Applications'],
   },
   {
     id: 6,
@@ -84,7 +84,7 @@ const projects = [
       'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY3NTc2My5qcGc=/347x500/l9Ln1q.jpg',
     ],
     videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
-    tags: ['Game Development', 'UX'],
+    tags: ['Game Development', 'UX', 'Mobile Applications'],
   },
   {
     id: 7,

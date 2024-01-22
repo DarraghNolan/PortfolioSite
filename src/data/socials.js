@@ -2,7 +2,7 @@ const socials = [
     {
       id: 1,
       title: 'LinkedIn',
-      description: 'My LinkedIn.',
+      description: 'My LinkedIn, for business networking.',
       imageURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/480px-LinkedIn_logo_initials.png',
       URL: 'https://www.linkedin.com/in/darragh-nolan-639125164',
       // Add more project details as needed
