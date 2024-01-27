@@ -7,7 +7,19 @@ const projects = [
     contentURL: [
       'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg',
       'https://cdna.artstation.com/p/assets/images/images/071/012/510/large/darragh-nolan-theft.jpg',
-      'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg'    
+      'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg',
+      // 'https://i.ibb.co/71zrT6w/Theft.png',
+      // 'https://i.ibb.co/Zx0rXvP/D-O.png',
+      // 'https://i.ibb.co/gmRgSQF/Note.png',
+      'https://i.ibb.co/KWmqpTG/D-OIdleS.png',
+      'https://i.ibb.co/5XDw9pF/D-OPressed-S.png',
+      'https://i.ibb.co/1M1LZLY/D-OThumbnail-S.png',
+      'https://i.ibb.co/kGBQVXt/Theft-Idle-S.png',
+      'https://i.ibb.co/6nSJWLQ/Theft-Pressed-S.png',
+      'https://i.ibb.co/J57qwsG/Theft-Thumbnail-S.png',
+      'https://i.ibb.co/JtBW957/Note-Idle-S.png',
+      'https://i.ibb.co/zxxqtvp/Note-Pressed-S.png',
+      'https://i.ibb.co/59cfCYV/Note-Thumbnail-S.png'
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
     tags: ['UI Art', 'Web Development', 'UX', 'Mobile Applications'],
