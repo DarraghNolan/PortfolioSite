@@ -64,7 +64,7 @@ const projects = [
   {
     id: 5,
     title: 'GrangeMobile App',
-    description: 'A prototype app I made for storing information about lectures, classes, sudents and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
+    description: 'A prototype app I made for storing information about lectures, classes, students and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
     imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
     contentURL: [
     ],
@@ -74,7 +74,7 @@ const projects = [
   {
     id: 6,
     title: 'Post-Apocalyptic Platformer',
-    description: 'A 2D platformer made for Android mobile devices made with Unity that I programmed. Art by Sonali Mathur and design by Karan Gupta.',
+    description: 'A 2D platformer made for Android mobile devices made with Unity. Art by Sonali Mathur, design by Karan Gupta and programming by me.',
     imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
     contentURL: [
       'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',

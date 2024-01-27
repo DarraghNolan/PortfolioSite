@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   const navigate = useNavigate()
 
@@ -34,13 +36,38 @@ const DetailsProject = () => {
     }
   };
 
+  const openOverlay = (image) => {
+    setSelectedImage(image);
+    setOverlayVisible(true);
+  };
+
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+    setSelectedImage(null);
+  };
+
   return (
     <div className="bg-midnight">
       <button className='fixed w-[10rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' onClick={backToHome}>
-        <h1>
+        <h1 className='z-50'>
           Back To Home
         </h1>
       </button>
+      {/* Overlay */}
+      {overlayVisible && (
+      <div>
+        <div className="fixed inset-0 bg-midnight bg-opacity-80 z-50 flex justify-center items-center">
+          <div className="relative">
+            <img src={selectedImage} alt="Selected" className="max-h-[95vh] w-fit max-w-[95vw]" />
+          </div>
+          <button className='absolute top-0 right-0 m-4 w-[6rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' onClick={closeOverlay}>
+            <h1 className='z-40'>
+              Close
+            </h1>
+          </button>
+        </div>
+      </div>        
+      )}
       <div className="container mx-auto p-8 text-white2">
         <h1 className="text-4xl text-blueLIGHT font-bold mt-[5rem] mb-8">{project.title}</h1>
         <p>{project.description}</p>
@@ -59,16 +86,18 @@ const DetailsProject = () => {
     ) : (
       <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
     )}
-    <div className="flex flex-wrap gap-8">
-      {project.contentURL.map((content, index) => (
-        <img
-          key={index}
-          src={content}
-          alt={`Project ${index + 2}`}
-          className="my-4 flex-auto object-cover sm:h-full w-fit lg:min-h-[50%] lg:max-h-[30rem] lg:max-w-[70rem] "
-        />
-      ))}
+      <div className="flex flex-wrap gap-8">
+        {project.contentURL.map((content, index) => (
+          <img
+            key={index}
+            src={content}
+            alt={`Project ${index + 2}`}
+            className="my-4 flex-auto object-cover sm:h-full w-fit lg:min-h-[50%] md:max-h-[12rem] lg:max-h-[17rem] xl:max-h-[22rem] 2xl:max-h-[27rem]"
+            onClick={() => openOverlay(content)}
+          />
+        ))}
       </div>
+      <div>        
       {/* <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
         {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
           project.ThreeDModels.map((model, index) => (
@@ -89,6 +118,7 @@ const DetailsProject = () => {
             />
           ))
         )}</div> */}
+      </div>
       </div>
     </div>
   );
