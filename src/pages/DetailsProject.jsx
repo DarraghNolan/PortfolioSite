@@ -8,6 +8,8 @@ const DetailsProject = () => {
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [zoomedIn, setZoomedIn] = useState(false);
 
   const navigate = useNavigate()
 
@@ -46,6 +48,13 @@ const DetailsProject = () => {
     setSelectedImage(null);
   };
 
+  const navigateImage = (direction) => {
+    const newIndex = (selectedIndex + direction + project.contentURL.length) % project.contentURL.length;
+    setSelectedIndex(newIndex);
+    setSelectedImage(project.contentURL[newIndex]);
+  };
+
+
   return (
     <div className="bg-midnight">
       <button className='fixed w-[10rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' onClick={backToHome}>
@@ -58,15 +67,39 @@ const DetailsProject = () => {
       <div>
         <div className="fixed inset-0 bg-midnight bg-opacity-80 z-50 flex justify-center items-center">
           <div className="relative">
-            <img src={selectedImage} alt="Selected" className="max-h-[95vh] w-fit max-w-[95vw]" />
+            <img
+              src={selectedImage}
+              alt="Selected"
+              className="max-h-[95vh] w-fit max-w-[95vw]"
+            />
           </div>
-          <button className='absolute top-0 right-0 m-4 w-[6rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' onClick={closeOverlay}>
+          <button 
+            className='absolute top-0 right-0 m-4 w-[6rem] h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            onClick={closeOverlay}
+          >
             <h1 className='z-40'>
               Close
             </h1>
           </button>
+          <button 
+            className='absolute top-[88vh] sm:top-[50vh] right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            onClick={() => navigateImage(1)}
+          >
+            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+              &#8594;
+            </h1>
+          </button>
+          <button 
+            className='absolute top-[88vh] sm:top-[50vh] left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            onClick={() => navigateImage(-1)}
+          >
+            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+              &#8592;
+            </h1>
+          </button>
         </div>
       </div>        
+      
       )}
       <div className="container mx-auto p-8 text-white2">
         <h1 className="text-4xl text-blueLIGHT font-bold mt-[5rem] mb-8">{project.title}</h1>
