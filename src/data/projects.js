@@ -120,9 +120,9 @@ const projects = [
     videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
     tags: ['Game Development', 'Illustration'],
     subTags: ['Krita', 'Unity'],
-    credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry'],
-    creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer'],
-    creditSource: ['https://jamesbryan.itch.io/', 'https://slimshaney.itch.io/', 'https://papajepo.itch.io/', 'https://delta-rayquaza.itch.io/'],
+    credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry', 'Cormac FitzPatrick'],
+    creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer', 'Music'],
+    creditSource: ['https://jamesbryan.itch.io/', 'https://slimshaney.itch.io/', 'https://papajepo.itch.io/', 'https://delta-rayquaza.itch.io/', ' https://www.instagram.com/cormacfitzz/?igshid=n09wsabj1bol'],
   },
   {
     id: 8,
