@@ -7,6 +7,7 @@ import ThreeDScene from './ThreeDScene';
 
 const Login = () => {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
+  const [selectedSubtags, setSelectedSubtags] = useState([]);
   const [featuredProject, setFeaturedProject] = useState(null);
   const [featuredSocial, setFeaturedSocial] = useState([]);
 
@@ -20,11 +21,31 @@ const Login = () => {
     setFeaturedSocial(social);
   }, []);
 
-  const filteredProjects = selectedTag === 'All' 
-    ? projectsData 
-    : projectsData.filter((project) => project.tags.includes(selectedTag));
-
   const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications'];
+
+  // Extract unique subtags based on the selected primary tag
+  const availableSubtags = Array.from(new Set(
+    projectsData
+      .filter((project) => project.tags.includes(selectedTag))
+      .flatMap((project) => project.subTags)
+  ));
+
+  // Handle subtag selection
+  const toggleSubtag = (subtag) => {
+    if (selectedSubtags.includes(subtag)) {
+      setSelectedSubtags(selectedSubtags.filter((tag) => tag !== subtag));
+    } else {
+      setSelectedSubtags([...selectedSubtags, subtag]);
+    }
+  };
+
+  // Filter projects based on selected primary tag and subtags
+  const filteredProjects = selectedTag === 'All'
+    ? projectsData
+    : projectsData.filter((project) =>
+        project.tags.includes(selectedTag) &&
+        (selectedSubtags.length === 0 || project.subTags.some((tag) => selectedSubtags.includes(tag)))
+      );
 
   return (
     <div className="bg-midnight">
@@ -67,18 +88,16 @@ const Login = () => {
           )}
         </div>
         <div className='lg:mb-[20rem] md:mb-[20rem] mb-[15rem]'>
-          {/* <img src='./imgs/BluBox.png' className='absolute lg:mt-[5rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:mt-[5rem] mt-[4rem] w-[12.5rem] h-[8rem]'/>
-          <img src='./imgs/PinkBox.png' className='absolute lg:ml-[15rem] lg:w-[23rem] lg:h-[12rem] md:w-[20rem] md:h-[11rem] md:ml-[15rem] ml-[9rem] w-[12.5rem] h-[8rem]'/> */}
           <img src='./imgs/BluNPinkBox.png' className='absolute w-[85vw] sm:h-[30vh] sm:min-h-[15rem] sm:max-h-[10rem] h-[20vh] md:w-[35rem]'/>
           <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
-        <div className='hidden ml-[57vw] mt-[-27rem] justify-end md:block absolute'>
+        <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-27rem] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
             <Link key={social.id} to={social.URL}>
               <div className='flex'>
-                <div className='mx-[1rem] w-[13vw] text-right'>
+                <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
                   <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
-                  <p className="mb-4 ">{social.description}</p>
+                  <p className="mb-4">{social.description}</p>
                 </div>
                 <img src={social.imageURL} alt={social.title} className="w-[6rem] h-[6rem] object-cover mb-4" />
               </div>              
@@ -95,11 +114,31 @@ const Login = () => {
             <button
               key={tag}
               className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-midnight text-white2 border-[1px] border-blueLIGHT' : 'bg-blue-500 text-white2 border-[1px] border-pink'}`}
-              onClick={() => setSelectedTag(tag)}
+              onClick={() => {
+                setSelectedTag(tag);
+                setSelectedSubtags([]);
+              }}
             >
               {tag}
             </button>
           ))}
+          {(selectedTag != 'All') ? (
+            <>
+            <br/>
+            <br/>
+            <a>Tools:</a>
+            {/* Display subtags based on the selected primary tag */}
+            {selectedTag !== 'All' && availableSubtags.map((subtag) => (
+              <button
+                key={subtag}
+                className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
+                onClick={() => toggleSubtag(subtag)}
+              >
+                {subtag}
+              </button>
+            ))}
+          </>
+          ) : null}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (

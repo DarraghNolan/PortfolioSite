@@ -9,7 +9,6 @@ const DetailsProject = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [zoomedIn, setZoomedIn] = useState(false);
 
   const navigate = useNavigate()
 
@@ -119,6 +118,16 @@ const DetailsProject = () => {
     ) : (
       <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
     )}
+      <div className='flex flex-wrap gap-8 my-[2rem]'>
+          <h2 className='text-xl'>Tools used:</h2>
+          {project.subTags.map((tools, index) => (
+          <div key={index}>
+            <h3 className='text-xl text-blueLIGHT'>
+              {tools}
+            </h3>
+          </div>
+        ))}
+      </div>
       <div className="flex flex-wrap gap-8">
         {project.contentURL.map((content, index) => (
           <img
@@ -130,6 +139,26 @@ const DetailsProject = () => {
           />
         ))}
       </div>
+      {project.credits && project.creditCategory && project.creditSource ? (
+        <>
+      <div className='flex flex-wrap gap-8 my-[2rem]'>
+        <h2 className='text-xl'>Collaborators:</h2>
+        <br/>
+        {project.credits.map((name, index) => (
+        <div key={index}>
+          <a className='text-xl'>
+            {project.creditCategory[index]}
+          </a>
+          <a className='text-xl'>: </a>
+          <a className='text-xl text-pink underline' href={project.creditSource[index]}>
+            {name}
+          </a>
+        </div>
+        ))}
+      </div>
+        </>
+      ) : null}
+      
       <div>        
       {/* <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
         {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(

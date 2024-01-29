@@ -8,9 +8,6 @@ const projects = [
       'https://cdnb.artstation.com/p/assets/images/images/071/012/495/large/darragh-nolan-d-o.jpg',
       'https://cdna.artstation.com/p/assets/images/images/071/012/510/large/darragh-nolan-theft.jpg',
       'https://cdnb.artstation.com/p/assets/images/images/071/012/505/large/darragh-nolan-note.jpg',
-      // 'https://i.ibb.co/71zrT6w/Theft.png',
-      // 'https://i.ibb.co/Zx0rXvP/D-O.png',
-      // 'https://i.ibb.co/gmRgSQF/Note.png',
       'https://i.ibb.co/KWmqpTG/D-OIdleS.png',
       'https://i.ibb.co/5XDw9pF/D-OPressed-S.png',
       'https://i.ibb.co/1M1LZLY/D-OThumbnail-S.png',
@@ -23,6 +20,7 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
     tags: ['UI Art', 'Web Development', 'UX', 'Mobile Applications'],
+    subTags: ['React.Js', 'SQL', 'Express.Js', 'Node.Js', 'Illustrator', 'Krita'],
     // Add more project details as needed
   },
   {
@@ -43,6 +41,7 @@ const projects = [
       'https://pbs.twimg.com/media/EV2L1JPXgAIeZ8X?format=jpg&name=4096x4096',
     ],
     tags: ['Illustration'],
+    subTags: [ 'Krita', 'Photoshop'],
     // Add more project details as needed
   },
   {
@@ -57,6 +56,7 @@ const projects = [
     ],
     videoURL: 'https://www.youtube.com/embed/TXBZrwJOOq8?si=BuOOmhM_3IGzAICd',
     tags: ['3D Animation'],
+    subTags: ['Blender', 'Substance Painter'],
   },
   {
     id: 4,
@@ -72,6 +72,7 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
     tags: ['UI Art', 'Web Development', 'UX'],
+    subTags: ['HTML', 'Illustrator', 'Krita', 'Photoshop'],
   },
   {
     id: 5,
@@ -82,6 +83,7 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
     tags: ['Web Development', 'UX', 'Mobile Applications'],
+    subTags: ['Angular', 'Android Studio', 'PHP', 'Node.Js'],
   },
   {
     id: 6,
@@ -97,6 +99,10 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
     tags: ['Game Development', 'UX', 'Mobile Applications'],
+    subTags: ['Unity', 'C#'],
+    credits: ['Sonali Mathur', 'Karan Gupta'],
+    creditCategory: ['Art', 'Design'],
+    creditSource: ['https://www.instagram.com/sonalixart/', 'https://www.linkedin.com/in/karan-gupta-designer/'],
   },
   {
     id: 7,
@@ -113,6 +119,10 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
     tags: ['Game Development', 'Illustration'],
+    subTags: ['Krita', 'Unity'],
+    credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry'],
+    creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer'],
+    creditSource: ['https://jamesbryan.itch.io/', 'https://slimshaney.itch.io/', 'https://papajepo.itch.io/', 'https://delta-rayquaza.itch.io/'],
   },
   {
     id: 8,
@@ -141,6 +151,10 @@ const projects = [
       // Add properties for other models
     ],
     tags: ['Game Development', '3D Animation'],
+    subTags: ['Blender', 'Substance Painter', '3DS Max', 'Krita', 'Unity'],
+    credits: ['James Bryan', 'Steven Briscese', 'Sarah Long', 'James Skinner', 'Blue Diamond Gaming LLC'],
+    creditCategory: ['Robotic Arm Model', 'Lurker Model and Textures', 'Gauntlets Model and Textures', 'Weapons Models', 'Harbinger Assets'],
+    creditSource: ['https://www.jamesbryan.net', 'https://briscesesteven.wixsite.com', 'https://www.artstation.com/co2inferno', 'https://www.artstation.com/jamesskinner', 'https://bdsgaming.net'],
   },
   // Add more projects as needed
 ];
