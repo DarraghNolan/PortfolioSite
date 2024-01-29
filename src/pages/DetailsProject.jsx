@@ -122,7 +122,7 @@ const DetailsProject = () => {
           <h2 className='text-xl'>Tools used:</h2>
           {project.subTags.map((tools, index) => (
           <div key={index}>
-            <h3 className='text-xl text-blueLIGHT'>
+            <h3 className='text-xl font-bold text-blueLIGHT'>
               {tools}
             </h3>
           </div>
@@ -150,7 +150,7 @@ const DetailsProject = () => {
             {project.creditCategory[index]}
           </a>
           <a className='text-xl'>: </a>
-          <a className='text-xl text-pink underline' href={project.creditSource[index]}>
+          <a className='text-xl text-pink underline font-bold' href={project.creditSource[index]}>
             {name}
           </a>
         </div>

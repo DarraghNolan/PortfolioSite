@@ -131,7 +131,7 @@ const Login = () => {
             {selectedTag !== 'All' && availableSubtags.map((subtag) => (
               <button
                 key={subtag}
-                className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
+                className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full font-bold ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
                 onClick={() => toggleSubtag(subtag)}
               >
                 {subtag}
