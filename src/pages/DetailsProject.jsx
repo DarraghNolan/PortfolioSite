@@ -177,7 +177,7 @@ const DetailsProject = () => {
       <div>
         <div className="flex justify-center items-center">
           <button 
-            className='top-[88vh] sm:top-[50vh] left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            className='top-[88vh] sm:top-[50vh] mr-[-1.5rem] sm:mr-0 left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
             onClick={() => navigateModel(-1)}
           >
             <h1 className='z-40 text-5xl mt-[-0.5rem]'>
@@ -205,7 +205,7 @@ const DetailsProject = () => {
               )}</div>
             </div>
           <button 
-            className='top-[88vh] sm:top-[50vh] right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            className='top-[88vh] sm:top-[50vh] ml-[-1.5rem] sm:ml-0 right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
             onClick={() => navigateModel(1)}
           >
             <h1 className='z-40 text-5xl mt-[-0.5rem]'>
