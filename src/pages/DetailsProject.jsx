@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import projectsData from '../data/projects';
 import ThreeDScene from './ThreeDScene'; // Import the modified ThreeDScene component
 import { useNavigate } from 'react-router-dom';
-import { FBXLoader } from 'three/addons/loaders/FBXLoader';
-import { TextureLoader } from 'three/src/loaders/TextureLoader';
 
 const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
