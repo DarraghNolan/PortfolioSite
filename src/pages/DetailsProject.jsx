@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import projectsData from '../data/projects';
 import ThreeDScene from './ThreeDScene'; // Import the modified ThreeDScene component
 import { useNavigate } from 'react-router-dom';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader';
+import { TextureLoader } from 'three/src/loaders/TextureLoader';
 
 const DetailsProject = () => {
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [displayedModel, setDisplayedModel] = useState(1);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -53,6 +56,19 @@ const DetailsProject = () => {
     setSelectedImage(project.contentURL[newIndex]);
   };
 
+  const navigateModel = (direction) => {
+    if (!project.ThreeDModels || !project.ThreeDAlbedos || !project.ThreeDOpacitys || !project.modelProperties) {
+      // Ensure that necessary arrays are defined
+      return;
+    }
+  
+    const newIndex = (displayedModel + direction + project.ThreeDModels.length) % project.ThreeDModels.length;
+  
+    if (newIndex >= 0 && newIndex < project.modelProperties.length) {
+      // Ensure that the newIndex is within the bounds of modelProperties array
+      setDisplayedModel(newIndex);
+    }
+  };
 
   return (
     <div className="bg-midnight">
@@ -159,27 +175,47 @@ const DetailsProject = () => {
         </>
       ) : null}
       
-      <div>        
-      {/* <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 h-100">
-        {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
-          project.ThreeDModels.map((model, index) => (
-            <ThreeDScene 
-              key={index}
-              model={model}
-              albedo={project.ThreeDAlbedos[index]}
-              opacity={project.ThreeDOpacitys[index]}
-              posX={project.modelProperties[index].posX}
-              posY={project.modelProperties[index].posY}
-              posZ={project.modelProperties[index].posZ}
-              rotX={project.modelProperties[index].rotX}
-              rotY={project.modelProperties[index].rotY}
-              rotZ={project.modelProperties[index].rotZ}
-              scale={project.modelProperties[index].scale}
-              animSpeed={project.modelProperties[index].animSpeed}
-              className="h-[20rem] w-fit"
-            />
-          ))
-        )}</div> */}
+      <div>   
+      <div>
+        <div className="flex justify-center items-center">
+          <button 
+            className='top-[88vh] sm:top-[50vh] left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            onClick={() => navigateModel(-1)}
+          >
+            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+              &#8592;
+            </h1>
+          </button>
+          <div className="relative">     
+            <div className="gap-8 h-100">
+              {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
+                <ThreeDScene 
+                  key={displayedModel}
+                  model={project.ThreeDModels[displayedModel]}
+                  albedo={project.ThreeDAlbedos[displayedModel]}
+                  opacity={project.ThreeDOpacitys[displayedModel]}
+                  posX={project.modelProperties[displayedModel]?.posX || 0}
+                  posY={project.modelProperties[displayedModel]?.posY || 0}
+                  posZ={project.modelProperties[displayedModel]?.posZ || 0}
+                  rotX={project.modelProperties[displayedModel]?.rotX || 0}
+                  rotY={project.modelProperties[displayedModel]?.rotY || 0}
+                  rotZ={project.modelProperties[displayedModel]?.rotZ || 0}
+                  scale={project.modelProperties[displayedModel]?.scale || 1}
+                  animSpeed={project.modelProperties[displayedModel]?.animSpeed || 1}
+                  className="h-[20rem] w-fit"
+                />
+              )}</div>
+            </div>
+          <button 
+            className='top-[88vh] sm:top-[50vh] right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+            onClick={() => navigateModel(1)}
+          >
+            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+              &#8594;
+            </h1>
+          </button>
+        </div>
+      </div>        
       </div>
       </div>
     </div>

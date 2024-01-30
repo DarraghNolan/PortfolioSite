@@ -66,7 +66,6 @@ const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, pos
         }
       }}
     >
-
       <ambientLight intensity={0.2} />
       <pointLight position={[10, 10, 10]} intensity={0.3} />
       
@@ -79,9 +78,6 @@ const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, pos
           rotation={[rotX, rotY, rotZ]}
           position={[posX, posY, posZ]}
           scale={[scale, scale, scale]}
-
-          // rotation={[-Math.PI / 2, -Math.PI / 25, 0]}
-          // position={[0, 275, -650]}
         />
       )}
     </Canvas>
