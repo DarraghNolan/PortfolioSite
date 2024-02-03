@@ -156,6 +156,28 @@ const projects = [
     creditCategory: ['Robotic Arm Model', 'Lurker Model and Textures', 'Gauntlets Model and Textures', 'Weapons Models', 'Harbinger Assets'],
     creditSource: ['https://www.jamesbryan.net', 'https://briscesesteven.wixsite.com', 'https://www.artstation.com/co2inferno', 'https://www.artstation.com/jamesskinner', 'https://bdsgaming.net'],
   },
+  {
+    id: 9,
+    title: 'Coppercrown',
+    description: 'A 2D detective game I made in 2019 with Unity.',
+    imageURL: 'https://img.itch.zone/aW1nLzMyNjM2NTYucG5n/315x250%23c/ZsrgSo.png',
+    contentURL: [
+      'https://i.ibb.co/x7L90c2/Walter.png',
+      'https://i.ibb.co/LNh7zTS/Coppercrown-Snr.png',
+      'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MjkucG5n/original/8kLIuu.png',
+      'https://i.ibb.co/yR92L3k/Comissioner.png',
+      'https://i.ibb.co/vwJ8G4W/Maria.png',
+      'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzEucG5n/original/LwZUsv.png',
+      'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzIucG5n/original/31veTr.png',
+      'https://i.ibb.co/vXPgFyY/Junior.png',
+      'https://i.ibb.co/89TYBPN/Butler.png',
+      'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzAucG5n/original/9UrCYz.png',
+      'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzMucG5n/original/zySdKT.png'
+    ],
+    videoURL:'https://www.youtube.com/embed/O2gOy2BxbOk?si=UrdI174DX0Eu0R-v',
+    tags: ['Game Development', 'UX'],
+    subTags: ['Unity', 'C#', 'Illustration'],
+  },
   // Add more projects as needed
 ];
 
