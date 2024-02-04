@@ -175,8 +175,11 @@ const projects = [
       'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzMucG5n/original/zySdKT.png'
     ],
     videoURL:'https://www.youtube.com/embed/O2gOy2BxbOk?si=UrdI174DX0Eu0R-v',
-    tags: ['Game Development', 'UX'],
-    subTags: ['Unity', 'C#', 'Illustration'],
+    tags: ['Game Development', 'UX', 'Illustration'],
+    subTags: ['Unity', 'C#', 'Krita'],
+    credits: ['The Curious Case of Count Coppercrown'],
+    creditCategory: ['Itch.io page'],
+    creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
   },
   // Add more projects as needed
 ];
