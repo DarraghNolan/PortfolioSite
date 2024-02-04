@@ -114,20 +114,20 @@ const DetailsProject = () => {
       </div>        
       
       )}
-      <div className="container mx-auto p-8 text-white2">
-        <h1 className="text-4xl text-blueLIGHT font-bold mt-[5rem] mb-8">{project.title}</h1>
-        <p>{project.description}</p>
-        
-        {project.videoURL ? (
-        <iframe 
-          width="560"
-          height="315"
-          src={project.videoURL}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          className="lg:w-full lg:h-[40rem] w-full h-[12rem] my-4"
+  <div className="container mx-auto p-8 text-white2">
+    <h1 className="text-4xl text-blueLIGHT font-bold mt-[5rem] mb-8">{project.title}</h1>
+    <p>{project.description}</p>
+    
+    {project.videoURL ? (
+    <iframe 
+      width="560"
+      height="315"
+      src={project.videoURL}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      className="lg:w-full lg:h-[40rem] w-full h-[12rem] my-4"
       />
     ) : (
       <img src={project.imageURL} alt={project.title} className="lg:w-6/12 h-6/12 w-full h-4/12 my-4" />
@@ -174,47 +174,49 @@ const DetailsProject = () => {
       ) : null}
       
       <div>   
-      <div>
-        <div className="flex justify-center items-center">
-          <button 
-            className='top-[88vh] sm:top-[50vh] mr-[-1.5rem] sm:mr-0 left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
-            onClick={() => navigateModel(-1)}
-          >
-            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
-              &#8592;
-            </h1>
-          </button>
-          <div className="relative">     
-            <div className="gap-8 h-100">
-              {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys &&(
-                <ThreeDScene 
-                  key={displayedModel}
-                  model={project.ThreeDModels[displayedModel]}
-                  albedo={project.ThreeDAlbedos[displayedModel]}
-                  opacity={project.ThreeDOpacitys[displayedModel]}
-                  posX={project.modelProperties[displayedModel]?.posX || 0}
-                  posY={project.modelProperties[displayedModel]?.posY || 0}
-                  posZ={project.modelProperties[displayedModel]?.posZ || 0}
-                  rotX={project.modelProperties[displayedModel]?.rotX || 0}
-                  rotY={project.modelProperties[displayedModel]?.rotY || 0}
-                  rotZ={project.modelProperties[displayedModel]?.rotZ || 0}
-                  scale={project.modelProperties[displayedModel]?.scale || 1}
-                  animSpeed={project.modelProperties[displayedModel]?.animSpeed || 1}
-                  className="h-[20rem] w-fit"
-                />
-              )}</div>
+      {project.ThreeDModels && project.ThreeDAlbedos && project.ThreeDOpacitys ? (
+        <div >
+          <div className="relative">            
+            <div className="gap-8 h-100 flex justify-center items-center">
+              <button 
+                className='top-[88vh] sm:top-[50vh] mr-[-1.5rem] sm:mr-0 left-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+                onClick={() => navigateModel(-1)}
+              >
+                <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+                  &#8592;
+                </h1>
+              </button>
+              <ThreeDScene 
+                key={displayedModel}
+                model={project.ThreeDModels[displayedModel]}
+                albedo={project.ThreeDAlbedos[displayedModel]}
+                opacity={project.ThreeDOpacitys[displayedModel]}
+                posX={project.modelProperties[displayedModel]?.posX || 0}
+                posY={project.modelProperties[displayedModel]?.posY || 0}
+                posZ={project.modelProperties[displayedModel]?.posZ || 0}
+                rotX={project.modelProperties[displayedModel]?.rotX || 0}
+                rotY={project.modelProperties[displayedModel]?.rotY || 0}
+                rotZ={project.modelProperties[displayedModel]?.rotZ || 0}
+                scale={project.modelProperties[displayedModel]?.scale || 1}
+                animSpeed={project.modelProperties[displayedModel]?.animSpeed || 1}
+                className="h-[20rem] w-fit"
+              />
+              <button 
+                className='top-[88vh] sm:top-[50vh] ml-[-1.5rem] sm:ml-0 right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
+                onClick={() => navigateModel(1)}
+              >
+                <h1 className='z-40 text-5xl mt-[-0.5rem]'>
+                  &#8594;
+                </h1>
+              </button>
             </div>
-          <button 
-            className='top-[88vh] sm:top-[50vh] ml-[-1.5rem] sm:ml-0 right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
-            onClick={() => navigateModel(1)}
-          >
-            <h1 className='z-40 text-5xl mt-[-0.5rem]'>
-              &#8594;
-            </h1>
-          </button>
-        </div>
-      </div>        
-      </div>
+          </div>
+        </div>     
+                
+              ) : (
+                <div></div>
+              )}
+          </div>
       </div>
     </div>
   );
