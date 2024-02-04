@@ -177,8 +177,8 @@ const projects = [
     videoURL:'https://www.youtube.com/embed/O2gOy2BxbOk?si=UrdI174DX0Eu0R-v',
     tags: ['Game Development', 'UX', 'Illustration'],
     subTags: ['Unity', 'C#', 'Krita'],
-    credits: ['The Curious Case of Count Coppercrown'],
-    creditCategory: ['Itch.io page'],
+    credits: ['Darragh Nolan','The Curious Case of Count Coppercrown'],
+    creditCategory: ['Creator'],
     creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
   },
   // Add more projects as needed
