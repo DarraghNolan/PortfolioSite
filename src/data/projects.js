@@ -178,7 +178,7 @@ const projects = [
     tags: ['Game Development', 'UX', 'Illustration'],
     subTags: ['Unity', 'C#', 'Krita'],
     credits: ['Darragh Nolan','The Curious Case of Count Coppercrown'],
-    creditCategory: ['Creator'],
+    creditCategory: ['Creator','Game Source'],
     creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
   },
   // Add more projects as needed
