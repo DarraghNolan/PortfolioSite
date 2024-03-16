@@ -181,6 +181,24 @@ const projects = [
     creditCategory: ['Creator','Game Source'],
     creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
   },
+  {
+    id: 10,
+    title: 'KANISHA',
+    description: 'Some illustrations and designs I did for the band KANISHA.',
+    imageURL: 'https://i.ibb.co/rkRkbYN/Logo-Plain.jpg',
+    contentURL: [
+      'https://i.ibb.co/k2cRB5v/Kanish-Poster-Minimilist-2-01.jpg',
+      'https://i.ibb.co/JB0bksp/Kanish-Poster-Square-Minimilist-02.jpg',
+      'https://i.ibb.co/Gnv01yk/Kanish-Poster-01-01-01.jpg',
+      'https://i.ibb.co/gDqx9gN/Logo-04-03.jpg',
+      'https://i.ibb.co/rkRkbYN/Logo-Plain.jpg',
+    ],
+    tags: ['Illustration'],
+    subTags: ['Illustrator', 'Krita'],
+    credits: ['Darragh Nolan','KANISHA'],
+    creditCategory: ['Creator','Game Source'],
+    // creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
+  },
   // Add more projects as needed
 ];
 
