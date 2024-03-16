@@ -199,6 +199,27 @@ const projects = [
     creditCategory: ['Creator','Game Source'],
     // creditSource: ['https://dazariath.itch.io/the-curious-case-of-count-coppercrown'],
   },
+  {
+    id: 11,
+    title: 'Parsnip Pops',
+    description: 'A small game I made in 2023.',
+    imageURL: 'https://i.ibb.co/HnjqZtC/Screenshot-2024-03-16-070237.png',
+    contentURL: [
+      'https://i.ibb.co/Qb8BkzN/GameLogo.png',
+      'https://i.ibb.co/CQMpgJp/Game-Asset2.png',
+      'https://i.ibb.co/9qwmx9m/Game-Asset1.png',
+      'https://i.ibb.co/Ks1c7YN/Screenshot-2024-03-16-070342.png',
+      'https://i.ibb.co/wM072WN/Screenshot-2024-03-16-065913.png',
+      'https://i.ibb.co/vLkBwpR/Screenshot-2024-03-16-070208.png',
+      'https://i.ibb.co/GkMzLkP/Screenshot-2024-03-16-0702212.png',
+      'https://i.ibb.co/HnjqZtC/Screenshot-2024-03-16-070237.png',
+    ],
+    tags: ['Illustration', 'Game Development', 'Mobile Development'],
+    subTags: ['Illustrator', 'Krita', 'Unity'],
+    credits: ['Darragh Nolan','Eoin McSharry', 'Caoimhe Hill'],
+    creditCategory: ['Artist','Designer','Programmer'],
+    creditSource: ['https://dazariath.itch.io','https://delta-rayquaza.itch.io/'],
+  },
   // Add more projects as needed
 ];
 
