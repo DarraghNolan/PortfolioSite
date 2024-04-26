@@ -136,6 +136,7 @@ const projects = [
     ThreeDModels: [
       './mdls/Squirtle.fbx',
       './mdls/FlyFella.fbx',
+      // './mdls/KSGunV2.fbx',
     ],
     ThreeDAlbedos: [
       './txtrs/SquirtleAlbedo.png',
