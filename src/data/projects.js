@@ -136,18 +136,21 @@ const projects = [
     ThreeDModels: [
       './mdls/Squirtle.fbx',
       './mdls/FlyFella.fbx',
-      // './mdls/KSGunV2.fbx',
+      './mdls/KSGunV2.fbx',
     ],
     ThreeDAlbedos: [
       './txtrs/SquirtleAlbedo.png',
+      './txtrs/FlyFellaAlbedo.png',
       './txtrs/FlyFellaAlbedo.png',
     ],
     ThreeDOpacitys: [
       './txtrs/SquirtleOpacity.png',
       './txtrs/FlyFellaOpacity.png',
+      './txtrs/FlyFellaAlbedo.png',
     ],
     modelProperties: [
       { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.02 },
+      { posX: 0, posY: 500, posZ: -1500, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -2, animSpeed: 0.02 },
       { posX: 0, posY: 500, posZ: -1500, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -2, animSpeed: 0.02 },
       // Add properties for other models
     ],

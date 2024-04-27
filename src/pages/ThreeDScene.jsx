@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, startTransition } from 'react';
 import { Canvas, useLoader } from 'react-three-fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
@@ -14,35 +14,37 @@ const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, pos
 
   useEffect(() => {
     const loadModel = async () => {
-      console.log('Loading albedo texture:', albedo);
-      fbxModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material.map = albedoTexture;
+      startTransition(() => {
+        console.log('Loading albedo texture:', albedo);
+        fbxModel.traverse((child) => {
+          if (child.isMesh) {
+            child.material.map = albedoTexture;
 
-          // Apply opacity texture
-          child.material.alphaMap = opacityTexture;
-          child.material.transparent = true;
-        }
+            // Apply opacity texture
+            child.material.alphaMap = opacityTexture;
+            child.material.transparent = true;
+          }
+        });
+
+        const animations = fbxModel.animations;
+        animations.forEach((clip) => {
+          clip.loop = THREE.LoopRepeat;
+          clip.clampWhenFinished = true;
+        });
+
+        const mixer = new THREE.AnimationMixer(fbxModel);
+        const action = mixer.clipAction(animations[0]);
+        action.play();
+
+        const animate = () => {
+          mixer.update(animSpeed);
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        fbxRef.current = fbxModel;
       });
-
-      const animations = fbxModel.animations;
-      animations.forEach((clip) => {
-        clip.loop = THREE.LoopRepeat;
-        clip.clampWhenFinished = true;
-      });
-
-      const mixer = new THREE.AnimationMixer(fbxModel);
-      const action = mixer.clipAction(animations[0]);
-      action.play();
-
-      const animate = () => {
-        mixer.update(animSpeed);
-        requestAnimationFrame(animate);
-      };
-
-      animate();
-
-      fbxRef.current = fbxModel;
     };
 
     loadModel();
@@ -66,6 +68,7 @@ const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, pos
         }
       }}
     >
+
       <ambientLight intensity={0.2} />
       <pointLight position={[10, 10, 10]} intensity={0.3} />
       
@@ -78,6 +81,9 @@ const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, pos
           rotation={[rotX, rotY, rotZ]}
           position={[posX, posY, posZ]}
           scale={[scale, scale, scale]}
+
+          // rotation={[-Math.PI / 2, -Math.PI / 25, 0]}
+          // position={[0, 275, -650]}
         />
       )}
     </Canvas>
