@@ -57,6 +57,22 @@ const Login = () => {
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
+              model={featuredProject.ThreeDModels[2]}
+              albedo={featuredProject.ThreeDAlbedos[2]}
+              opacity={featuredProject.ThreeDOpacitys[2]}
+              posX={featuredProject.modelProperties[2].posX}
+              posY={featuredProject.modelProperties[2].posY}
+              posZ={featuredProject.modelProperties[2].posZ}
+              rotX={featuredProject.modelProperties[2].rotX}
+              rotY={featuredProject.modelProperties[2].rotY}
+              rotZ={featuredProject.modelProperties[2].rotZ}
+              scale={featuredProject.modelProperties[2].scale}
+              animSpeed={featuredProject.modelProperties[2].animSpeed}
+            />
+          )}
+          {featuredProject && (
+            <ThreeDScene
+              key={featuredProject.id}
               model={featuredProject.ThreeDModels[1]}
               albedo={featuredProject.ThreeDAlbedos[1]}
               opacity={featuredProject.ThreeDOpacitys[1]}
@@ -70,6 +86,8 @@ const Login = () => {
               animSpeed={featuredProject.modelProperties[1].animSpeed}
             />
           )}
+        </div>
+        <div className="hidden">
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
