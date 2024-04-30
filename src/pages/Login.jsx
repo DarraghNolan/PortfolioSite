@@ -4,6 +4,7 @@ import socialsData from '../data/socials';
 import '../index.css';
 import { Link } from 'react-router-dom';
 import ThreeDScene from './ThreeDScene';
+import GLTF3DScene from './GLTF3DScene';
 
 const Login = () => {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
@@ -86,6 +87,9 @@ const Login = () => {
               animSpeed={featuredProject.modelProperties[1].animSpeed}
             />
           )}
+        </div>
+        <div>
+         <GLTF3DScene/> 
         </div>
         <div className="hidden">
           {featuredProject && (
