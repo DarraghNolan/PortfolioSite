@@ -111,15 +111,16 @@ const Login = () => {
         </div>
         <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-27rem] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
-            <Link key={social.id} to={social.URL}>
-              <div className='flex'>
-                <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
-                  <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
-                  <p className="mb-4">{social.description}</p>
-                </div>
-                <img src={social.imageURL} alt={social.title} className="w-[6rem] h-[6rem] object-cover mb-4" />
-              </div>              
-            </Link>
+            <div className='flex' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
+              <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
+                <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
+                <p className="mb-4">{social.description}</p>
+              </div>
+              <img 
+                src={social.imageURL} 
+                alt={social.title} 
+                className="w-[6rem] h-[6rem] object-cover mb-4" />
+            </div>
           ))}
         </div>
         <h1 className="text-5xl font-bold mb-[2.5rem]">
