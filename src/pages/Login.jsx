@@ -68,6 +68,7 @@ const Login = () => {
               rotZ={featuredProject.modelProperties[2].rotZ}
               scale={featuredProject.modelProperties[2].scale}
               animSpeed={featuredProject.modelProperties[2].animSpeed}
+              isAnimated={featuredProject.modelProperties[2].isAnimated}
             />
           )}
           {featuredProject && (
@@ -84,6 +85,7 @@ const Login = () => {
               rotZ={featuredProject.modelProperties[1].rotZ}
               scale={featuredProject.modelProperties[1].scale}
               animSpeed={featuredProject.modelProperties[1].animSpeed}
+              isAnimated={featuredProject.modelProperties[1].isAnimated}
             />
           )}
         </div>
@@ -102,6 +104,24 @@ const Login = () => {
               rotZ={featuredProject.modelProperties[0].rotZ}
               scale={featuredProject.modelProperties[0].scale}
               animSpeed={featuredProject.modelProperties[0].animSpeed}
+              isAnimated={featuredProject.modelProperties[0].isAnimated}
+            />
+          )}
+          {featuredProject && (
+            <ThreeDScene
+              key={featuredProject.id}
+              model={featuredProject.ThreeDModels[3]}
+              albedo={featuredProject.ThreeDAlbedos[3]}
+              opacity={featuredProject.ThreeDOpacitys[3]}
+              posX={featuredProject.modelProperties[3].posX}
+              posY={featuredProject.modelProperties[3].posY}
+              posZ={featuredProject.modelProperties[3].posZ}
+              rotX={featuredProject.modelProperties[3].rotX}
+              rotY={featuredProject.modelProperties[3].rotY}
+              rotZ={featuredProject.modelProperties[3].rotZ}
+              scale={featuredProject.modelProperties[3].scale}
+              animSpeed={featuredProject.modelProperties[3].animSpeed}
+              isAnimated={featuredProject.modelProperties[3].isAnimated}
             />
           )}
         </div>
@@ -111,7 +131,7 @@ const Login = () => {
         </div>
         <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-27rem] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
-            <div className='flex' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
+            <div className='flex cursor-pointer' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
               <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
                 <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
                 <p className="mb-4">{social.description}</p>
