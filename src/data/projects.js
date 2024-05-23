@@ -153,8 +153,8 @@ const projects = [
     ],
     modelProperties: [
       { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -0.1, animSpeed: 0.045, isAnimated: true },
-      { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.045, isAnimated: true },
-      { posX: 0, posY: 500, posZ: -1500, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -2, animSpeed: 0.045, isAnimated: true },
+      { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.025, isAnimated: true },
+      { posX: 0, posY: 500, posZ: -1500, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -2, animSpeed: 0.025, isAnimated: true },
       { posX: -150, posY: -500, posZ: -1250, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -1, animSpeed: 0.045, isAnimated: false },
       // Add properties for other models
     ],
