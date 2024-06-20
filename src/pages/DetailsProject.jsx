@@ -34,7 +34,7 @@ const DetailsProject = () => {
   const backToHome = async (e) =>{
     e.preventDefault();
     try {
-      navigate('/login');
+      navigate('/');
     } catch (err) {
       console.log("Could not get back to home...");
     }

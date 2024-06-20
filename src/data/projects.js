@@ -136,16 +136,16 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
     ThreeDModels: [
-      './mdls/KSGunV2.fbx',
-      './mdls/Squirtle.fbx',
+      './mdls/KSGun.fbx',
+      '../mdls/Squirtle.fbx',
       './mdls/FlyFella.fbx',
       './mdls/BatLurker.fbx',
     ],
     ThreeDAlbedos: [
-      './txtrs/FlyFellaOpacity.png',
+      './txtrs/KSGunAlbedo.png',
       './txtrs/SquirtleAlbedo.png',
       './txtrs/FlyFellaAlbedo.png',
-      './txtrs/FlyFellaAlbedo.png',
+      './txtrs/BatLurkerABO.png',
     ],    
     ThreeDOpacitys: [
       './txtrs/FlyFellaOpacity.png',
@@ -154,7 +154,7 @@ const projects = [
       './txtrs/FlyFellaOpacity.png',
     ],
     modelProperties: [
-      { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -0.1, animSpeed: 0.045, isAnimated: true },
+      { posX: 0, posY: 25, posZ: -800, rotX: Math.PI / 60, rotY: Math.PI / 2, rotZ: Math.PI / 1 , scale: -0.1, animSpeed: 0.03, isAnimated: true },
       { posX: 0, posY: 100, posZ: -1300, rotX: Math.PI / 60, rotY: Math.PI / 1.15, rotZ: Math.PI / 1 , scale: -2, animSpeed: 0.025, isAnimated: true },
       { posX: 0, posY: 500, posZ: -1500, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -2, animSpeed: 0.025, isAnimated: true },
       { posX: -150, posY: -500, posZ: -1250, rotX: Math.PI / 1, rotY: Math.PI / -6, rotZ: Math.PI / -180, scale: -1, animSpeed: 0.045, isAnimated: false },
