@@ -1,16 +1,14 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import Home from './pages/Home';
 const DetailsProject = React.lazy(() => import('./pages/DetailsProject'));
-// import ThreeDScene from './pages/ThreeDScene';
 
 function App() {
-
   return (
     <div className="App">      
       <BrowserRouter>
         <Routes>
-          <Route path="/*" element={<Login />} />
+          <Route path="/*" element={<Home />} />
           
           {/* Wrap lazy-loaded component with Suspense */}
           <Route

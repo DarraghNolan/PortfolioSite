@@ -1,85 +1,82 @@
-import React, { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as THREE from 'three';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { TextureLoader } from 'three';
-import { startTransition } from 'react';
+import React, { useRef, useEffect, Suspense, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { useGLTF, OrbitControls } from '@react-three/drei';
+import { AnimationMixer, Clock, TextureLoader } from 'three';
 
-const ThreeDScene = ({ model, albedo, opacity, rotX, rotY, rotZ, posX, posY, posZ, scale, animSpeed, isAnimated }) => {
-  const fbxRef = useRef();
-  const fbxModel = useLoader(FBXLoader, model);
-  const albedoTexture = useLoader(TextureLoader, albedo);
-  const opacityTexture = useLoader(TextureLoader, opacity);
+function ThreeDScene({ url, albedo, opacity, rotX, rotY, rotZ, posX, posY, posZ, scale, isAnimating, animSpeed, camPosY }) {
+
+  // console.log('URL:', url); // Add this line to log the URL
+  const { scene, animations } = useGLTF(url);
+  const mixer = useRef(null);
+  const clock = useRef(new Clock());
 
   useEffect(() => {
-    const loadModel = async () => {
-      startTransition(() => {
-        console.log('Loading albedo texture:', albedo);
-        fbxModel.traverse((child) => {
-          if (child.isMesh) {
-            child.material.map = albedoTexture;
-            child.material.alphaMap = opacityTexture;
-            child.material.transparent = true;
-          }
-        });
-
-        if (isAnimated) {
-          const animations = fbxModel.animations;
-          if (animations && animations.length > 0) {
-            animations.forEach((clip) => {
-              clip.loop = THREE.LoopRepeat;
-              clip.clampWhenFinished = true;
-            });
-
-            const mixer = new THREE.AnimationMixer(fbxModel);
-            const action = mixer.clipAction(animations[0]);
-            action.play();
-
-            const animate = () => {
-              mixer.update(animSpeed);
-              requestAnimationFrame(animate);
-            };
-
-            animate();
-          }
-        }
-
-        fbxRef.current = fbxModel;
+    if (isAnimating) {
+      mixer.current = new AnimationMixer(scene);
+      animations.forEach((clip) => {
+        const action = mixer.current.clipAction(clip);
+        action.setEffectiveTimeScale(animSpeed); // Set initial animSpeed
+        action.play();
       });
-    };
 
-    loadModel();
-  }, [fbxModel, albedoTexture, opacityTexture, isAnimated, animSpeed]);
+      const animate = () => {
+        if (mixer.current) {
+          requestAnimationFrame(animate);
+          const delta = clock.current.getDelta();
+          mixer.current.update(delta);
+        }
+      };
+
+      animate();
+    }
+
+    return () => {
+      if (mixer.current) {
+        mixer.current.stopAllAction();
+        mixer.current = null;
+      }
+    };
+  }, [scene, animations, isAnimating, animSpeed]);
+
+  useEffect(() => {
+    if (mixer.current) {
+      mixer.current.timeScale = animSpeed;
+    }
+  }, [animSpeed]);
+
+
+  useEffect(() => {
+    const textureLoader = new TextureLoader();
+    const ALBTexture = textureLoader.load(albedo); // Adjust path to your texture
+    const OPYTexture = textureLoader.load(opacity); // Adjust path to your texture
+
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material.map = ALBTexture;
+        child.material.alphaMap = OPYTexture;
+        child.material.transparent = true;
+        child.material.needsUpdate = true;
+      }
+    });
+  }, [scene]);
 
   return (
-    <Canvas
-      camera={{ fov: 60, position: [0, 0, 10], near: 0.1, far: 3250 }}
-      onCreated={({ camera, gl }) => {
-        const controls = new OrbitControls(camera, gl.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.25;
-        controls.screenSpacePanning = false;
-        controls.maxPolarAngle = Math.PI / 2;
-        if (fbxRef.current) {
-          controls.target.copy(fbxRef.current.position);
-        }
-      }}
-    >
-      <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={0.3} />
-
-      {fbxModel && (
-        <primitive
-          object={fbxModel}
-          ref={fbxRef}
+    <Canvas camera={{fov: 30, near:0.5, far:9999}}>
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[50, 50, 50]} intensity={4} />
+      <directionalLight position={[-50, -50, -50]} intensity={3} />
+      <pointLight position={[-5, -5, -5]} intensity={9} />
+      <Suspense fallback={null}>
+        <primitive 
+          object={scene} 
           rotation={[rotX, rotY, rotZ]}
           position={[posX, posY, posZ]}
           scale={[scale, scale, scale]}
         />
-      )}
+        <OrbitControls target={[posX, camPosY, posZ]}/>
+      </Suspense>
     </Canvas>
   );
-};
+}
 
 export default ThreeDScene;

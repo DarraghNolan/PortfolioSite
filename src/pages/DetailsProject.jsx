@@ -1,11 +1,13 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react'; // Import lazy and Suspense
 import projectsData from '../data/projects';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Lazy load the ThreeDScene component
 const ThreeDScene = lazy(() => import('./ThreeDScene'));
 
 const DetailsProject = () => {
+  const location = useLocation(); // Use useLocation hook to access location object
+//   console.log('URL:', location.pathname); // Add this line to log the URL
   const projectId = location.pathname.split("/")[2];
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -69,6 +71,7 @@ const DetailsProject = () => {
       setDisplayedModel(newIndex);
     }
   };
+  
 
   return (
     <div className="bg-midnight">
@@ -191,21 +194,23 @@ const DetailsProject = () => {
               {/* Wrap the ThreeDScene component with Suspense */}
               <Suspense fallback={<div>Loading 3D Scene...</div>}>
                 <ThreeDScene 
-                  key={displayedModel}
-                  model={project.ThreeDModels[displayedModel]}
-                  albedo={project.ThreeDAlbedos[displayedModel]}
-                  opacity={project.ThreeDOpacitys[displayedModel]}
-                  posX={project.modelProperties[displayedModel]?.posX || 0}
-                  posY={project.modelProperties[displayedModel]?.posY || 0}
-                  posZ={project.modelProperties[displayedModel]?.posZ || 0}
-                  rotX={project.modelProperties[displayedModel]?.rotX || 0}
-                  rotY={project.modelProperties[displayedModel]?.rotY || 0}
-                  rotZ={project.modelProperties[displayedModel]?.rotZ || 0}
-                  scale={project.modelProperties[displayedModel]?.scale || 1}
-                  animSpeed={project.modelProperties[displayedModel]?.animSpeed || 1}
-                  className="h-[20rem] w-fit"
+                    key={displayedModel}
+                    url={project.ThreeDModels[displayedModel]}
+                    albedo={project.ThreeDAlbedos[displayedModel]}
+                    opacity={project.ThreeDOpacitys[displayedModel]}
+                    posX={project.modelProperties[displayedModel]?.posX || 0}
+                    posY={project.modelProperties[displayedModel]?.posY || 0}
+                    posZ={project.modelProperties[displayedModel]?.posZ || 0}
+                    rotX={project.modelProperties[displayedModel]?.rotX || 0}
+                    rotY={project.modelProperties[displayedModel]?.rotY || 0}
+                    rotZ={project.modelProperties[displayedModel]?.rotZ || 0}
+                    scale={project.modelProperties[displayedModel]?.scale || 1}
+                    isAnimating={project.modelProperties[displayedModel]?.isAnimating || true}
+                    animSpeed={project.modelProperties[displayedModel]?.animSpeed || 1}
+                    camPosY={project.modelProperties[displayedModel]?.camPosY || 0}
+                    className="h-[20rem] w-fit"
                 />
-              </Suspense>
+                </Suspense>
               <button 
                 className='top-[88vh] sm:top-[50vh] ml-[-1.5rem] sm:ml-0 right-0 m-4 w-[6rem] bg-opacity-60 h-[4rem] border-[1px] text-blueLIGHT border-solid border-pink mx-[4vw] my-[2rem] bg-midnight rounded-full' 
                 onClick={() => navigateModel(1)}
