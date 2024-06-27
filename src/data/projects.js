@@ -136,14 +136,14 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/gXPXQvk9A_4?si=_bFCo65lbc8V2mdf',
     ThreeDModels: [
-      '../models/KSGun.glb',
       '../models/BatLurker.glb',
-      '../models/FlyFella.glb',
-      '../models/Squirtle.glb',
+      '../models/KSGun.glb',
+      '../models/FlyFella2.glb',
+      '../models/Squirtle2.glb',
     ],
     ThreeDAlbedos: [
-      '../textures/KSGun.png',
       '../textures/BatLurkerABO.png',
+      '../textures/KSGun.png',
       '../textures/testABO.png',
       '../textures/SquirtleABO.png',
     ],    
@@ -154,10 +154,10 @@ const projects = [
       '../textures/SquirtleOPY.png',
     ],
     modelProperties: [
+      { posX: 0, posY: 0, posZ: -1500, rotX: Math.PI / 10, rotY: 0, rotZ: 0 , scale: 0.5, animSpeed: 1, isAnimated: true, camPosY: 250 },
       { posX: 0, posY: 0, posZ: -120, rotX: 0, rotY: Math.PI / -2, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: 0 },
-      { posX: 0, posY: 0, posZ: -1500, rotX: Math.PI / 10, rotY: 0, rotZ: 0 , scale: 0.5, animSpeed: 0.025, isAnimated: true, camPosY: 250 },
-      { posX: 0, posY: 0, posZ: -900, rotX: 0, rotY: Math.PI / -1.3, rotZ: Math.PI / -1 , scale: -0.5, animSpeed: 0.025, isAnimated: true, camPosY: -100 },
-      { posX: 0, posY: 0, posZ: -500, rotX: 0, rotY: Math.PI / 1.15, rotZ: Math.PI / -1 , scale: -0.5, animSpeed: 0.025, isAnimated: true, camPosY: 30 },
+      { posX: 0, posY: 0, posZ: -900, rotX: 0, rotY: Math.PI / -1.3, rotZ: Math.PI / -1 , scale: -50, animSpeed: 1, isAnimated: true, camPosY: -100 },
+      { posX: 0, posY: 0, posZ: -500, rotX: 0, rotY: Math.PI / 1.15, rotZ: Math.PI / -1 , scale: -50, animSpeed: 1, isAnimated: true, camPosY: 30 },
       // Add properties for other models
     ],
     tags: ['Game Development', '3D Animation'],
