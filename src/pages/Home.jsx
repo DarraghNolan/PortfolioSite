@@ -122,11 +122,11 @@ function Home() {
             />
           )}          
         </div> */}
-        <div className='lg:mb-[20rem] md:mb-[20rem] mb-[15rem]'>
+        <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem]'>
           <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] sm:h-[30vh] sm:min-h-[15rem] sm:max-h-[10rem] h-[20vh] md:w-[35rem]'/>
           <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
-        <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-27rem] justify-end md:block absolute'>
+        <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-23rem] justify-end md:block absolute'>
           {featuredSocial.map((social) => (
             <div className='flex cursor-pointer' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
               <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
@@ -140,7 +140,8 @@ function Home() {
             </div>
           ))}
         </div>
-        <h1 className="text-5xl font-bold mb-[2.5rem]">
+        <br/>
+        <h1 className="text-5xl font-bold mb-[2.5rem] mt-[3rem]">
           My Work
         </h1>
         <div className="mb-4 flex-auto content-center mt-[1.5rem]">
