@@ -2,10 +2,8 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 const DetailsProject = React.lazy(() => import('./pages/DetailsProject'));
-// import ThreeDScene from './pages/ThreeDScene';
 
 function App() {
-
   return (
     <div className="App">      
       <BrowserRouter>

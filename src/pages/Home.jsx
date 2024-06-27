@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import ThreeDScene from './ThreeDScene';
 import projectsData from '../data/projects';
 import socialsData from '../data/socials';
-import '../index.css';
 import { Link } from 'react-router-dom';
-import ThreeDScene from './ThreeDScene';
 
-const Home = () => {
+function Home() {
   const [selectedTag, setSelectedTag] = useState('All'); // Initial tag is 'all'
   const [selectedSubtags, setSelectedSubtags] = useState([]);
-  const [featuredProject, setFeaturedProject] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animSpeed, setAnimSpeed] = useState(1); // Default speed is 1
   const [featuredSocial, setFeaturedSocial] = useState([]);
+  const [featuredProject, setFeaturedProject] = useState(null);
 
   useEffect(() => {
     // Fetch the project you want to feature (replace 'projectId' with the actual project ID)
@@ -47,53 +48,30 @@ const Home = () => {
         (selectedSubtags.length === 0 || project.subTags.some((tag) => selectedSubtags.includes(tag)))
       );
 
+  const toggleAnimation = () => {
+    setIsAnimating(!isAnimating); // Toggle animation state
+    if (!isAnimating) {
+      setAnimSpeed(0.9); // Reset animSpeed to normal when resuming
+    }
+  };
+
+  const handleSpeedChange = (event) => {
+    const newSpeed = parseFloat(event.target.value);
+    setAnimSpeed(newSpeed); // Update animation speed
+  };
+
+
   return (
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2">
         {/* <h1 className="text-6xl font-bold w-[10rem] mt-[10rem] mb-[-15rem] lg:mb-[-15rem] lg:mt-[8rem] lg:ml-5rem">
           Darragh Nolan
         </h1> */}
-        <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[0] lg:w-[30rem] mb-[-3.5rem]">
+        {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[0] lg:w-[30rem] mb-[-3.5rem]">
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
-              model={featuredProject.ThreeDModels[2]}
-              albedo={featuredProject.ThreeDAlbedos[2]}
-              opacity={featuredProject.ThreeDOpacitys[2]}
-              posX={featuredProject.modelProperties[2].posX}
-              posY={featuredProject.modelProperties[2].posY}
-              posZ={featuredProject.modelProperties[2].posZ}
-              rotX={featuredProject.modelProperties[2].rotX}
-              rotY={featuredProject.modelProperties[2].rotY}
-              rotZ={featuredProject.modelProperties[2].rotZ}
-              scale={featuredProject.modelProperties[2].scale}
-              animSpeed={featuredProject.modelProperties[2].animSpeed}
-              isAnimated={featuredProject.modelProperties[2].isAnimated}
-            />
-          )}
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              model={featuredProject.ThreeDModels[1]}
-              albedo={featuredProject.ThreeDAlbedos[1]}
-              opacity={featuredProject.ThreeDOpacitys[1]}
-              posX={featuredProject.modelProperties[1].posX}
-              posY={featuredProject.modelProperties[1].posY}
-              posZ={featuredProject.modelProperties[1].posZ}
-              rotX={featuredProject.modelProperties[1].rotX}
-              rotY={featuredProject.modelProperties[1].rotY}
-              rotZ={featuredProject.modelProperties[1].rotZ}
-              scale={featuredProject.modelProperties[1].scale}
-              animSpeed={featuredProject.modelProperties[1].animSpeed}
-              isAnimated={featuredProject.modelProperties[1].isAnimated}
-            />
-          )}
-        </div>
-        <div className="hidden">
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              model={featuredProject.ThreeDModels[0]}
+              url={featuredProject.ThreeDModels[0]}
               albedo={featuredProject.ThreeDAlbedos[0]}
               opacity={featuredProject.ThreeDOpacitys[0]}
               posX={featuredProject.modelProperties[0].posX}
@@ -110,23 +88,42 @@ const Home = () => {
           {featuredProject && (
             <ThreeDScene
               key={featuredProject.id}
-              model={featuredProject.ThreeDModels[3]}
-              albedo={featuredProject.ThreeDAlbedos[3]}
-              opacity={featuredProject.ThreeDOpacitys[3]}
-              posX={featuredProject.modelProperties[3].posX}
-              posY={featuredProject.modelProperties[3].posY}
-              posZ={featuredProject.modelProperties[3].posZ}
-              rotX={featuredProject.modelProperties[3].rotX}
-              rotY={featuredProject.modelProperties[3].rotY}
-              rotZ={featuredProject.modelProperties[3].rotZ}
-              scale={featuredProject.modelProperties[3].scale}
-              animSpeed={featuredProject.modelProperties[3].animSpeed}
-              isAnimated={featuredProject.modelProperties[3].isAnimated}
+              url={featuredProject.ThreeDModels[1]}
+              albedo={featuredProject.ThreeDAlbedos[1]}
+              opacity={featuredProject.ThreeDOpacitys[1]}
+              posX={featuredProject.modelProperties[1].posX}
+              posY={featuredProject.modelProperties[1].posY}
+              posZ={featuredProject.modelProperties[1].posZ}
+              rotX={featuredProject.modelProperties[1].rotX}
+              rotY={featuredProject.modelProperties[1].rotY}
+              rotZ={featuredProject.modelProperties[1].rotZ}
+              scale={featuredProject.modelProperties[1].scale}
+              animSpeed={featuredProject.modelProperties[1].animSpeed}
+              isAnimated={featuredProject.modelProperties[1].isAnimated}
             />
           )}
-        </div>
+        </div> */}
+        {/* <div className="hidden">
+          {featuredProject && (
+            <ThreeDScene
+              key={featuredProject.id}
+              model={featuredProject.ThreeDModels[0]}
+              albedo={featuredProject.ThreeDAlbedos[0]}
+              opacity={featuredProject.ThreeDOpacitys[0]}
+              posX={featuredProject.modelProperties[0].posX}
+              posY={featuredProject.modelProperties[0].posY}
+              posZ={featuredProject.modelProperties[0].posZ}
+              rotX={featuredProject.modelProperties[0].rotX}
+              rotY={featuredProject.modelProperties[0].rotY}
+              rotZ={featuredProject.modelProperties[0].rotZ}
+              scale={featuredProject.modelProperties[0].scale}
+              animSpeed={featuredProject.modelProperties[0].animSpeed}
+              isAnimated={featuredProject.modelProperties[0].isAnimated}
+            />
+          )}          
+        </div> */}
         <div className='lg:mb-[20rem] md:mb-[20rem] mb-[15rem]'>
-          <img src='./imgs/BluNPinkBox.png' className='absolute w-[85vw] sm:h-[30vh] sm:min-h-[15rem] sm:max-h-[10rem] h-[20vh] md:w-[35rem]'/>
+          <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] sm:h-[30vh] sm:min-h-[15rem] sm:max-h-[10rem] h-[20vh] md:w-[35rem]'/>
           <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
         <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-27rem] justify-end md:block absolute'>
@@ -195,6 +192,50 @@ const Home = () => {
       </div>
     </div>
   );
-};
+
+  // return (
+  //   <div className="home-container">
+  //     <div className="animation-container">
+  //       {featuredProject && featuredProject.ThreeDModels.map((model, index) => (
+  //         <ThreeDScene 
+  //           key={index}
+  //           url={model}
+  //           albedo={featuredProject.ThreeDAlbedos[index]}
+  //           opacity={featuredProject.ThreeDOpacitys[index]}
+  //           posX={featuredProject.modelProperties[index].posX}
+  //           posY={featuredProject.modelProperties[index].posY}
+  //           posZ={featuredProject.modelProperties[index].posZ}
+  //           rotX={featuredProject.modelProperties[index].rotX}
+  //           rotY={featuredProject.modelProperties[index].rotY}
+  //           rotZ={featuredProject.modelProperties[index].rotZ}
+  //           isAnimating={isAnimating} 
+  //           animSpeed={animSpeed} 
+  //         />
+  //       ))}
+  //     </div>
+  //     <button onClick={toggleAnimation}>
+  //       {isAnimating ? 'Pause Animation' : 'Play Animation'}
+  //     </button>
+  //     <div>
+  //       {/* <label>
+  //         Animation Speed:
+  //         <input
+  //           type="range"
+  //           min="0"
+  //           max="3"
+  //           step="0.1"
+  //           value={animSpeed}
+  //           onChange={handleSpeedChange}
+  //         />
+  //       </label>
+  //       <span>{animSpeed.toFixed(1)}</span> */}
+  //       {/* Display the current speed */}
+  //     </div>
+  //     <div className="other-content">
+  //       {/* Other content of your home page */}
+  //     </div>
+  //   </div>
+  // );
+}
 
 export default Home;
