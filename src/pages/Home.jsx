@@ -53,6 +53,8 @@ function Home() {
               url={featuredProject.ThreeDModels[2]}
               albedo={featuredProject.ThreeDAlbedos[2]}
               opacity={featuredProject.ThreeDOpacitys[2]}
+              metalness={featuredProject.ThreeDMetalness[2]}
+              emissive={featuredProject.ThreeDEmissive[2]}
               posX={featuredProject.modelProperties[2].posX}
               posY={featuredProject.modelProperties[2].posY}
               posZ={featuredProject.modelProperties[2].posZ}
@@ -71,6 +73,8 @@ function Home() {
               url={featuredProject.ThreeDModels[3]}
               albedo={featuredProject.ThreeDAlbedos[3]}
               opacity={featuredProject.ThreeDOpacitys[3]}
+              metalness={featuredProject.ThreeDMetalness[3]}
+              emissive={featuredProject.ThreeDEmissive[3]}
               posX={featuredProject.modelProperties[3].posX}
               posY={featuredProject.modelProperties[3].posY}
               posZ={featuredProject.modelProperties[3].posZ}
@@ -85,7 +89,7 @@ function Home() {
           )}
         </div>
         <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem]'>
-          <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] h-[26vh] sm:min-h-[5rem] sm:max-h-[15rem] md:min-h-[15rem] md:max-h-[30rem] md:h-[20vh] md:w-[35rem]'/>
+          <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] h-[20vh] sm:min-h-[5rem] sm:max-h-[25rem] md:min-h-[15rem] md:max-h-[30rem] md:h-[20vh] md:w-[35rem]'/>
           <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
         <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-32rem] justify-end md:block absolute'>

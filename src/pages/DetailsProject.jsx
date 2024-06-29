@@ -198,6 +198,8 @@ const DetailsProject = () => {
                     url={project.ThreeDModels[displayedModel]}
                     albedo={project.ThreeDAlbedos[displayedModel]}
                     opacity={project.ThreeDOpacitys[displayedModel]}
+                    metalness={project.ThreeDMetalness[displayedModel]}
+                    emissive={project.ThreeDEmissive[displayedModel]}
                     posX={project.modelProperties[displayedModel]?.posX || 0}
                     posY={project.modelProperties[displayedModel]?.posY || 0}
                     posZ={project.modelProperties[displayedModel]?.posZ || 0}

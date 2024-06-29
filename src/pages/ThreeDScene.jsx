@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
-import { AnimationMixer, Clock, TextureLoader } from 'three';
+import { AnimationMixer, Clock, Color, TextureLoader } from 'three';
 
-function ThreeDScene({ url, albedo, opacity, rotX, rotY, rotZ, posX, posY, posZ, scale, isAnimating, animSpeed, camPosY }) {
+function ThreeDScene({ url, albedo, opacity, metalness, roughness, emissive, rotX, rotY, rotZ, posX, posY, posZ, scale, isAnimating, animSpeed, camPosY }) {
 
   // console.log('URL:', url); // Add this line to log the URL
   const { scene, animations } = useGLTF(url);
@@ -49,12 +49,20 @@ function ThreeDScene({ url, albedo, opacity, rotX, rotY, rotZ, posX, posY, posZ,
     const textureLoader = new TextureLoader();
     const ALBTexture = textureLoader.load(albedo); // Adjust path to your texture
     const OPYTexture = textureLoader.load(opacity); // Adjust path to your texture
+    const MTCTexture = textureLoader.load(metalness); // Adjust path to your texture
+    const RNSTexture = textureLoader.load(roughness); // Adjust path to your texture
+    const ESETexture = textureLoader.load(emissive); // Adjust path to your texture
 
     scene.traverse((child) => {
       if (child.isMesh) {
         child.material.map = ALBTexture;
-        child.material.alphaMap = OPYTexture;
+        child.material.alphaMap = OPYTexture; 
         child.material.transparent = true;
+        // child.material.roughness = 0.5; // Adjust roughness to reduce overly reflective appearance
+        // child.material.metalnessMap = MTCTexture;
+        // child.material.emissiveMap = ESETexture;
+        // child.material.emissiveIntensity = 1;
+        // child.material.roughnessMap = RNSTexture;       
         child.material.needsUpdate = true;
       }
     });
@@ -62,10 +70,10 @@ function ThreeDScene({ url, albedo, opacity, rotX, rotY, rotZ, posX, posY, posZ,
 
   return (
     <Canvas camera={{fov: 30, near:0.5, far:9999}}>
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[50, 50, 50]} intensity={4} />
-      <directionalLight position={[-50, -50, -50]} intensity={3} />
-      <pointLight position={[-5, -5, -5]} intensity={9} />
+      <ambientLight intensity={4} />
+      <directionalLight position={[0,camPosY,-100]} rotation={[0,0,0]} intensity={1.5} />
+      <directionalLight position={[0,camPosY,100]} rotation={[0,0,0]} intensity={3} />
+      <pointLight position={[posX+200, camPosY-50, posZ-100]} intensity={9} color={'#f403fc'}/>
       <Suspense fallback={null}>
         <primitive 
           object={scene} 
