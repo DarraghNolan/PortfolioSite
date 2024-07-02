@@ -2,6 +2,7 @@ import React, { useRef, useEffect, Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 import { AnimationMixer, Clock, Color, TextureLoader } from 'three';
+import * as THREE from 'three';
 
 function ThreeDScene({ url, albedo, opacity, metalness, roughness, emissive, rotX, rotY, rotZ, posX, posY, posZ, scale, isAnimating, animSpeed, camPosY }) {
 
@@ -60,8 +61,9 @@ function ThreeDScene({ url, albedo, opacity, metalness, roughness, emissive, rot
         child.material.transparent = true;
         // child.material.roughness = 0.5; // Adjust roughness to reduce overly reflective appearance
         // child.material.metalnessMap = MTCTexture;
-        // child.material.emissiveMap = ESETexture;
-        // child.material.emissiveIntensity = 1;
+        child.material.emissiveMap = ESETexture;
+        child.material.emissive = new THREE.Color(0x00fff7);
+        child.material.emissiveIntensity = 1.5;
         // child.material.roughnessMap = RNSTexture;       
         child.material.needsUpdate = true;
       }
