@@ -20,7 +20,7 @@ function Home() {
     setFeaturedSocial(social);
   }, []);
 
-  const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications'];
+  const tags = ['All', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications', 'UI Art'];
 
   const availableSubtags = Array.from(new Set(
     projectsData

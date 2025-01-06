@@ -47,136 +47,6 @@ const projects = [
     // Add more project details as needed
   },
   {
-    id: 3,
-    title: 'Deft Hands like the Wings of a Butterfly',
-    description: 'A cinemetic I made in 2019.',
-    imageURL: 'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
-    contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
-      'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
-      'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
-    ],
-    videoURL: 'https://www.youtube.com/embed/TXBZrwJOOq8?si=BuOOmhM_3IGzAICd',
-    ThreeDModels: [
-      '../models/Iyrah.glb',
-      '../models/Iyrah.glb',
-    ],
-    ThreeDAlbedos: [
-      '../textures/IyrahABO(1).png',
-      '../textures/IyrahABO(2).png',
-      '../textures/IyrahABO(3).png',
-      '../textures/IyrahABO(4).png',
-      '../textures/IyrahABO(5).png',
-      '../textures/IyrahABO(6).png',
-    ],    
-    ThreeDOpacitys: [
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-    ],
-    ThreeDMetalness: [
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-    ],
-    ThreeDRoughness: [
-      '../textures/testMTC.png',
-      '../textures/testMTC.png',
-      '../textures/testMTC.png',
-      '../textures/testMTC.png',
-      '../textures/testMTC.png',
-      '../textures/testMTC.png',
-    ],
-    ThreeDEmissive: [
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-      '../textures/testOPY.png',
-    ],
-    UVList: 6,
-    modelProperties: [      
-      { posX: 0, posY: 0, posZ: -23, rotX: Math.PI / -25, rotY: Math.PI / 3, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: -4 },      
-      { posX: 0, posY: 0, posZ: -23, rotX: Math.PI / -25, rotY: Math.PI / 3, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: -4 },
-      // Add properties for other models
-    ],
-    tags: ['3D Animation'],
-    subTags: ['Blender', 'Substance Painter'],
-  },
-  {
-    id: 4,
-    title: 'Maguire`s Whiskey Website',
-    description: 'HTML design for a hypothetical artisian Irish Whiskey website that delivers drink kits to customers.',
-    imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
-    contentURL: [
-      'https://cdna.artstation.com/p/assets/images/images/071/197/056/medium/darragh-nolan-mw-favicon.jpg?1704675978',
-      'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
-      'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg',
-      'https://cdnb.artstation.com/p/assets/images/images/071/474/953/medium/darragh-nolan-mw-mobilelandingpage.jpg?1705280292',
-      'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg'
-    ],
-    videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
-    tags: ['UI Art', 'Web Development', 'UX'],
-    subTags: ['HTML', 'Illustrator', 'Krita', 'Photoshop'],
-  },
-  {
-    id: 5,
-    title: 'GrangeMobile App',
-    description: 'A prototype app I made for storing information about lectures, classes, students and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
-    imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
-    contentURL: [
-    ],
-    videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
-    tags: ['Web Development', 'UX', 'Mobile Applications'],
-    subTags: ['Angular', 'Android Studio', 'PHP', 'Node.Js'],
-  },
-  {
-    id: 6,
-    title: 'Post-Apocalyptic Platformer',
-    description: 'A 2D platformer made for Android mobile devices made with Unity. Art by Sonali Mathur, design by Karan Gupta and programming by me.',
-    imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
-    contentURL: [
-      'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
-      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE0OS5qcGc=/347x500/xteN%2Bb.jpg',
-      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MC5qcGc=/347x500/U17K8Q.jpg',
-      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MS5qcGc=/347x500/BEA4lf.jpg',
-      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY3NTc2My5qcGc=/347x500/l9Ln1q.jpg',
-    ],
-    videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
-    tags: ['Game Development', 'UX', 'Mobile Applications'],
-    subTags: ['Unity', 'C#'],
-    credits: ['Sonali Mathur', 'Karan Gupta'],
-    creditCategory: ['Art', 'Design'],
-    creditSource: ['https://www.instagram.com/sonalixart/', 'https://www.linkedin.com/in/karan-gupta-designer/'],
-  },
-  {
-    id: 7,
-    title: 'Neon Demon Illustrations',
-    description: 'Collection of illustrations I made for Neon Demon: A 3D first person shooter I made in college.',
-    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
-    contentURL: [
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',               //NeonDemonBanner
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/409/large/darragh-nolan-billboardadtranscend.jpg?1616620239',   //ConzUmerCola
-      'https://cdna.artstation.com/p/assets/images/images/036/062/402/large/darragh-nolan-billboardaddescend.jpg?1616620233',     //YouAbsoluteTrog
-      'https://cdna.artstation.com/p/assets/images/images/037/052/334/large/darragh-nolan-nightclubaddone.jpg?1619363166',         //NineCircles
-      'https://cdnb.artstation.com/p/assets/images/images/036/062/419/large/darragh-nolan-duanconecptdark-2.jpg?1616620246',       //DuaneSmoking
-      'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'         //Belial
-    ],
-    videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
-    tags: ['Game Development', 'Illustration'],
-    subTags: ['Krita', 'Unity'],
-    credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry', 'Cormac FitzPatrick'],
-    creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer', 'Music'],
-    creditSource: ['https://jamesbryan.itch.io/', 'https://slimshaney.itch.io/', 'https://papajepo.itch.io/', 'https://delta-rayquaza.itch.io/', ' https://www.instagram.com/cormacfitzz/?igshid=n09wsabj1bol'],
-  },
-  {
     id: 8,
     title: 'Animation Reel',
     description: 'Collection of 3D animations I made for over the years',
@@ -257,6 +127,124 @@ const projects = [
     creditSource: ['https://www.jamesbryan.net', 'https://briscesesteven.wixsite.com', 'https://www.artstation.com/co2inferno', 'https://www.artstation.com/jamesskinner', 'https://bdsgaming.net'],
   },
   {
+    id: 4,
+    title: 'Vape Drop',
+    description: 'Some of the features I added to the Vape Drop site as a freelance Web Developer. I added a bulk discount feature and a Blue Light card feature that allowed users to upload an image of their Blue Light card to the site to get 15% off their order.',
+    imageURL: 'https://i.ibb.co/2SjQ1fP/Screenshot-2025-01-06-190004.png',
+    contentURL: [
+      'https://i.ibb.co/34GvT9v/Screenshot-2025-01-06-190004.png',
+      'https://i.ibb.co/qdcBDHQ/Screenshot-2025-01-06-190004.png',
+    ],
+    tags: ['Web Development'],
+    subTags: ['WordPress'],
+    credits: ['Darragh Nolan'],
+    creditCategory: ['Programmer','Designer','UX'],
+    creditSource: ['http://vapedropuk.com/'],
+  },
+  {
+    id: 6,
+    title: 'Post-Apocalyptic Platformer',
+    description: 'A 2D platformer made for Android mobile devices made with Unity. Art by Sonali Mathur, design by Karan Gupta and programming by me.',
+    imageURL: 'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
+    contentURL: [
+      'https://img.itch.zone/aW1nLzE0NTM3NzA0LnBuZw==/347x500/G0%2B8%2Bp.png',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE0OS5qcGc=/347x500/xteN%2Bb.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MC5qcGc=/347x500/U17K8Q.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY2OTE1MS5qcGc=/347x500/BEA4lf.jpg',
+      'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY3NTc2My5qcGc=/347x500/l9Ln1q.jpg',
+    ],
+    videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
+    tags: ['Game Development', 'UX', 'Mobile Applications'],
+    subTags: ['Unity', 'C#'],
+    credits: ['Sonali Mathur', 'Karan Gupta'],
+    creditCategory: ['Art', 'Design'],
+    creditSource: ['https://www.instagram.com/sonalixart/', 'https://www.linkedin.com/in/karan-gupta-designer/'],
+  },
+  {
+    id: 7,
+    title: 'Neon Demon Illustrations',
+    description: 'Collection of illustrations I made for Neon Demon: A 3D first person shooter I made in college.',
+    imageURL: 'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',
+    contentURL: [
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/471/large/darragh-nolan-banner-1.jpg?1616620335',               //NeonDemonBanner
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/409/large/darragh-nolan-billboardadtranscend.jpg?1616620239',   //ConzUmerCola
+      'https://cdna.artstation.com/p/assets/images/images/036/062/402/large/darragh-nolan-billboardaddescend.jpg?1616620233',     //YouAbsoluteTrog
+      'https://cdna.artstation.com/p/assets/images/images/037/052/334/large/darragh-nolan-nightclubaddone.jpg?1619363166',         //NineCircles
+      'https://cdnb.artstation.com/p/assets/images/images/036/062/419/large/darragh-nolan-duanconecptdark-2.jpg?1616620246',       //DuaneSmoking
+      'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'         //Belial
+    ],
+    videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
+    tags: ['Game Development', 'Illustration'],
+    subTags: ['Krita', 'Unity'],
+    credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry', 'Cormac FitzPatrick'],
+    creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer', 'Music'],
+    creditSource: ['https://jamesbryan.itch.io/', 'https://slimshaney.itch.io/', 'https://papajepo.itch.io/', 'https://delta-rayquaza.itch.io/', ' https://www.instagram.com/cormacfitzz/?igshid=n09wsabj1bol'],
+  },
+  {
+    id: 3,
+    title: 'Deft Hands like the Wings of a Butterfly',
+    description: 'A cinemetic I made in 2019.',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
+    contentURL: [
+      'https://cdna.artstation.com/p/assets/images/images/039/681/834/20210719133213/smaller_square/darragh-nolan-screenshot3.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/039/665/135/large/darragh-nolan-screenshot1.jpg?1626570029',
+      'https://cdnb.artstation.com/p/assets/images/images/039/665/655/large/darragh-nolan-screenshot2.jpg?1626572930'
+    ],
+    videoURL: 'https://www.youtube.com/embed/TXBZrwJOOq8?si=BuOOmhM_3IGzAICd',
+    ThreeDModels: [
+      '../models/Iyrah.glb',
+      '../models/Iyrah.glb',
+    ],
+    ThreeDAlbedos: [
+      '../textures/IyrahABO(1).png',
+      '../textures/IyrahABO(2).png',
+      '../textures/IyrahABO(3).png',
+      '../textures/IyrahABO(4).png',
+      '../textures/IyrahABO(5).png',
+      '../textures/IyrahABO(6).png',
+    ],    
+    ThreeDOpacitys: [
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+    ],
+    ThreeDMetalness: [
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+    ],
+    ThreeDRoughness: [
+      '../textures/testMTC.png',
+      '../textures/testMTC.png',
+      '../textures/testMTC.png',
+      '../textures/testMTC.png',
+      '../textures/testMTC.png',
+      '../textures/testMTC.png',
+    ],
+    ThreeDEmissive: [
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+      '../textures/testOPY.png',
+    ],
+    UVList: 6,
+    modelProperties: [      
+      { posX: 0, posY: 0, posZ: -23, rotX: Math.PI / -25, rotY: Math.PI / 3, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: -4 },      
+      { posX: 0, posY: 0, posZ: -23, rotX: Math.PI / -25, rotY: Math.PI / 3, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: -4 },
+      // Add properties for other models
+    ],
+    tags: ['3D Animation'],
+    subTags: ['Blender', 'Substance Painter'],
+  },
+  {
     id: 9,
     title: 'Coppercrown',
     description: 'A 2D detective game I made in 2019 with Unity.',
@@ -319,6 +307,33 @@ const projects = [
     credits: ['Darragh Nolan','Eoin McSharry', 'Caoimhe Hill'],
     creditCategory: ['Artist','Designer','Programmer'],
     creditSource: ['https://dazariath.itch.io','https://delta-rayquaza.itch.io/'],
+  },
+  {
+    id: 12,
+    title: 'Maguire`s Whiskey Website',
+    description: 'HTML design for a hypothetical artisian Irish Whiskey website that delivers drink kits to customers.',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/071/197/056/large/darragh-nolan-mw-favicon.jpg',
+    contentURL: [
+      'https://cdna.artstation.com/p/assets/images/images/071/197/056/medium/darragh-nolan-mw-favicon.jpg?1704675978',
+      'https://cdnb.artstation.com/p/assets/images/images/071/196/927/large/darragh-nolan-logoheader.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/071/198/739/large/darragh-nolan-mw-desktoplandingpage.jpg',
+      'https://cdnb.artstation.com/p/assets/images/images/071/474/953/medium/darragh-nolan-mw-mobilelandingpage.jpg?1705280292',
+      'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg'
+    ],
+    videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
+    tags: ['UI Art', 'Web Development', 'UX'],
+    subTags: ['HTML', 'Illustrator', 'Krita', 'Photoshop'],
+  },
+  {
+    id: 5,
+    title: 'GrangeMobile App',
+    description: 'A prototype app I made for storing information about lectures, classes, students and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
+    imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
+    contentURL: [
+    ],
+    videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
+    tags: ['Web Development', 'UX', 'Mobile Applications'],
+    subTags: ['Angular', 'Android Studio', 'PHP', 'Node.Js'],
   },
   // Add more projects as needed
 ];
