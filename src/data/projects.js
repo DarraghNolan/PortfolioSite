@@ -1,5 +1,21 @@
 const projects = [
   {
+    id: 4,
+    title: 'Emerald Oak Studios',
+    description: 'My Web Development company`s website. Made with WordPress and animations made with Blender. Geometry garden models made by Ryan Singh.',
+    imageURL: 'https://cdna.artstation.com/p/assets/images/images/086/582/000/original/darragh-nolan-gif-01-04-2025-21-49-26.gif?1743540983',
+    contentURL: [
+      'https://cdnb.artstation.com/p/assets/images/images/086/582/125/large/darragh-nolan-screenshot-2025-04-01-220246.jpg?1743541225',
+      'https://cdnb.artstation.com/p/assets/images/images/086/582/197/large/darragh-nolan-screenshot-2025-04-01-220423.jpg?1743541457',
+      'https://cdna.artstation.com/p/assets/images/images/086/568/198/original/darragh-nolan-eos-flowerscene.gif?1743519131',
+    ],
+    tags: ['Web Development', 'UX', '3D Animation', 'UI Art'],
+    subTags: ['WordPress', 'PHP', 'JavaScript', 'HTML', 'JavaScript', 'Krita'],
+    credits: ['EOS','Darragh Nolan','Ryan Singh'],
+    creditCategory: ['Vist the site','Developer','Modeller & Logo Designer'],
+    creditSource: ['https://emeraldoakstudios.co.uk','https://emeraldoakstudios.co.uk','https://vapesmokechill.com'],
+  },
+  {
     id: 1,
     title: 'IncidenTracker',
     description: 'UI for the app IncidenTracker, an app for storing and tracking theft incidents for petrol stations.',
@@ -125,21 +141,6 @@ const projects = [
     credits: ['James Bryan', 'Steven Briscese', 'Sarah Long', 'James Skinner', 'Blue Diamond Gaming LLC'],
     creditCategory: ['Robotic Arm Model', 'Lurker Model and Textures', 'Gauntlets Model and Textures', 'Weapons Models', 'Harbinger Assets'],
     creditSource: ['https://www.jamesbryan.net', 'https://briscesesteven.wixsite.com', 'https://www.artstation.com/co2inferno', 'https://www.artstation.com/jamesskinner', 'https://bdsgaming.net'],
-  },
-  {
-    id: 4,
-    title: 'Vape Drop',
-    description: 'Some of the features I added to the Vape Drop site as a freelance Web Developer. I added a bulk discount feature and a Blue Light card feature that allowed users to upload an image of their Blue Light card to the site to get 15% off their order.',
-    imageURL: 'https://i.ibb.co/2SjQ1fP/Screenshot-2025-01-06-190004.png',
-    contentURL: [
-      'https://i.ibb.co/34GvT9v/Screenshot-2025-01-06-190004.png',
-      'https://i.ibb.co/qdcBDHQ/Screenshot-2025-01-06-190004.png',
-    ],
-    tags: ['Web Development'],
-    subTags: ['WordPress'],
-    credits: ['Darragh Nolan'],
-    creditCategory: ['Programmer','Designer','UX'],
-    creditSource: ['http://vapedropuk.com/'],
   },
   {
     id: 6,
@@ -334,6 +335,21 @@ const projects = [
     videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
     tags: ['Web Development', 'UX', 'Mobile Applications'],
     subTags: ['Angular', 'Android Studio', 'PHP', 'Node.Js'],
+  },
+  {
+    id: 13,
+    title: 'Vape Drop',
+    description: 'Some of the features I added to the Vape Drop site as a freelance Web Developer. I added a bulk discount feature and a Blue Light card feature that allowed users to upload an image of their Blue Light card to the site to get 15% off their order.',
+    imageURL: 'https://i.ibb.co/2SjQ1fP/Screenshot-2025-01-06-190004.png',
+    contentURL: [
+      'https://i.ibb.co/34GvT9v/Screenshot-2025-01-06-190004.png',
+      'https://i.ibb.co/qdcBDHQ/Screenshot-2025-01-06-190004.png',
+    ],
+    tags: ['Web Development'],
+    subTags: ['WordPress'],
+    credits: ['Darragh Nolan'],
+    creditCategory: ['Programmer','Designer','UX'],
+    creditSource: ['http://vapedropuk.com/'],
   },
   // Add more projects as needed
 ];
