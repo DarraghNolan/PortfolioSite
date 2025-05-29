@@ -45,67 +45,46 @@ function Home() {
 
   return (
     <div className="bg-midnight">
-      <div className="container mx-auto p-8 bg-midnight text-white2">
-        <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]">
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              url={featuredProject.ThreeDModels[2]}
-              albedo={featuredProject.ThreeDAlbedos[2]}
-              opacity={featuredProject.ThreeDOpacitys[2]}
-              metalness={featuredProject.ThreeDMetalness[2]}
-              emissive={featuredProject.ThreeDEmissive[2]}
-              posX={featuredProject.modelProperties[2].posX}
-              posY={featuredProject.modelProperties[2].posY}
-              posZ={featuredProject.modelProperties[2].posZ}
-              rotX={featuredProject.modelProperties[2].rotX}
-              rotY={featuredProject.modelProperties[2].rotY}
-              rotZ={featuredProject.modelProperties[2].rotZ}
-              scale={featuredProject.modelProperties[2].scale}
-              animSpeed={animSpeed}
-              isAnimating={isAnimating}
-              camPosY={featuredProject.modelProperties[2].camPosY}
-            />
-          )}
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              url={featuredProject.ThreeDModels[3]}
-              albedo={featuredProject.ThreeDAlbedos[3]}
-              opacity={featuredProject.ThreeDOpacitys[3]}
-              metalness={featuredProject.ThreeDMetalness[3]}
-              emissive={featuredProject.ThreeDEmissive[3]}
-              posX={featuredProject.modelProperties[3].posX}
-              posY={featuredProject.modelProperties[3].posY}
-              posZ={featuredProject.modelProperties[3].posZ}
-              rotX={featuredProject.modelProperties[3].rotX}
-              rotY={featuredProject.modelProperties[3].rotY}
-              rotZ={featuredProject.modelProperties[3].rotZ}
-              scale={featuredProject.modelProperties[3].scale}
-              animSpeed={animSpeed}
-              isAnimating={isAnimating}
-              camPosY={featuredProject.modelProperties[3].camPosY}
-            />
-          )}
-        </div>
+      <div className="container mx-auto p-8 bg-midnight text-white2 pb-20">
+        {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]"></div> */}        
         <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem]'>
           <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] h-[20vh] sm:min-h-[5rem] sm:max-h-[25rem] md:min-h-[15rem] md:max-h-[30rem] md:h-[20vh] md:w-[35rem]'/>
           <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
         </div>
-        <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-32rem] justify-end md:block absolute'>
-          {featuredSocial.map((social) => (
-            <div className='flex cursor-pointer' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
-              <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
-                <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
-                <p className="mb-4">{social.description}</p>
-              </div>
+        <div>
+          <h2 className="text-xl text-center">
+            Howya! My name is Darragh Nolan and I'm web developer from Dublin living in Edinburgh. I did my bachelor's degree is in <span className="font-bold">Game Design</span> and graduated in <span className="font-bold">2021</span>. I was a 3D animator for an indie games company called Blue Diamond, operating with an international team I helped them develop a game called <span className="font-bold">"Harbinger - The Wild Dawn"</span>.             
+          </h2>
+          <br/>
+          <h2 className="text-xl text-center">
+            During my time working there I also worked as a supervisor in a petrol station. I started my master's in <span className="font-bold">Creative Digital Media & UX</span> in <span className="font-bold">2022</span>. While I was doing my master's, I made a web application for my job at the petrol station to store all the theft reports they had.
+          </h2>
+          <h2 className="text-xl text-center font-bold italic">
+            (There were a lot).
+          </h2>
+          <br/>
+          <h2 className="text-xl text-center">
+            After finishing my master's in <span className="font-bold">December 2023</span> I moved to Scotland in <span className="font-bold">May 2024</span> and started a web development company with a local business owner I met. I make websites now for small businesses around Edinburgh with the company, <span className="font-bold">Emerald Oak Studios</span>. 
+          </h2>
+        </div>
+        <div className="fixed bottom-0 left-0 w-full bg-midnight border-t border-pink z-50">
+          <div className="flex justify-evenly items-center py-4 z-50">
+            {featuredSocial.map((social) => (
+              <div
+                key={social.id}
+                className="cursor-pointer"
+                onClick={() => window.open(social.URL, '_blank')}
+              >
               <img 
                 src={social.imageURL} 
                 alt={social.title} 
-                className="w-[6rem] h-[6rem] object-cover mb-4" />
+                className="w-10 h-10 object-contain hover:opacity-75 transition-opacity duration-200" 
+              />
             </div>
           ))}
         </div>
+      </div>
+
         <h1 className="text-5xl font-bold mb-[2.5rem] mt-[3rem]">
           My Work
         </h1>

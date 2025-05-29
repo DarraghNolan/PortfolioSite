@@ -36,7 +36,7 @@ const projects = [
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
     tags: ['UI Art', 'Web Development', 'UX', 'Mobile Applications'],
-    subTags: ['React.Js', 'SQL', 'Express.Js', 'Node.Js', 'Illustrator', 'Krita'],
+    subTags: ['React.Js', 'SQL', 'Express.Js', 'Node.Js', 'Illustrator', 'Krita','JavaScript'],
     // Add more project details as needed
   },
   {
