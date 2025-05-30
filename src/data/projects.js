@@ -328,7 +328,7 @@ const projects = [
   {
     id: 5,
     title: 'GrangeMobile App',
-    description: 'A prototype app I made for storing information about lectures, classes, students and lecturers within the Grangegorman campus. This uses news and weather APIs, a MAMP server to connect to the database and was made with Angular using Android Studio and Ionic.',
+    description: 'A prototype app I made for storing information about lectures, classes, students and lecturers within the Grangegorman campus.',
     imageURL: 'https://www.irishtimes.com/resizer/dTxc-VG4dOsORgqdeDwPyUdviaE=/1600x1200/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/irishtimes/GEZDF3RXYXEXZN2TZELPUSYJFM.jpg',
     contentURL: [
     ],
