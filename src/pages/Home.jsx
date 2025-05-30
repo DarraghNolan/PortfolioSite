@@ -47,9 +47,53 @@ function Home() {
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2 pb-20">
         {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]"></div> */}        
-        <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem] flex justify-center'>
-          <img src='./images/BluNPinkBox.png' className='absolute w-[300px] h-[150px] md:w-[600px] md:h-[300px]'/>
-          <img src='./gifs/Signature.gif' className='absolute w-[320px] md:w-[640px] mt-[30px] md:mt-[60px] ml-[25px] md:ml-[50px]'/>
+        <div className='md:mb-[23rem] mb-[15rem] mt-[3rem] flex justify-center mr-[305px] md:mr-[66.6vw] lg:grid lg:grid-cols-2 lg:mr-[0px]'>
+          <div>
+            <img src='./images/BluNPinkBox.png' className='absolute justify-center w-[300px] h-[150px] md:w-[520px] md:h-[280px]'/>
+            <img src='./gifs/Signature.gif' className='absolute justify-center w-[310px] md:w-[580px] mt-[30px] md:mt-[60px] ml-[15px] md:ml-[10px]'/>
+          </div>          
+          <div className="hidden lg:grid lg:grid-cols-2 lg:gap-[16px] lg:w-[400px] lg:h-[240px] lg:ml-[100px] lg:mb-[-200px]">
+            {featuredProject && (
+              <ThreeDScene
+                key={featuredProject.id}
+                url={featuredProject.ThreeDModels[2]}
+                albedo={featuredProject.ThreeDAlbedos[2]}
+                opacity={featuredProject.ThreeDOpacitys[2]}
+                metalness={featuredProject.ThreeDMetalness[2]}
+                emissive={featuredProject.ThreeDEmissive[2]}
+                posX={featuredProject.modelProperties[2].posX}
+                posY={featuredProject.modelProperties[2].posY}
+                posZ={featuredProject.modelProperties[2].posZ}
+                rotX={featuredProject.modelProperties[2].rotX}
+                rotY={featuredProject.modelProperties[2].rotY}
+                rotZ={featuredProject.modelProperties[2].rotZ}
+                scale={featuredProject.modelProperties[2].scale}
+                animSpeed={animSpeed}
+                isAnimating={isAnimating}
+                camPosY={featuredProject.modelProperties[2].camPosY}
+              />
+            )}
+            {featuredProject && (
+              <ThreeDScene
+                key={featuredProject.id}
+                url={featuredProject.ThreeDModels[3]}
+                albedo={featuredProject.ThreeDAlbedos[3]}
+                opacity={featuredProject.ThreeDOpacitys[3]}
+                metalness={featuredProject.ThreeDMetalness[3]}
+                emissive={featuredProject.ThreeDEmissive[3]}
+                posX={featuredProject.modelProperties[3].posX}
+                posY={featuredProject.modelProperties[3].posY}
+                posZ={featuredProject.modelProperties[3].posZ}
+                rotX={featuredProject.modelProperties[3].rotX}
+                rotY={featuredProject.modelProperties[3].rotY}
+                rotZ={featuredProject.modelProperties[3].rotZ}
+                scale={featuredProject.modelProperties[3].scale}
+                animSpeed={animSpeed}
+                isAnimating={isAnimating}
+                camPosY={featuredProject.modelProperties[3].camPosY}
+              />
+            )}
+          </div>
         </div>
         <div>
           <h2 className="text-xl text-center">
@@ -85,11 +129,11 @@ function Home() {
         </div>
       </div>
 
-        <h1 className="text-5xl font-bold mb-[2.5rem] mt-[3rem]">
+        <h1 className="text-5xl font-bold mb-[80px] mt-[80px] italic flex justify-center content-center">
           My Work
         </h1>
         <div className="mb-4 flex-auto content-center mt-[1.5rem]">
-          <a> Filter By : </a>
+          <a className="text-3xl md:text-sm"> Filter By : </a>
           {tags.map((tag) => (
             <button
               key={tag}
