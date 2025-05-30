@@ -47,9 +47,9 @@ function Home() {
     <div className="bg-midnight">
       <div className="container mx-auto p-8 bg-midnight text-white2 pb-20">
         {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]"></div> */}        
-        <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem]'>
-          <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] h-[20vh] sm:min-h-[5rem] sm:max-h-[25rem] md:min-h-[15rem] md:max-h-[30rem] md:h-[20vh] md:w-[35rem]'/>
-          <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
+        <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem] flex justify-center'>
+          <img src='./images/BluNPinkBox.png' className='absolute w-[300px] h-[150px] md:w-[600px] md:h-[300px]'/>
+          <img src='./gifs/Signature.gif' className='absolute w-[320px] md:w-[640px] mt-[30px] md:mt-[60px] ml-[25px] md:ml-[50px]'/>
         </div>
         <div>
           <h2 className="text-xl text-center">
