@@ -165,9 +165,9 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (
             <Link key={project.id} to={`/detailsproject/${project.id}`}>
-              <div className='border-solid border-[1px] border-pink p-[10px] m-[10px]'>
-                <h2 className="text-xl text-blueLIGHT font-semibold mb-4">{project.title}</h2>
-                <p className="mb-4">{project.description}</p>
+              <div className='border-solid border-[1px] border-pink p-[10px] m-[10px] shadow-none hover:shadow-lg hover:shadow-pink hover:inset-shadow-lg hover:border-[4px] text-xl hover:italic hover:text-2xl'>
+                <h2 className="text-blueLIGHT font-semibold mb-4">{project.title}</h2>
+                <p className="text-sm mb-4 not-italic">{project.description}</p>
                 <img src={project.imageURL} alt={project.title} className="w-full min-h-32 max-h-48 object-cover mb-4" />
               </div>
             </Link>
