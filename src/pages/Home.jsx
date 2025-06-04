@@ -20,7 +20,7 @@ function Home() {
     setFeaturedSocial(social);
   }, []);
 
-  const tags = ['All', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications', 'UI Art'];
+  const tags = ['All', 'Web Dev', 'UX', 'Game Dev', 'Illustration', '3D Animation', 'Mobile Apps', 'UI Art'];
 
   const availableSubtags = Array.from(new Set(
     projectsData
@@ -132,12 +132,12 @@ function Home() {
         <h1 className="text-5xl font-bold mb-[80px] mt-[80px] italic flex justify-center content-center">
           My Work
         </h1>
-        <div className="mb-4 flex-auto content-center mt-[1.5rem]">
-          <a className="text-3xl md:text-sm"> Filter By : </a>
+        <div className="mb-12 mt-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8 ">
+          {/* <a className="text-3xl md:text-sm"> Filter By : </a> */}
           {tags.map((tag) => (
             <button
               key={tag}
-              className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-midnight text-white2 border-[1px] border-blueLIGHT' : 'bg-blue-500 text-white2 border-[1px] border-pink'}`}
+              className={`m-2 w-full px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-midnight text-white2 border-[5px] border-blueLIGHT lg:italic shadow-blueLIGHT shadow-lg' : 'bg-blue-500 text-white2 border-[1px] border-pink'} lg:text-2xl lg:font-bold`}
               onClick={() => {
                 setSelectedTag(tag);
                 setSelectedSubtags([]);
@@ -146,21 +146,19 @@ function Home() {
               {tag}
             </button>
           ))}
-          {(selectedTag !== 'All') && (
-            <>
-              <br/><br/>
-              <a>Tools:</a>
-              {availableSubtags.map((subtag) => (
-                <button
-                  key={subtag}
-                  className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full font-bold ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
-                  onClick={() => toggleSubtag(subtag)}
-                >
-                  {subtag}
-                </button>
-              ))}
-            </>
-          )}
+            {(selectedTag !== 'All') && (
+              <>              
+                {availableSubtags.map((subtag) => (
+                  <button
+                    key={subtag}
+                    className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full font-bold ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
+                    onClick={() => toggleSubtag(subtag)}
+                  >
+                    {subtag}
+                  </button>
+                ))}
+              </>
+            )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (

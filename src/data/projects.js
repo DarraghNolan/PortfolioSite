@@ -2,14 +2,14 @@ const projects = [
   {
     id: 4,
     title: 'Emerald Oak Studios',
-    description: 'My Web Development company`s website. Made with WordPress and animations made with Blender. Geometry garden models made by Ryan Singh.',
+    description: 'My Web Dev company`s website. Made with WordPress and animations made with Blender. Geometry garden models made by Ryan Singh.',
     imageURL: 'https://cdna.artstation.com/p/assets/images/images/086/582/000/original/darragh-nolan-gif-01-04-2025-21-49-26.gif?1743540983',
     contentURL: [
       'https://cdnb.artstation.com/p/assets/images/images/086/582/125/large/darragh-nolan-screenshot-2025-04-01-220246.jpg?1743541225',
       'https://cdnb.artstation.com/p/assets/images/images/086/582/197/large/darragh-nolan-screenshot-2025-04-01-220423.jpg?1743541457',
       'https://cdna.artstation.com/p/assets/images/images/086/568/198/original/darragh-nolan-eos-flowerscene.gif?1743519131',
     ],
-    tags: ['Web Development', 'UX', '3D Animation', 'UI Art'],
+    tags: ['Web Dev', 'UX', '3D Animation', 'UI Art'],
     subTags: ['WordPress', 'PHP', 'JavaScript', 'HTML', 'JavaScript', 'Krita'],
     credits: ['EOS','Darragh Nolan','Ryan Singh'],
     creditCategory: ['Vist the site','Developer','Modeller & Logo Designer'],
@@ -35,7 +35,7 @@ const projects = [
       'https://i.ibb.co/59cfCYV/Note-Thumbnail-S.png'
     ],
     videoURL:'https://www.youtube.com/embed/yXhGysglTLw?si=U6rqGzpswXASJm5a',
-    tags: ['UI Art', 'Web Development', 'UX', 'Mobile Applications'],
+    tags: ['UI Art', 'Web Dev', 'UX', 'Mobile Apps'],
     subTags: ['React.Js', 'SQL', 'Express.Js', 'Node.Js', 'Illustrator', 'Krita','JavaScript'],
     // Add more project details as needed
   },
@@ -136,7 +136,7 @@ const projects = [
       // { posX: 0, posY: 0, posZ: -23, rotX: Math.PI / -25, rotY: Math.PI / 3, rotZ: 0 , scale: 1, animSpeed: 1, isAnimated: true, camPosY: -4 },
       // Add properties for other models
     ],
-    tags: ['Game Development', '3D Animation'],
+    tags: ['Game Dev', '3D Animation'],
     subTags: ['Blender', 'Substance Painter', '3DS Max', 'Krita', 'Unity'],
     credits: ['James Bryan', 'Steven Briscese', 'Sarah Long', 'James Skinner', 'Blue Diamond Gaming LLC'],
     creditCategory: ['Robotic Arm Model', 'Lurker Model and Textures', 'Gauntlets Model and Textures', 'Weapons Models', 'Harbinger Assets'],
@@ -155,7 +155,7 @@ const projects = [
       'https://img.itch.zone/aW1hZ2UvMTgzOTM0Ni8xNDY3NTc2My5qcGc=/347x500/l9Ln1q.jpg',
     ],
     videoURL:'https://www.youtube.com/embed/IbZgBuL-ZUw?si=qL52rFAfvFV3K-9y',
-    tags: ['Game Development', 'UX', 'Mobile Applications'],
+    tags: ['Game Dev', 'UX', 'Mobile Apps'],
     subTags: ['Unity', 'C#'],
     credits: ['Sonali Mathur', 'Karan Gupta'],
     creditCategory: ['Art', 'Design'],
@@ -175,7 +175,7 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/036/062/424/large/darragh-nolan-belileprofilepic.jpg?1616620258'         //Belial
     ],
     videoURL:'https://www.youtube.com/embed/Zim-yXAKP5Y?si=ujGwo5rIJYJ-bQUg',
-    tags: ['Game Development', 'Illustration'],
+    tags: ['Game Dev', 'Illustration'],
     subTags: ['Krita', 'Unity'],
     credits: ['James Bryan', 'Shane Carrol', 'Conor Jespon', 'Eoin McSharry', 'Cormac FitzPatrick'],
     creditCategory: ['Artist and Designer', 'Designer and Programmer', 'Programmer, Designer and Artist', 'Producer, Artist and Designer', 'Music'],
@@ -264,7 +264,7 @@ const projects = [
       'https://img.itch.zone/aW1hZ2UvNjEzNDI4LzMyNjM1MzMucG5n/original/zySdKT.png'
     ],
     videoURL:'https://www.youtube.com/embed/O2gOy2BxbOk?si=UrdI174DX0Eu0R-v',
-    tags: ['Game Development', 'UX', 'Illustration'],
+    tags: ['Game Dev', 'UX', 'Illustration'],
     subTags: ['Unity', 'C#', 'Krita'],
     credits: ['Darragh Nolan','The Curious Case of Count Coppercrown'],
     creditCategory: ['Creator','Game Source'],
@@ -303,7 +303,7 @@ const projects = [
       'https://i.ibb.co/GkMzLkP/Screenshot-2024-03-16-0702212.png',
       'https://i.ibb.co/HnjqZtC/Screenshot-2024-03-16-070237.png',
     ],
-    tags: ['Illustration', 'Game Development', 'Mobile Development'],
+    tags: ['Illustration', 'Game Dev', 'Mobile Dev'],
     subTags: ['Illustrator', 'Krita', 'Unity'],
     credits: ['Darragh Nolan','Eoin McSharry', 'Caoimhe Hill'],
     creditCategory: ['Artist','Designer','Programmer'],
@@ -322,7 +322,7 @@ const projects = [
       'https://cdna.artstation.com/p/assets/images/images/071/196/934/large/darragh-nolan-logoheadermonitor.jpg'
     ],
     videoURL:'https://www.youtube.com/embed/yHCjgjzyGjk?si=hCyaI1GN5Uxsv_uF',
-    tags: ['UI Art', 'Web Development', 'UX'],
+    tags: ['UI Art', 'Web Dev', 'UX'],
     subTags: ['HTML', 'Illustrator', 'Krita', 'Photoshop'],
   },
   {
@@ -333,7 +333,7 @@ const projects = [
     contentURL: [
     ],
     videoURL:'https://www.youtube.com/embed/TYzk-LdKOjs?si=PZs0nOpiIdDeLyNt',
-    tags: ['Web Development', 'UX', 'Mobile Applications'],
+    tags: ['Web Dev', 'UX', 'Mobile Apps'],
     subTags: ['Angular', 'Android Studio', 'PHP', 'Node.Js'],
   },
   {
@@ -345,7 +345,7 @@ const projects = [
       'https://i.ibb.co/34GvT9v/Screenshot-2025-01-06-190004.png',
       'https://i.ibb.co/qdcBDHQ/Screenshot-2025-01-06-190004.png',
     ],
-    tags: ['Web Development'],
+    tags: ['Web Dev'],
     subTags: ['WordPress'],
     credits: ['Darragh Nolan'],
     creditCategory: ['Programmer','Designer','UX'],
