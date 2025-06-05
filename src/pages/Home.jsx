@@ -48,8 +48,8 @@ function Home() {
       <div className="container mx-auto p-8 bg-midnight text-white2 pb-20">
         {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]"></div> */}        
         <div className='md:mb-[23rem] mb-[15rem] mt-[3rem] flex justify-center mr-[305px] md:mr-[66.6vw] lg:grid lg:grid-cols-2 lg:mr-[0px]'>
-          <div>
-            <img src='./images/BluNPinkBox.png' className='absolute justify-center w-[300px] h-[150px] md:w-[520px] md:h-[280px]'/>
+          <div className='ml-[2.5vw]'>
+            <img src='./images/BluNPinkBox.png' className='absolute justify-center w-[300px] h-[150px] md:w-[530px] md:h-[280px]'/>
             <img src='./gifs/Signature.gif' className='absolute justify-center w-[310px] md:w-[580px] mt-[30px] md:mt-[60px] ml-[15px] md:ml-[10px]'/>
           </div>          
           <div className="hidden lg:grid lg:grid-cols-2 lg:gap-[16px] lg:w-[400px] lg:h-[240px] lg:ml-[100px] lg:mb-[-200px]">
