@@ -401,18 +401,13 @@ class Portfolio_3D_Home_Plugin {
         return [
             [
                 'id' => 1,
-                'glb' => '/2026/05/TestRoom.glb',
+                'glb' => '/2026/05/TestRoom1.glb',
                 'railMin' => -2,
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'panels' => [
-                    $this->panel_template('room1-panel1', [-2.25, 1.5, -1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room1-panel2', [-2.25, 1.5, 0], [0, M_PI / 2, 0]),
-                    $this->panel_template('room1-panel3', [-2.25, 1.5, 1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room1-panel4', [2.25, 1.5, -1.25], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room1-panel5', [2.25, 1.5, 0], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room1-panel6', [2.25, 1.5, 1.25], [0, -M_PI / 2, 0]),
+                    $this->panel_template('room1-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
                     'position' => [3.25, 1.5, 0],
@@ -429,12 +424,7 @@ class Portfolio_3D_Home_Plugin {
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'panels' => [
-                    $this->panel_template('room2-panel1', [-2.25, 1.5, -1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room2-panel2', [-2.25, 1.5, 0], [0, M_PI / 2, 0]),
-                    $this->panel_template('room2-panel3', [-2.25, 1.5, 1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room2-panel4', [2.25, 1.5, -1.25], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room2-panel5', [2.25, 1.5, 0], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room2-panel6', [2.25, 1.5, 1.25], [0, -M_PI / 2, 0]),
+                    $this->panel_template('room2-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
                     'position' => [3.25, 1.5, 0],
@@ -445,18 +435,13 @@ class Portfolio_3D_Home_Plugin {
             ],
             [
                 'id' => 3,
-                'glb' => '/2026/05/TestRoom2.glb',
+                'glb' => '/2026/05/TestRoom3.glb',
                 'railMin' => -2,
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'panels' => [
-                    $this->panel_template('room3-panel1', [-2.25, 1.5, -1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room3-panel2', [-2.25, 1.5, 0], [0, M_PI / 2, 0]),
-                    $this->panel_template('room3-panel3', [-2.25, 1.5, 1.25], [0, M_PI / 2, 0]),
-                    $this->panel_template('room3-panel4', [2.25, 1.5, -1.25], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room3-panel5', [2.25, 1.5, 0], [0, -M_PI / 2, 0]),
-                    $this->panel_template('room3-panel6', [2.25, 1.5, 1.25], [0, -M_PI / 2, 0]),
+                    $this->panel_template('room3-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
                     'position' => [3.25, 1.5, 0],

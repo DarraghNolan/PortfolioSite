@@ -1,7 +1,7 @@
 export const rooms = [
   {
     id: 1,
-    glb: '/2026/05/TestRoom.glb',
+    glb: '/2026/05/TestRoom1.glb',
     railMin: -2,
     railMax: 1,
     scrollSpeed: 0.005,
@@ -9,8 +9,8 @@ export const rooms = [
     panels: [
       {
         id: 'room1-panel1',
-        position: [-2.25, 1.5, -1.25],
-        rotation: [0, Math.PI / 2, 0],
+        position: [0, 1.5, 0],
+        rotation: [0, Math.PI, 0],
         // Tier 1 — always visible
         image: '/2026/05/BluNPinkBox.png',
         // Tier 2 — shown when user looks at panel
@@ -39,7 +39,19 @@ export const rooms = [
     railMax: 1,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
-    panels: [],
+    panels: [
+      {
+        id: 'room2-panel1',
+        position: [-1.5, 1.5, 3.5],
+        rotation: [0, Math.PI, 0],
+        image: '/2026/05/BluNPinkBox.png',
+        title: 'Test Panel',
+        caption: 'Room 2 Content',
+        description: 'This is a test panel in room 2.',
+        videoUrl: '',
+        links: []
+      }
+    ],
     navPanel: {
       position: [3.25, 1.5, 0],
       rotation: [0, -Math.PI / 2, 0],
@@ -50,12 +62,24 @@ export const rooms = [
   },
   {
     id: 3,
-    glb: '/2026/05/TestRoom2.glb',
+    glb: '/2026/05/TestRoom3.glb',
     railMin: -2,
     railMax: 1,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
-    panels: [],
+    panels: [
+      {
+        id: 'room3-panel1',
+        position: [-1.5, 1.5, 3.5],
+        rotation: [0, Math.PI, 0],
+        image: '/2026/05/BluNPinkBox.png',
+        title: 'Test Panel',
+        caption: 'Room 3 Content',
+        description: 'This is a test panel in room 3.',
+        videoUrl: '',
+        links: []
+      }
+    ],
     navPanel: {
       position: [3.25, 1.5, 0],
       rotation: [0, -Math.PI / 2, 0],
