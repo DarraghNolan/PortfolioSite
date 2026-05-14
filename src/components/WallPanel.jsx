@@ -8,7 +8,7 @@ import * as THREE from 'three';
 // Tier 2 — title + caption, shown when crosshair is on panel
 // Tier 3 — description, video, links, shown in modal on click
 function WallPanel({
-  position = [0, 1.5, -3],
+  position = [0, 1.5, 0],
   rotation = [0, 0, 0],
   image = null,
   title = 'Panel Title',
