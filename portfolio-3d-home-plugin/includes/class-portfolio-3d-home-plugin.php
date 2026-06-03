@@ -209,29 +209,54 @@ class Portfolio_3D_Home_Plugin {
         );
     }
 
-    public function get_rooms_payload(): WP_REST_Response {
+    public function get_rooms_payload(WP_REST_Request $request): WP_REST_Response {
+        $debug = $this->should_debug($request);
         $saved = get_option(self::OPTION_KEY, []);
         $rooms = $this->merge_with_defaults($saved);
 
+        if ($debug) {
+            error_log('[P3D] get_rooms_payload: start room_count=' . count($rooms));
+        }
+
         foreach ($rooms as &$room) {
             foreach ($room['panels'] as &$panel) {
-                $panel_data = $this->get_panel_page_data($panel['slug'], false);
+                if ($debug) {
+                    error_log('[P3D] get_rooms_payload: processing room_id=' . $room['id'] . ' panel_id=' . ($panel['id'] ?? 'unknown') . ' slug="' . ($panel['slug'] ?? '') . '"');
+                }
 
-                if (!empty($panel_data)) {
-                    $panel['title'] = $panel_data['title'];
-                    $panel['caption'] = $panel_data['caption'];
-                    $panel['description'] = $panel_data['description'];
-                    $panel['videoUrl'] = $panel_data['videoUrl'];
-                    $panel['links'] = $panel_data['links'];
-                    $panel['image'] = $panel_data['heroImage'] ?: $panel['image'];
+                $panel_data = $this->get_panel_page_data($panel['slug'], $debug);
+                $has_real_data = !empty($panel_data) && !isset($panel_data['_early_fail']);
+
+                if ($has_real_data) {
+                    $panel['title'] = $panel_data['title'] ?? '';
+                    $panel['caption'] = $panel_data['caption'] ?? '';
+                    $panel['description'] = $panel_data['description'] ?? '';
+                    $panel['videoUrl'] = $panel_data['videoUrl'] ?? '';
+                    $panel['links'] = $panel_data['links'] ?? [];
+                    $panel['image'] = ($panel_data['heroImage'] ?? '') ?: $panel['image'];
+
+                    if ($debug) {
+                        $panel['_debug'] = $panel_data['_debug'] ?? ['status' => 'populated'];
+                        error_log('[P3D] get_rooms_payload: panel populated title_len=' . strlen((string) $panel['title']) . ' caption_len=' . strlen((string) $panel['caption']) . ' desc_len=' . strlen((string) $panel['description']) . ' links=' . count((array) $panel['links']));
+                    }
                 } else {
                     $panel['title'] = '';
                     $panel['caption'] = '';
                     $panel['description'] = '';
                     $panel['videoUrl'] = '';
                     $panel['links'] = [];
+
+                    if ($debug) {
+                        // Carry through early-fail details if present
+                        $panel['_debug'] = !empty($panel_data) ? $panel_data : ['status' => 'panel_data_empty'];
+                        error_log('[P3D] get_rooms_payload: panel empty. reason=' . ($panel_data['_early_fail'] ?? 'unknown'));
+                    }
                 }
             }
+        }
+
+        if ($debug) {
+            error_log('[P3D] get_rooms_payload: done');
         }
 
         return new WP_REST_Response(['rooms' => $rooms], 200);
@@ -286,6 +311,7 @@ class Portfolio_3D_Home_Plugin {
             'Portfolio3DHomeSettings',
             [
                 'apiEndpoint' => esc_url_raw(rest_url(self::REST_NAMESPACE . '/rooms')),
+                'debugEnabled' => defined('WP_DEBUG') && WP_DEBUG,
                 'uploadsBaseUrl' => esc_url_raw(trailingslashit(wp_upload_dir()['baseurl'] ?? '')),
             ]
         );
@@ -295,21 +321,62 @@ class Portfolio_3D_Home_Plugin {
         $slug = trim($slug);
         if ($slug === '') {
             if ($debug) error_log('[P3D] get_panel_page_data: empty slug, skipping.');
-            return [];
+            return $debug ? ['_early_fail' => 'empty_slug'] : [];
         }
 
         if ($debug) error_log('[P3D] get_panel_page_data: looking up slug "' . $slug . '"');
 
+        // Also try WP_Query as a fallback for get_page_by_path which can miss posts
         $post = get_page_by_path($slug, OBJECT, ['page', 'post']);
-        if (!$post instanceof WP_Post || $post->post_status !== 'publish') {
-            if ($debug) error_log('[P3D] get_panel_page_data: post not found or not published for slug "' . $slug . '"');
-            return [];
+        if (!$post instanceof WP_Post) {
+            $q = new WP_Query([
+                'name'           => $slug,
+                'post_type'      => ['page', 'post'],
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+            ]);
+            $post = $q->have_posts() ? $q->posts[0] : null;
+        }
+
+        if (!$post instanceof WP_Post) {
+            if ($debug) error_log('[P3D] get_panel_page_data: post not found for slug "' . $slug . '"');
+            // List all pages/posts for diagnosis
+            if ($debug) {
+                $all = get_posts(['post_type' => ['page', 'post'], 'post_status' => 'publish', 'posts_per_page' => 50, 'fields' => 'all']);
+                $names = array_map(fn($p) => $p->post_name . '(' . $p->post_status . ')', $all);
+                error_log('[P3D] Published pages/posts: ' . implode(', ', $names));
+            }
+            return $debug ? ['_early_fail' => 'post_not_found', '_slug_searched' => $slug] : [];
+        }
+
+        if ($post->post_status !== 'publish') {
+            if ($debug) error_log('[P3D] get_panel_page_data: post found (ID=' . $post->ID . ') but status="' . $post->post_status . '" not published');
+            return $debug ? ['_early_fail' => 'not_published', '_post_id' => $post->ID, '_post_status' => $post->post_status] : [];
         }
 
         if ($debug) error_log('[P3D] get_panel_page_data: post found, ID=' . $post->ID . ', title="' . $post->post_title . '"');
 
         $content_html = $this->render_post_content($post, $debug);
         $ids = $this->extract_panel_ids($content_html, $debug);
+
+        if ($this->is_panel_data_empty($ids)) {
+            if ($debug) {
+                error_log('[P3D] get_panel_page_data: no ids found in initial content, trying public page HTML fallback.');
+            }
+
+            $public_html = $this->fetch_public_page_html($post, $debug);
+            if ($public_html !== '') {
+                $fallback_ids = $this->extract_panel_ids($public_html, $debug);
+                if (!$this->is_panel_data_empty($fallback_ids)) {
+                    $ids = $fallback_ids;
+                    if ($debug) {
+                        error_log('[P3D] get_panel_page_data: public page HTML fallback produced panel ids.');
+                    }
+                } elseif ($debug) {
+                    error_log('[P3D] get_panel_page_data: public page HTML fallback still empty.');
+                }
+            }
+        }
 
         $title = $ids['title'] !== '' ? $ids['title'] : get_the_title($post);
 
@@ -379,7 +446,89 @@ class Portfolio_3D_Home_Plugin {
 
     private function is_elementor_post(WP_Post $post): bool {
         $meta = get_post_meta($post->ID, '_elementor_edit_mode', true);
-        return $meta === 'builder';
+        if ($meta === 'builder' || $meta === 'default') {
+            return true;
+        }
+
+        $elementor_data = get_post_meta($post->ID, '_elementor_data', true);
+        if (!empty($elementor_data)) {
+            return true;
+        }
+
+        if (class_exists('\Elementor\Plugin') && isset(\Elementor\Plugin::instance()->documents)) {
+            $document = \Elementor\Plugin::instance()->documents->get($post->ID);
+            if ($document && method_exists($document, 'is_built_with_elementor')) {
+                return (bool) $document->is_built_with_elementor();
+            }
+        }
+
+        return false;
+    }
+
+    private function is_panel_data_empty(array $ids): bool {
+        return (
+            trim((string) ($ids['title'] ?? '')) === ''
+            && trim((string) ($ids['caption'] ?? '')) === ''
+            && trim((string) ($ids['description'] ?? '')) === ''
+            && trim((string) ($ids['heroImage'] ?? '')) === ''
+            && trim((string) ($ids['videoUrl'] ?? '')) === ''
+            && empty($ids['links'])
+        );
+    }
+
+    private function fetch_public_page_html(WP_Post $post, bool $debug = false): string {
+        $url = get_permalink($post);
+        if (!is_string($url) || trim($url) === '') {
+            if ($debug) {
+                error_log('[P3D] fetch_public_page_html: permalink empty for post ID=' . $post->ID);
+            }
+            return '';
+        }
+
+        if ($debug) {
+            error_log('[P3D] fetch_public_page_html: requesting ' . $url);
+        }
+
+        $response = wp_remote_get(
+            $url,
+            [
+                'timeout' => 12,
+                'redirection' => 3,
+                'headers' => [
+                    'Accept' => 'text/html',
+                ],
+            ]
+        );
+
+        if (is_wp_error($response)) {
+            if ($debug) {
+                error_log('[P3D] fetch_public_page_html: request error ' . $response->get_error_message());
+            }
+            return '';
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = (string) wp_remote_retrieve_body($response);
+
+        if ($debug) {
+            error_log('[P3D] fetch_public_page_html: response_code=' . $code . ' body_length=' . strlen($body));
+        }
+
+        if ($code < 200 || $code >= 300 || trim($body) === '') {
+            return '';
+        }
+
+        return $body;
+    }
+
+    private function should_debug(?WP_REST_Request $request = null): bool {
+        $query_debug = false;
+        if ($request instanceof WP_REST_Request) {
+            $value = (string) $request->get_param('debug');
+            $query_debug = in_array(strtolower($value), ['1', 'true', 'yes', 'on'], true);
+        }
+
+        return $query_debug || (defined('WP_DEBUG') && WP_DEBUG);
     }
 
     private function extract_panel_ids(string $content_html, bool $debug = false): array {

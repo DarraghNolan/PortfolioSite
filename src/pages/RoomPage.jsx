@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import ThreeDScene from './ThreeDScene';
 import { getRoomById } from '../data/rooms';
 
@@ -189,20 +189,22 @@ function RoomPage({
       )}
 
       {/* 3D Scene */}
-      <ThreeDScene
-        mode="fps"
-        url={room.glb}
-        railMin={room.railMin}
-        railMax={room.railMax}
-        scrollSpeed={room.scrollSpeed}
-        lookSpeed={0.002}
-        eyeHeight={room.eyeHeight}
-        panels={room.panels}
-        navPanel={room.navPanel}
-        modalOpen={modalOpen}
-        onPanelClick={handlePanelClick}
-        onNavigate={handleNavigate}
-      />
+      <Suspense fallback={<div style={{ color: '#fff', padding: '20px' }}>Loading room...</div>}>
+        <ThreeDScene
+          mode="fps"
+          url={room.glb}
+          railMin={room.railMin}
+          railMax={room.railMax}
+          scrollSpeed={room.scrollSpeed}
+          lookSpeed={0.002}
+          eyeHeight={room.eyeHeight}
+          panels={room.panels}
+          navPanel={room.navPanel}
+          modalOpen={modalOpen}
+          onPanelClick={handlePanelClick}
+          onNavigate={handleNavigate}
+        />
+      </Suspense>
     </div>
   );
 }
