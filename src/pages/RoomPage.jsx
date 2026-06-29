@@ -154,9 +154,10 @@ function RoomPage({
 
             {/* Description */}
             {modalContent.description && (
-              <p style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '20px' }}>
-                {modalContent.description}
-              </p>
+              <div
+                style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '20px' }}
+                dangerouslySetInnerHTML={{ __html: modalContent.description }}
+              />
             )}
 
             {/* External links */}

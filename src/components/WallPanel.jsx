@@ -10,6 +10,7 @@ import * as THREE from 'three';
 function WallPanel({
   position = [0, 1.5, 0],
   rotation = [0, 0, 0],
+  scale = [2, 1.5],
   image = null,
   title = 'Panel Title',
   caption = 'Caption text',
@@ -25,6 +26,13 @@ function WallPanel({
   const { camera, gl } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
   const centerScreen = new THREE.Vector2(0, 0);
+
+  const width = Math.max(0.1, Number(scale?.[0] ?? 2));
+  const height = Math.max(0.1, Number(scale?.[1] ?? 1.5));
+  const titleY = Math.min(height * 0.3, height / 2 - 0.1);
+  const captionY = Math.max(0.08, height * 0.08);
+  const titleSize = Math.max(0.09, Math.min(0.2, height * 0.12));
+  const captionSize = Math.max(0.07, Math.min(0.13, height * 0.08));
 
   // Tier 1: load image texture onto mesh
   useEffect(() => {
@@ -66,7 +74,7 @@ function WallPanel({
     <group position={position} rotation={rotation}>
       {/* Panel face */}
       <mesh ref={meshRef}>
-        <planeGeometry args={[2, 4]} />
+        <planeGeometry args={[width, height]} />
         <meshStandardMaterial color="#888888" side={THREE.DoubleSide} />
       </mesh>
 
@@ -74,12 +82,12 @@ function WallPanel({
       <Text
         ref={titleRef}
         visible={false}
-        position={[0, 0.5, 0.01]}
-        fontSize={0.2}
+        position={[0, titleY, 0.01]}
+        fontSize={titleSize}
         color="white"
         anchorX="center"
         anchorY="middle"
-        maxWidth={1.8}
+        maxWidth={Math.max(0.3, width * 0.9)}
         outlineWidth={0.012}
         outlineColor="#000000"
         font={undefined}
@@ -91,12 +99,12 @@ function WallPanel({
       <Text
         ref={captionRef}
         visible={false}
-        position={[0, 0.1, 0.01]}
-        fontSize={0.13}
+        position={[0, captionY, 0.01]}
+        fontSize={captionSize}
         color="#eeeeee"
         anchorX="center"
         anchorY="middle"
-        maxWidth={1.7}
+        maxWidth={Math.max(0.3, width * 0.85)}
         lineHeight={1.4}
         outlineWidth={0.008}
         outlineColor="#000000"

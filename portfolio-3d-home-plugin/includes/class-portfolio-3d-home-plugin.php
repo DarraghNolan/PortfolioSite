@@ -44,6 +44,30 @@ class Portfolio_3D_Home_Plugin {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
             $saved = $this->sanitize_rooms_config($posted);
+
+            $add_panel_room_index = isset($_POST['portfolio_3d_home_add_panel_room'])
+                ? (int) $_POST['portfolio_3d_home_add_panel_room']
+                : -1;
+
+            if ($add_panel_room_index >= 0 && isset($saved[$add_panel_room_index])) {
+                $room_id = (int) ($saved[$add_panel_room_index]['id'] ?? ($add_panel_room_index + 1));
+                $next_index = count($saved[$add_panel_room_index]['panels']) + 1;
+                $seed_panel = $saved[$add_panel_room_index]['panels'][0] ?? [
+                    'position' => [-1.5, 1.5, 3.5],
+                    'rotation' => [0, M_PI, 0],
+                    'scale' => [2, 1.5],
+                ];
+
+                $saved[$add_panel_room_index]['panels'][] = $this->panel_template(
+                    $this->build_panel_id($room_id, $next_index),
+                    $seed_panel['position'] ?? [-1.5, 1.5, 3.5],
+                    $seed_panel['rotation'] ?? [0, M_PI, 0],
+                    $seed_panel['scale'] ?? [2, 1.5]
+                );
+
+                echo '<div class="notice notice-success is-dismissible"><p>New panel added. Update values as needed, then click Save Rooms.</p></div>';
+            }
+
             update_option(self::OPTION_KEY, $saved, false);
 
             echo '<div class="notice notice-success is-dismissible"><p>Saved room panel mappings.</p></div>';
@@ -136,6 +160,7 @@ class Portfolio_3D_Home_Plugin {
                                 <th>Page Slug</th>
                                 <th>Position (X Y Z)</th>
                                 <th>Rotation (X Y Z)</th>
+                                <th>Scale (X Y)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -161,10 +186,17 @@ class Portfolio_3D_Home_Plugin {
                                         <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['rotation'][1]); ?>" />
                                         <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['rotation'][2]); ?>" />
                                     </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][0]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][1]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][1]); ?>" />
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <p style="margin-top:10px;">
+                        <button type="submit" class="button" name="portfolio_3d_home_add_panel_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Panel</button>
+                    </p>
                 <?php endforeach; ?>
 
                 <?php submit_button('Save Rooms'); ?>
@@ -469,7 +501,7 @@ class Portfolio_3D_Home_Plugin {
         return (
             trim((string) ($ids['title'] ?? '')) === ''
             && trim((string) ($ids['caption'] ?? '')) === ''
-            && trim((string) ($ids['description'] ?? '')) === ''
+            && trim(wp_strip_all_tags((string) ($ids['description'] ?? ''))) === ''
             && trim((string) ($ids['heroImage'] ?? '')) === ''
             && trim((string) ($ids['videoUrl'] ?? '')) === ''
             && empty($ids['links'])
@@ -555,7 +587,7 @@ class Portfolio_3D_Home_Plugin {
 
         $result['title'] = $this->extract_text_by_id($xpath, 'p3d-title', $debug);
         $result['caption'] = $this->extract_text_by_id($xpath, 'p3d-caption', $debug);
-        $result['description'] = $this->extract_text_by_id($xpath, 'p3d-description', $debug);
+        $result['description'] = $this->extract_html_by_id($xpath, 'p3d-description', $debug);
 
         $hero = $this->extract_hero_image($xpath, $debug);
         $result['heroImage'] = $hero;
@@ -609,6 +641,51 @@ class Portfolio_3D_Home_Plugin {
         $text = trim(wp_strip_all_tags($nodes->item(0)->textContent));
         if ($debug) error_log('[P3D] extract_text_by_id: id="' . $id . '" FOUND — value="' . mb_substr($text, 0, 120) . '"');
         return $text;
+    }
+
+    private function extract_html_by_id(DOMXPath $xpath, string $id, bool $debug = false): string {
+        $nodes = $xpath->query("//*[@id='{$id}']");
+        if (!$nodes instanceof DOMNodeList || $nodes->length === 0) {
+            if ($debug) error_log('[P3D] extract_html_by_id: id="' . $id . '" NOT FOUND in HTML.');
+            return '';
+        }
+
+        $node = $nodes->item(0);
+        if (!$node instanceof DOMElement) {
+            return '';
+        }
+
+        // Keep rich structure (paragraphs, headings, lists, etc.) from children of p3d-description.
+        $inner_html = '';
+        foreach ($node->childNodes as $child) {
+            $inner_html .= $node->ownerDocument->saveHTML($child);
+        }
+
+        // If no child markup exists, fall back to text content.
+        if (trim($inner_html) === '') {
+            $inner_html = esc_html(trim($node->textContent));
+        }
+
+        $allowed_tags = wp_kses_allowed_html('post');
+        $allowed_tags['iframe'] = [
+            'src' => true,
+            'title' => true,
+            'width' => true,
+            'height' => true,
+            'allow' => true,
+            'allowfullscreen' => true,
+            'frameborder' => true,
+            'loading' => true,
+            'referrerpolicy' => true,
+        ];
+
+        $safe_html = wp_kses($inner_html, $allowed_tags);
+
+        if ($debug) {
+            error_log('[P3D] extract_html_by_id: id="' . $id . '" FOUND — html_length=' . strlen($safe_html) . ', text_length=' . strlen(trim(wp_strip_all_tags($safe_html))));
+        }
+
+        return trim($safe_html);
     }
 
     private function extract_hero_image(DOMXPath $xpath, bool $debug = false): string {
@@ -758,21 +835,35 @@ class Portfolio_3D_Home_Plugin {
                 );
             }
 
-            if (isset($room['panels']) && is_array($room['panels'])) {
-                foreach ($default_room['panels'] as $panel_index => $default_panel) {
-                    $panel = isset($room['panels'][$panel_index]) && is_array($room['panels'][$panel_index]) ? $room['panels'][$panel_index] : [];
-                    $sanitized_room['panels'][$panel_index]['slug'] = isset($panel['slug'])
-                        ? sanitize_title((string) $panel['slug'])
-                        : '';
-                    $sanitized_room['panels'][$panel_index]['position'] = $this->sanitize_vector3(
-                        $panel['position'] ?? null,
-                        $default_panel['position']
-                    );
-                    $sanitized_room['panels'][$panel_index]['rotation'] = $this->sanitize_vector3(
-                        $panel['rotation'] ?? null,
-                        $default_panel['rotation']
-                    );
-                }
+            $posted_panels = isset($room['panels']) && is_array($room['panels'])
+                ? array_values(array_filter($room['panels'], 'is_array'))
+                : [];
+
+            $panel_seed = $default_room['panels'][0];
+            $panel_count = max(count($default_room['panels']), count($posted_panels));
+            $sanitized_room['panels'] = [];
+
+            for ($panel_index = 0; $panel_index < $panel_count; $panel_index++) {
+                $default_panel = $default_room['panels'][$panel_index] ?? $panel_seed;
+                $panel = $posted_panels[$panel_index] ?? [];
+
+                $sanitized_room['panels'][$panel_index] = $default_panel;
+                $sanitized_room['panels'][$panel_index]['id'] = $this->build_panel_id((int) $default_room['id'], $panel_index + 1);
+                $sanitized_room['panels'][$panel_index]['slug'] = isset($panel['slug'])
+                    ? sanitize_title((string) $panel['slug'])
+                    : '';
+                $sanitized_room['panels'][$panel_index]['position'] = $this->sanitize_vector3(
+                    $panel['position'] ?? null,
+                    $default_panel['position']
+                );
+                $sanitized_room['panels'][$panel_index]['rotation'] = $this->sanitize_vector3(
+                    $panel['rotation'] ?? null,
+                    $default_panel['rotation']
+                );
+                $sanitized_room['panels'][$panel_index]['scale'] = $this->sanitize_vector2(
+                    $panel['scale'] ?? null,
+                    $default_panel['scale'] ?? [2, 1.5]
+                );
             }
 
             $sanitized[] = $sanitized_room;
@@ -790,6 +881,17 @@ class Portfolio_3D_Home_Plugin {
             isset($value[0]) ? (float) $value[0] : (float) $fallback[0],
             isset($value[1]) ? (float) $value[1] : (float) $fallback[1],
             isset($value[2]) ? (float) $value[2] : (float) $fallback[2],
+        ];
+    }
+
+    private function sanitize_vector2($value, array $fallback): array {
+        if (!is_array($value) || count($value) < 2) {
+            return [max(0.1, (float) $fallback[0]), max(0.1, (float) $fallback[1])];
+        }
+
+        return [
+            max(0.1, isset($value[0]) ? (float) $value[0] : (float) $fallback[0]),
+            max(0.1, isset($value[1]) ? (float) $value[1] : (float) $fallback[1]),
         ];
     }
 
@@ -857,12 +959,13 @@ class Portfolio_3D_Home_Plugin {
         ];
     }
 
-    private function panel_template(string $id, array $position, array $rotation): array {
+    private function panel_template(string $id, array $position, array $rotation, array $scale = [2, 1.5]): array {
         return [
             'id' => $id,
             'slug' => '',
             'position' => $position,
             'rotation' => $rotation,
+            'scale' => $scale,
             'image' => '',
             'title' => '',
             'caption' => '',
@@ -870,5 +973,9 @@ class Portfolio_3D_Home_Plugin {
             'videoUrl' => '',
             'links' => [],
         ];
+    }
+
+    private function build_panel_id(int $room_id, int $panel_number): string {
+        return 'room' . $room_id . '-panel' . $panel_number;
     }
 }

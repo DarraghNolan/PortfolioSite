@@ -11,6 +11,7 @@ export const rooms = [
         id: 'room1-panel1',
         position: [0, 1.5, 0],
         rotation: [0, Math.PI, 0],
+        scale: [2, 1.5],
         // Tier 1 — always visible
         image: '/2026/05/BluNPinkBox.png',
         // Tier 2 — shown when user looks at panel
@@ -44,6 +45,7 @@ export const rooms = [
         id: 'room2-panel1',
         position: [-1.5, 1.5, 3.5],
         rotation: [0, Math.PI, 0],
+        scale: [2, 1.5],
         image: '/2026/05/BluNPinkBox.png',
         title: 'Test Panel',
         caption: 'Room 2 Content',
@@ -72,6 +74,7 @@ export const rooms = [
         id: 'room3-panel1',
         position: [-1.5, 1.5, 3.5],
         rotation: [0, Math.PI, 0],
+        scale: [2, 1.5],
         image: '/2026/05/BluNPinkBox.png',
         title: 'Test Panel',
         caption: 'Room 3 Content',

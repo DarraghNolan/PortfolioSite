@@ -148,6 +148,7 @@ function ThreeDScene({
                 key={p.id}
                 position={p.position}
                 rotation={p.rotation}
+                scale={p.scale}
                 image={p.image}
                 title={p.title}
                 caption={p.caption}
