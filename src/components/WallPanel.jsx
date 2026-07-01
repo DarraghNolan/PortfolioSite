@@ -156,9 +156,9 @@ function WallPanel({
     raycaster.current.setFromCamera(centerScreen, camera);
     const hit = raycaster.current.intersectObject(meshRef.current).length > 0;
     // Not hovered: brighter panel. Hovered: darker panel so text stands out.
-    meshRef.current.material.color.set(hit ? '#707070' : (image ? '#ffffff' : '#b5b5b5'));
+    meshRef.current.material.color.set(hit ? '#b8b8b8' : (image ? '#ffffff' : '#e3e3e3'));
     meshRef.current.material.transparent = true;
-    meshRef.current.material.opacity = hit ? 0.85 : 1;
+    meshRef.current.material.opacity = hit ? 0.95 : 1;
     if (titleRef.current) titleRef.current.visible = hit;
     if (captionRef.current) captionRef.current.visible = hit;
   });
