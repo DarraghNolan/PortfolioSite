@@ -26,6 +26,28 @@
     -->
     <title>Darragh Nolan Portfolio Website</title>
     <link rel="stylesheet" href="output.css">
+    <style>
+      .bg-pattern {
+        position: relative;
+        isolation: isolate;
+      }
+      .bg-pattern::before {
+        content: "";
+        position: absolute;
+        inset: 0%;
+        background-image: url('/images/pattern.webp');
+        background-repeat: repeat;
+        background-size: 96px 96px;
+        background-position: 0 0;
+        opacity: 0.15;                        /* 0 = invisible, 1 = full */
+        pointer-events: none;
+        z-index: -1;
+        /* filter: hue-rotate(180deg);           -- shift hue */
+        /* filter: sepia(1) hue-rotate(200deg);  -- colour tint */
+        mix-blend-mode: overlay;           /* -- blend with bg colour */
+        /*transform: rotate(45deg);          /* -- diagonal (add inset:-50%;width:200%;height:200%) */
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

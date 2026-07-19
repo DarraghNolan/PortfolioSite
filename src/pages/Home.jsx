@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import projectsData from '../data/projects.js'; // Ensure these paths are correct
+import { useTheme } from '../contexts/ThemeContext';
+import projectsData from '../data/projects.js';
 import socialsData from '../data/socials.js';
 import ThreeDScene from './ThreeDScene';
+import Navbar from '../components/Navbar';
+import SocialsBar from '../components/SocialsBar';
 
 function Home() {
   const [selectedTag, setSelectedTag] = useState('All');
@@ -11,6 +14,8 @@ function Home() {
   const [animSpeed, setAnimSpeed] = useState(1.15);
   const [featuredSocial, setFeaturedSocial] = useState([]);
   const [featuredProject, setFeaturedProject] = useState(null);
+  const [gifKey, setGifKey] = useState(0);
+  const { darkMode, toggleDarkMode } = useTheme(); // Use theme context
 
   useEffect(() => {
     const projectId = 8; // Replace with the actual project ID
@@ -20,7 +25,16 @@ function Home() {
     setFeaturedSocial(social);
   }, []);
 
-  const tags = ['All', 'UI Art', 'Web Development', 'UX', 'Game Development', 'Illustration', '3D Animation', 'Mobile Applications'];
+  // Add dark mode effect
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const tags = ['All', 'Web Dev', 'UX', 'Game Dev', 'Illustration', '3D Animation', 'Mobile Apps', 'UI Art'];
 
   const availableSubtags = Array.from(new Set(
     projectsData
@@ -44,159 +58,158 @@ function Home() {
       );
 
   return (
-    <div className="bg-midnight">
-      <div className="container mx-auto p-8 bg-midnight text-white2">
-        <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]">
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              url={featuredProject.ThreeDModels[2]}
-              albedo={featuredProject.ThreeDAlbedos[2]}
-              opacity={featuredProject.ThreeDOpacitys[2]}
-              metalness={featuredProject.ThreeDMetalness[2]}
-              emissive={featuredProject.ThreeDEmissive[2]}
-              posX={featuredProject.modelProperties[2].posX}
-              posY={featuredProject.modelProperties[2].posY}
-              posZ={featuredProject.modelProperties[2].posZ}
-              rotX={featuredProject.modelProperties[2].rotX}
-              rotY={featuredProject.modelProperties[2].rotY}
-              rotZ={featuredProject.modelProperties[2].rotZ}
-              scale={featuredProject.modelProperties[2].scale}
-              animSpeed={animSpeed}
-              isAnimating={isAnimating}
-              camPosY={featuredProject.modelProperties[2].camPosY}
-            />
-          )}
-          {featuredProject && (
-            <ThreeDScene
-              key={featuredProject.id}
-              url={featuredProject.ThreeDModels[3]}
-              albedo={featuredProject.ThreeDAlbedos[3]}
-              opacity={featuredProject.ThreeDOpacitys[3]}
-              metalness={featuredProject.ThreeDMetalness[3]}
-              emissive={featuredProject.ThreeDEmissive[3]}
-              posX={featuredProject.modelProperties[3].posX}
-              posY={featuredProject.modelProperties[3].posY}
-              posZ={featuredProject.modelProperties[3].posZ}
-              rotX={featuredProject.modelProperties[3].rotX}
-              rotY={featuredProject.modelProperties[3].rotY}
-              rotZ={featuredProject.modelProperties[3].rotZ}
-              scale={featuredProject.modelProperties[3].scale}
-              animSpeed={animSpeed}
-              isAnimating={isAnimating}
-              camPosY={featuredProject.modelProperties[3].camPosY}
-            />
-          )}
+    <div className="bg-lightBG dark:bg-midnight transition-colors duration-500 min-h-screen">
+      <Navbar />
+
+      <div className="container mx-auto p-8 pt-20 bg-lightBG dark:bg-midnight text-midnight dark:text-white2 pb-20 transition-colors duration-500">
+        {/* <div className="grid grid-cols-2 gap-[1rem] w-[25rem] lg:h-[25rem] max-h-[15rem] ml-[-2.5rem] lg:gap-2 lg:mb-[-4.5rem] lg:ml-[-2rem] lg:w-[30rem] mb-[-3.5rem]"></div> */}        
+        <div className='md:mb-[23rem] mb-[15rem] mt-[3rem] flex justify-center mr-[305px] md:mr-[66.6vw] lg:grid lg:grid-cols-2 lg:mr-[0px]'>
+          <div className='ml-[2.5vw]'>
+            <img src='./images/BluNPinkBox.png' className='absolute justify-center w-[300px] h-[150px] md:w-[530px] md:h-[280px]'/>
+            <img src='./gifs/Signature.gif' className='absolute justify-center w-[310px] md:w-[580px] mt-[30px] md:mt-[60px] ml-[15px] md:ml-[10px]'/>
+          </div>          
+          <div className="hidden lg:grid lg:grid-cols-2 lg:gap-[16px] lg:w-[400px] lg:h-[240px] lg:ml-[100px] lg:mb-[-200px]">
+            {featuredProject && (
+              <ThreeDScene
+                key={featuredProject.id}
+                url={featuredProject.ThreeDModels[2]}
+                albedo={featuredProject.ThreeDAlbedos[2]}
+                opacity={featuredProject.ThreeDOpacitys[2]}
+                metalness={featuredProject.ThreeDMetalness[2]}
+                emissive={featuredProject.ThreeDEmissive[2]}
+                posX={featuredProject.modelProperties[2].posX}
+                posY={featuredProject.modelProperties[2].posY}
+                posZ={featuredProject.modelProperties[2].posZ}
+                rotX={featuredProject.modelProperties[2].rotX}
+                rotY={featuredProject.modelProperties[2].rotY}
+                rotZ={featuredProject.modelProperties[2].rotZ}
+                scale={featuredProject.modelProperties[2].scale}
+                animSpeed={animSpeed}
+                isAnimating={isAnimating}
+                camPosY={featuredProject.modelProperties[2].camPosY}
+              />
+            )}
+            {featuredProject && (
+              <ThreeDScene
+                key={featuredProject.id}
+                url={featuredProject.ThreeDModels[3]}
+                albedo={featuredProject.ThreeDAlbedos[3]}
+                opacity={featuredProject.ThreeDOpacitys[3]}
+                metalness={featuredProject.ThreeDMetalness[3]}
+                emissive={featuredProject.ThreeDEmissive[3]}
+                posX={featuredProject.modelProperties[3].posX}
+                posY={featuredProject.modelProperties[3].posY}
+                posZ={featuredProject.modelProperties[3].posZ}
+                rotX={featuredProject.modelProperties[3].rotX}
+                rotY={featuredProject.modelProperties[3].rotY}
+                rotZ={featuredProject.modelProperties[3].rotZ}
+                scale={featuredProject.modelProperties[3].scale}
+                animSpeed={animSpeed}
+                isAnimating={isAnimating}
+                camPosY={featuredProject.modelProperties[3].camPosY}
+              />
+            )}
+          </div>
         </div>
-        <div className='lg:mb-[23rem] md:mb-[23rem] mb-[15rem] mt-[3rem]'>
-          <img src='./images/BluNPinkBox.png' className='absolute w-[85vw] h-[20vh] sm:min-h-[5rem] sm:max-h-[25rem] md:min-h-[15rem] md:max-h-[30rem] md:h-[20vh] md:w-[35rem]'/>
-          <img src='./gifs/Signature.gif' className='absolute max-w-[90vw] mt-[2.25rem] ml-[0]'/>
+        <div>
+          <h2 className="text-xl text-center">
+            Howya! My name is Darragh Nolan and I'm web developer from Dublin living in Edinburgh. I did my bachelor's degree is in <span className="font-bold">Game Design</span> and graduated in <span className="font-bold">2021</span>. I was a 3D animator for an indie games company called Blue Diamond, operating with an international team I helped them develop a game called <span className="font-bold">"Harbinger - The Wild Dawn"</span>.             
+          </h2>
+          <br/>
+          <h2 className="text-xl text-center">
+            During my time working there I also worked as a supervisor in a petrol station. I started my master's in <span className="font-bold">Creative Digital Media & UX</span> in <span className="font-bold">2022</span>. While I was doing my master's, I made a web application for my job at the petrol station to store all the theft reports they had.
+          </h2>
+          <h2 className="text-xl text-center font-bold italic">
+            (There were a lot).
+          </h2>
+          <br/>
+          <h2 className="text-xl text-center">
+            After finishing my master's in <span className="font-bold">December 2023</span> I moved to Scotland in <span className="font-bold">May 2024</span> and started a web development company with a local business owner I met. I make websites now for small businesses around Edinburgh with the company, <span className="font-bold">Emerald Oak Studios</span>. 
+          </h2>
         </div>
-        <div className='hidden ml-[57vw] md:min-ml-[40rem] mt-[-32rem] justify-end md:block absolute'>
-          {featuredSocial.map((social) => (
-            <div className='flex cursor-pointer' key={social.id} onClick={() => window.open(social.URL, '_blank')}>
-              <div className='mx-[1rem] max-w-[5rem] min-w-[10rem] lg:min-w-[15rem] w-[13vw] text-right'>
-                <h2 className="text-xl text-blueLIGHT font-semibold mb-4 ">{social.title}</h2>
-                <p className="mb-4">{social.description}</p>
-              </div>
-              <img 
-                src={social.imageURL} 
-                alt={social.title} 
-                className="w-[6rem] h-[6rem] object-cover mb-4" />
-            </div>
-          ))}
+        <div className="fixed bottom-0 left-0 w-full bg-lightBG dark:bg-midnight border-t border-pink z-50 transition-colors duration-500">
+          <SocialsBar />
         </div>
-        <h1 className="text-5xl font-bold mb-[2.5rem] mt-[3rem]">
+
+        <h1 className="text-5xl font-bold mb-[80px] mt-[80px] italic flex justify-center content-center text-midnight dark:text-white2 transition-colors duration-500">
           My Work
         </h1>
-        <div className="mb-4 flex-auto content-center mt-[1.5rem]">
-          <a> Filter By : </a>
-          {tags.map((tag) => (
-            <button
-              key={tag}
-              className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full ${selectedTag === tag ? 'bg-midnight text-white2 border-[1px] border-blueLIGHT' : 'bg-blue-500 text-white2 border-[1px] border-pink'}`}
-              onClick={() => {
-                setSelectedTag(tag);
-                setSelectedSubtags([]);
-              }}
-            >
-              {tag}
-            </button>
-          ))}
-          {(selectedTag !== 'All') && (
-            <>
-              <br/><br/>
-              <a>Tools:</a>
-              {availableSubtags.map((subtag) => (
-                <button
-                  key={subtag}
-                  className={`mr-4 ml-[1rem] px-4 py-2 mb-2 rounded-full font-bold ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-white2' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
-                  onClick={() => toggleSubtag(subtag)}
-                >
-                  {subtag}
-                </button>
-              ))}
-            </>
-          )}
+        <div className="mb-4 mt-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
+          {tags.map((tag) => {
+            const isVisible = selectedTag === 'All' || tag === 'All' || tag === selectedTag;
+            const isSelected = selectedTag === tag;
+            return (
+              <button
+                key={tag}
+                className={`m-2 w-full px-4 py-2 mb-2 rounded-full hover:mb-0 lg:text-2xl lg:font-bold shadow-none text-xl hover:shadow-lg hover:inset-shadow-lg hover:border-[4px] hover:italic hover:text-2xl transition-all duration-300
+                  ${isSelected
+                    ? 'bg-lightBG dark:bg-midnight text-midnight dark:text-white2 border-[5px] border-blueLIGHT italic shadow-blueLIGHT shadow-lg font-bold hover:shadow-blueLIGHT hover:mb-[0.575rem]'
+                    : 'bg-blue-500 text-midnight dark:text-white2 border-[1px] border-pink hover:shadow-pink hover:mb-0'
+                  }
+                  ${isVisible ? 'opacity-100' : 'opacity-25'}`}
+                onClick={() => {
+                  setSelectedTag(tag);
+                  setSelectedSubtags([]);
+                }}
+              >
+                {tag}
+              </button>
+            );
+          })}
         </div>
+        {(selectedTag !== 'All') && (
+          <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 mb-12">
+            {availableSubtags.map((subtag) => (
+              <button
+                key={subtag}
+                className={`mr-4 ml-[1rem] mb-6 px-4 py-2 rounded-full font-bold hover:shadow-lg hover:inset-shadow-lg hover:shadow-blueLIGHT hover:italic transition-all duration-300 ${selectedSubtags.includes(subtag) ? 'bg-pink text-white2 border-[1px] border-pink italic shadow-pink shadow-lg hover:shadow-pink' : 'bg-blueLIGHT text-midnight border-[1px] border-blueLIGHT'}`}
+                onClick={() => toggleSubtag(subtag)}
+              >
+                {subtag}
+              </button>
+            ))}
+          </div>
+        )}
+        {selectedSubtags.length > 0 && (
+          <p className="mb-6 ml-[1rem] text-base italic text-midnight dark:text-white2 transition-colors duration-300">
+            Showing <span className="font-bold text-blueLIGHT">{selectedTag}</span> projects using <span className="font-bold text-pink">{selectedSubtags.join(' or ')}</span>:
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (
-            <Link key={project.id} to={`/detailsproject/${project.id}`}>
-              <div className='border-solid border-[1px] border-pink p-[10px] m-[10px]'>
-                <h2 className="text-xl text-blueLIGHT font-semibold mb-4">{project.title}</h2>
-                <p className="mb-4">{project.description}</p>
-                <img src={project.imageURL} alt={project.title} className="w-full min-h-32 max-h-48 object-cover mb-4" />
+            <Link key={project.id} to={`/detailsproject/${project.id}`} className="block relative"
+              onMouseEnter={() => project.imageURL.endsWith('.gif') && setGifKey(k => k + 1)}>
+              {/* Invisible spacer — maintains grid row height at collapsed size */}
+              <div className="invisible pointer-events-none p-[10px] m-[10px]" aria-hidden="true">
+                <h2 className="font-semibold mb-4">{project.title}</h2>
+                <p className="text-sm mb-4 line-clamp-2">{project.description}</p>
+                <img src={project.imageURL} alt="" className="w-full max-h-48 object-cover mb-4" />
+              </div>
+              {/* Actual card — absolutely positioned so expansion overlaps rows below */}
+              <div className='group absolute top-0 left-0 right-0 bg-lightBG dark:bg-midnight overflow-hidden border-solid border-[1px] border-pink p-[10px] m-[10px] shadow-none hover:shadow-lg hover:shadow-pink hover:inset-shadow-lg hover:border-[4px] hover:z-20 text-xl hover:italic hover:text-2xl transition-all duration-300'>
+                {/* Pattern overlay */}
+                <div className="absolute inset-0 bg-repeat pointer-events-none opacity-15" style={{backgroundImage: "url('/images/pattern.webp')", backgroundSize: '48px 48px'}} />
+                {/* Content */}
+                <div className="relative">
+                  <h2 className="text-blueLIGHT font-semibold mb-4">{project.title}</h2>
+                  <p className="text-sm mb-4 not-italic text-midnight dark:text-white2 group-hover:text-base line-clamp-2 group-hover:line-clamp-none transition-colors duration-300">{project.description}</p>
+                  {project.imageURL.endsWith('.gif') ? (
+                    <div className="relative w-full max-h-48 group-hover:max-h-[800px] mb-4 transition-[max-height] duration-300 ease-in-out overflow-hidden">
+                      <img src={project.contentURL[0]} alt={project.title} className="w-full h-full object-cover opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                      <img key={gifKey} src={project.imageURL} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  ) : (
+                    <img src={project.imageURL} alt={project.title} className="w-full max-h-48 group-hover:max-h-[800px] object-cover mb-4 transition-[max-height] duration-300 ease-in-out" />
+                  )}
+                </div>
               </div>
             </Link>
           ))}
         </div>
+        <div className="m-[30vh]"></div>
       </div>
     </div>
   );
 }
-
-  // return (
-  //   <div className="home-container">
-  //     <div className="animation-container">
-  //       {featuredProject && featuredProject.ThreeDModels.map((model, index) => (
-  //         <ThreeDScene 
-  //           key={index}
-  //           url={model}
-  //           albedo={featuredProject.ThreeDAlbedos[index]}
-  //           opacity={featuredProject.ThreeDOpacitys[index]}
-  //           posX={featuredProject.modelProperties[index].posX}
-  //           posY={featuredProject.modelProperties[index].posY}
-  //           posZ={featuredProject.modelProperties[index].posZ}
-  //           rotX={featuredProject.modelProperties[index].rotX}
-  //           rotY={featuredProject.modelProperties[index].rotY}
-  //           rotZ={featuredProject.modelProperties[index].rotZ}
-  //           isAnimating={isAnimating} 
-  //           animSpeed={animSpeed} 
-  //         />
-  //       ))}
-  //     </div>
-  //     <button onClick={toggleAnimation}>
-  //       {isAnimating ? 'Pause Animation' : 'Play Animation'}
-  //     </button>
-  //     <div>
-  //       {/* <label>
-  //         Animation Speed:
-  //         <input
-  //           type="range"
-  //           min="0"
-  //           max="3"
-  //           step="0.1"
-  //           value={animSpeed}
-  //           onChange={handleSpeedChange}
-  //         />
-  //       </label>
-  //       <span>{animSpeed.toFixed(1)}</span> */}
-  //       {/* Display the current speed */}
-  //     </div>
-  //     <div className="other-content">
-  //       {/* Other content of your home page */}
-  //     </div>
-  //   </div>
-  // );
 
 export default Home;
