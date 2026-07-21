@@ -11,6 +11,7 @@ function ThreeDScene({
   url, albedo, opacity, metalness, roughness, emissive, 
   rotX, rotY, rotZ, posX, posY, posZ, scale, 
   isAnimating, animSpeed, camPosY,
+  roomTexture = '',
   
   // New props for FPS room mode
   mode = "viewer", // "viewer" or "fps"
@@ -93,6 +94,30 @@ function ThreeDScene({
       }
     });
   }, [scene, albedo, opacity, metalness, roughness, emissive]);
+
+  useEffect(() => {
+    if (mode !== 'fps') return;
+    if (!roomTexture) return;
+
+    const textureLoader = new TextureLoader();
+    textureLoader.load(roomTexture, (tex) => {
+      tex.flipY = false;
+      scene.traverse((child) => {
+        if (!child.isMesh || !child.material) return;
+
+        if (Array.isArray(child.material)) {
+          child.material.forEach((mat) => {
+            if (!mat) return;
+            mat.map = tex;
+            mat.needsUpdate = true;
+          });
+        } else {
+          child.material.map = tex;
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }, [scene, mode, roomTexture]);
 
   // Different camera settings for different modes
   const cameraProps = mode === "fps" 

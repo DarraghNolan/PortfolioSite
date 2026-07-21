@@ -27,6 +27,7 @@ function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
   return rawRooms.map((room) => ({
     ...room,
     glb: resolveUploadsUrl(room.glb, uploadsBaseUrl),
+    texture: resolveUploadsUrl(room.texture, uploadsBaseUrl),
     panels: Array.isArray(room.panels)
       ? room.panels.map((panel) => ({
           ...panel,

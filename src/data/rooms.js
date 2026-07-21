@@ -2,6 +2,7 @@ export const rooms = [
   {
     id: 1,
     glb: '/2026/05/TestRoom1.glb',
+    texture: '/2026/05/TestRoom1.webp',
     railMin: -2,
     railMax: 1,
     scrollSpeed: 0.005,
@@ -36,6 +37,7 @@ export const rooms = [
   {
     id: 2,
     glb: '/2026/05/TestRoom2.glb',
+    texture: '/2026/05/TestRoom2.webp',
     railMin: -2,
     railMax: 1,
     scrollSpeed: 0.005,
@@ -65,6 +67,7 @@ export const rooms = [
   {
     id: 3,
     glb: '/2026/05/TestRoom3.glb',
+    texture: '/2026/05/TestRoom3.webp',
     railMin: -2,
     railMax: 1,
     scrollSpeed: 0.005,

@@ -39,11 +39,32 @@ class Portfolio_3D_Home_Plugin {
         }
 
         $saved = get_option(self::OPTION_KEY, []);
+        $notices = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['portfolio_3d_home_nonce'])) {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
             $saved = $this->sanitize_rooms_config($posted);
+
+            $remove_room_index = isset($_POST['portfolio_3d_home_remove_room'])
+                ? (int) $_POST['portfolio_3d_home_remove_room']
+                : -1;
+
+            if ($remove_room_index >= 0 && isset($saved[$remove_room_index])) {
+                if (count($saved) <= 1) {
+                    $notices[] = ['type' => 'error', 'text' => 'At least one room is required. Remove was ignored.'];
+                } else {
+                    unset($saved[$remove_room_index]);
+                    $saved = array_values($saved);
+                    $notices[] = ['type' => 'success', 'text' => 'Room removed.'];
+                }
+            }
+
+            if (isset($_POST['portfolio_3d_home_add_room'])) {
+                $next_room_id = $this->get_next_room_id($saved);
+                $saved[] = $this->create_room_template($next_room_id);
+                $notices[] = ['type' => 'success', 'text' => 'New room added.'];
+            }
 
             $add_panel_room_index = isset($_POST['portfolio_3d_home_add_panel_room'])
                 ? (int) $_POST['portfolio_3d_home_add_panel_room']
@@ -64,43 +85,138 @@ class Portfolio_3D_Home_Plugin {
                     $seed_panel['rotation'] ?? [0, M_PI, 0],
                     $seed_panel['scale'] ?? [2, 1.5]
                 );
+                $notices[] = ['type' => 'success', 'text' => 'New panel added.'];
+            }
 
-                echo '<div class="notice notice-success is-dismissible"><p>New panel added. Update values as needed, then click Save Rooms.</p></div>';
+            $invalid_nav_count = 0;
+            $saved = $this->sanitize_rooms_config_with_validation($saved, $this->get_default_rooms(), $invalid_nav_count);
+
+            if ($invalid_nav_count > 0) {
+                $notices[] = [
+                    'type' => 'warning',
+                    'text' => 'Some nav panel targets were invalid and have been disabled. Check Next Room ID values.'
+                ];
             }
 
             update_option(self::OPTION_KEY, $saved, false);
-
-            echo '<div class="notice notice-success is-dismissible"><p>Saved room panel mappings.</p></div>';
+            $notices[] = ['type' => 'success', 'text' => 'Saved room panel mappings.'];
         }
 
         $rooms = $this->merge_with_defaults($saved);
+        $room_ids = $this->get_room_id_list($rooms);
         ?>
         <div class="wrap">
             <h1>Portfolio 3D Rooms</h1>
             <p>Set the page slug for each panel. Leave a slug blank to keep a panel empty.</p>
             <p><strong>Room model paths</strong> should be typed relative to <code>wp-content/uploads</code>, for example <code>/2026/05/WellsFlat.glb</code>. Full URLs also work.</p>
+            <p><strong>Room texture paths</strong> should also be relative to <code>wp-content/uploads</code>, for example <code>/2026/05/WellsFlat.webp</code>.</p>
             <p><strong>Expected IDs in source pages:</strong> p3d-title, p3d-caption, p3d-description, p3d-hero, p3d-video, p3d-link, p3d-link-2, ...</p>
+
+            <?php foreach ($notices as $notice): ?>
+                <?php
+                    $class = 'notice-warning';
+                    if ($notice['type'] === 'success') {
+                        $class = 'notice-success';
+                    } elseif ($notice['type'] === 'error') {
+                        $class = 'notice-error';
+                    }
+                ?>
+                <div class="notice <?php echo esc_attr($class); ?> is-dismissible">
+                    <p><?php echo esc_html($notice['text']); ?></p>
+                </div>
+            <?php endforeach; ?>
 
             <form method="post">
                 <?php wp_nonce_field('portfolio_3d_home_save', 'portfolio_3d_home_nonce'); ?>
 
+                <p>
+                    <button type="submit" class="button button-secondary" name="portfolio_3d_home_add_room" value="1">Add Room</button>
+                </p>
+
                 <?php foreach ($rooms as $room_index => $room): ?>
                     <hr />
                     <h2><?php echo esc_html('Room ' . $room['id']); ?></h2>
-                    <?php $room_count = count($rooms); ?>
 
                     <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Room ID</th>
+                            <td>
+                                <input type="number" value="<?php echo esc_attr((string) $room['id']); ?>" readonly />
+                                <p class="description">Use this ID in Next Room ID fields when linking rooms.</p>
+                            </td>
+                        </tr>
                         <tr>
                             <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-glb">Model path or URL</label></th>
                             <td>
                                 <input
                                     id="room-<?php echo esc_attr((string) $room_index); ?>-glb"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][id]"
+                                    type="hidden"
+                                    value="<?php echo esc_attr((string) $room['id']); ?>"
+                                />
+                                <input
                                     name="rooms[<?php echo esc_attr((string) $room_index); ?>][glb]"
                                     type="text"
                                     class="regular-text"
                                     value="<?php echo esc_attr($room['glb']); ?>"
                                 />
                                 <p class="description">Example: <code>/2026/05/WellsFlat.glb</code></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture">Room texture path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][texture]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['texture'] ?? ''); ?>"
+                                />
+                                <p class="description">Example: <code>/2026/05/WellsFlat.webp</code></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Show Nav Panel</th>
+                            <td>
+                                <label>
+                                    <input
+                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][enabled]"
+                                        type="checkbox"
+                                        value="1"
+                                        <?php checked(!empty($room['navPanel']['enabled'])); ?>
+                                    />
+                                    Enable this room's navigation panel
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nav Label</th>
+                            <td>
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][label]" type="text" class="regular-text" value="<?php echo esc_attr($room['navPanel']['label']); ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Next Room ID</th>
+                            <td>
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" min="1" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
+                                <p class="description">Existing room IDs: <?php echo esc_html(implode(', ', array_map('strval', $room_ids))); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nav Position (X Y Z)</th>
+                            <td>
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nav Rotation (X Y Z)</th>
+                            <td>
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][0]); ?>" />
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][1]); ?>" />
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][2]); ?>" />
                             </td>
                         </tr>
                         <tr>
@@ -120,34 +236,6 @@ class Portfolio_3D_Home_Plugin {
                             <th scope="row">Eye Height</th>
                             <td>
                                 <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Label</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][label]" type="text" class="regular-text" value="<?php echo esc_attr($room['navPanel']['label']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Next Room ID</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" min="1" max="<?php echo esc_attr((string) $room_count); ?>" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Position (X Y Z)</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Rotation (X Y Z)</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][0]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][1]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][2]); ?>" />
                             </td>
                         </tr>
                     </table>
@@ -196,6 +284,7 @@ class Portfolio_3D_Home_Plugin {
                     </table>
                     <p style="margin-top:10px;">
                         <button type="submit" class="button" name="portfolio_3d_home_add_panel_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Panel</button>
+                        <button type="submit" class="button button-link-delete" name="portfolio_3d_home_remove_room" value="<?php echo esc_attr((string) $room_index); ?>" onclick="return confirm('Remove this room?');">Remove Room</button>
                     </p>
                 <?php endforeach; ?>
 
@@ -251,6 +340,10 @@ class Portfolio_3D_Home_Plugin {
         }
 
         foreach ($rooms as &$room) {
+            if (empty($room['navPanel']['enabled'])) {
+                $room['navPanel'] = null;
+            }
+
             foreach ($room['panels'] as &$panel) {
                 if ($debug) {
                     error_log('[P3D] get_rooms_payload: processing room_id=' . $room['id'] . ' panel_id=' . ($panel['id'] ?? 'unknown') . ' slug="' . ($panel['slug'] ?? '') . '"');
@@ -807,40 +900,67 @@ class Portfolio_3D_Home_Plugin {
 
     private function sanitize_rooms_config(array $posted_rooms): array {
         $defaults = $this->get_default_rooms();
-        $room_count = count($defaults);
-        $sanitized = [];
+        $invalid_nav_count = 0;
 
-        foreach ($defaults as $room_index => $default_room) {
-            $room = isset($posted_rooms[$room_index]) && is_array($posted_rooms[$room_index]) ? $posted_rooms[$room_index] : [];
+        return $this->sanitize_rooms_config_with_validation($posted_rooms, $defaults, $invalid_nav_count);
+    }
+
+    private function sanitize_rooms_config_with_validation(array $posted_rooms, array $defaults, int &$invalid_nav_count): array {
+        $default_map = [];
+        foreach ($defaults as $default_room) {
+            $default_id = (int) ($default_room['id'] ?? 0);
+            if ($default_id > 0) {
+                $default_map[$default_id] = $default_room;
+            }
+        }
+
+        $room_rows = array_values(array_filter($posted_rooms, 'is_array'));
+        if (empty($room_rows)) {
+            $room_rows = $defaults;
+        }
+
+        $sanitized = [];
+        $existing_ids = [];
+
+        foreach ($room_rows as $row_index => $room) {
+            $requested_id = isset($room['id']) ? (int) $room['id'] : 0;
+            if ($requested_id <= 0 || in_array($requested_id, $existing_ids, true)) {
+                $requested_id = $this->get_next_room_id($sanitized);
+            }
+
+            $existing_ids[] = $requested_id;
+
+            $default_room = $default_map[$requested_id] ?? $this->create_room_template($requested_id);
 
             $sanitized_room = $default_room;
+            $sanitized_room['id'] = $requested_id;
             $sanitized_room['glb'] = isset($room['glb']) ? sanitize_text_field((string) $room['glb']) : $default_room['glb'];
+            $sanitized_room['texture'] = isset($room['texture']) ? sanitize_text_field((string) $room['texture']) : ($default_room['texture'] ?? '');
             $sanitized_room['railMin'] = isset($room['railMin']) ? (float) $room['railMin'] : (float) $default_room['railMin'];
             $sanitized_room['railMax'] = isset($room['railMax']) ? (float) $room['railMax'] : (float) $default_room['railMax'];
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
             $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
 
-            if (isset($room['navPanel']) && is_array($room['navPanel'])) {
-                $nav = $room['navPanel'];
-                $next_room = isset($nav['nextRoomId']) ? (int) $nav['nextRoomId'] : (int) $default_room['navPanel']['nextRoomId'];
-                $sanitized_room['navPanel']['label'] = isset($nav['label']) ? sanitize_text_field((string) $nav['label']) : $default_room['navPanel']['label'];
-                $sanitized_room['navPanel']['nextRoomId'] = max(1, min($room_count, $next_room));
-                $sanitized_room['navPanel']['position'] = $this->sanitize_vector3(
-                    $nav['position'] ?? null,
-                    $default_room['navPanel']['position']
-                );
-                $sanitized_room['navPanel']['rotation'] = $this->sanitize_vector3(
-                    $nav['rotation'] ?? null,
-                    $default_room['navPanel']['rotation']
-                );
-            }
+            $nav = isset($room['navPanel']) && is_array($room['navPanel']) ? $room['navPanel'] : [];
+            $next_room = isset($nav['nextRoomId']) ? (int) $nav['nextRoomId'] : (int) $default_room['navPanel']['nextRoomId'];
+            $sanitized_room['navPanel']['enabled'] = !empty($nav['enabled']);
+            $sanitized_room['navPanel']['label'] = isset($nav['label']) ? sanitize_text_field((string) $nav['label']) : $default_room['navPanel']['label'];
+            $sanitized_room['navPanel']['nextRoomId'] = max(1, $next_room);
+            $sanitized_room['navPanel']['position'] = $this->sanitize_vector3(
+                $nav['position'] ?? null,
+                $default_room['navPanel']['position']
+            );
+            $sanitized_room['navPanel']['rotation'] = $this->sanitize_vector3(
+                $nav['rotation'] ?? null,
+                $default_room['navPanel']['rotation']
+            );
 
             $posted_panels = isset($room['panels']) && is_array($room['panels'])
                 ? array_values(array_filter($room['panels'], 'is_array'))
                 : [];
 
-            $panel_seed = $default_room['panels'][0];
-            $panel_count = max(count($default_room['panels']), count($posted_panels));
+            $panel_seed = $default_room['panels'][0] ?? $this->panel_template($this->build_panel_id($requested_id, 1), [-1.5, 1.5, 3.5], [0, M_PI, 0]);
+            $panel_count = max(1, max(count($default_room['panels']), count($posted_panels)));
             $sanitized_room['panels'] = [];
 
             for ($panel_index = 0; $panel_index < $panel_count; $panel_index++) {
@@ -848,7 +968,7 @@ class Portfolio_3D_Home_Plugin {
                 $panel = $posted_panels[$panel_index] ?? [];
 
                 $sanitized_room['panels'][$panel_index] = $default_panel;
-                $sanitized_room['panels'][$panel_index]['id'] = $this->build_panel_id((int) $default_room['id'], $panel_index + 1);
+                $sanitized_room['panels'][$panel_index]['id'] = $this->build_panel_id($requested_id, $panel_index + 1);
                 $sanitized_room['panels'][$panel_index]['slug'] = isset($panel['slug'])
                     ? sanitize_title((string) $panel['slug'])
                     : '';
@@ -867,6 +987,16 @@ class Portfolio_3D_Home_Plugin {
             }
 
             $sanitized[] = $sanitized_room;
+        }
+
+        $valid_ids = $this->get_room_id_list($sanitized);
+        foreach ($sanitized as &$room) {
+            $nav_enabled = !empty($room['navPanel']['enabled']);
+            $target_id = (int) ($room['navPanel']['nextRoomId'] ?? 0);
+            if ($nav_enabled && !in_array($target_id, $valid_ids, true)) {
+                $room['navPanel']['enabled'] = false;
+                $invalid_nav_count++;
+            }
         }
 
         return $sanitized;
@@ -903,11 +1033,56 @@ class Portfolio_3D_Home_Plugin {
         return $this->sanitize_rooms_config($saved);
     }
 
+    private function get_room_id_list(array $rooms): array {
+        $ids = [];
+        foreach ($rooms as $room) {
+            $room_id = (int) ($room['id'] ?? 0);
+            if ($room_id > 0) {
+                $ids[] = $room_id;
+            }
+        }
+        return array_values(array_unique($ids));
+    }
+
+    private function get_next_room_id(array $rooms): int {
+        $max_id = 0;
+        foreach ($rooms as $room) {
+            $room_id = (int) ($room['id'] ?? 0);
+            if ($room_id > $max_id) {
+                $max_id = $room_id;
+            }
+        }
+        return $max_id + 1;
+    }
+
+    private function create_room_template(int $room_id): array {
+        return [
+            'id' => $room_id,
+            'glb' => '',
+            'texture' => '',
+            'railMin' => -2,
+            'railMax' => 1,
+            'scrollSpeed' => 0.005,
+            'eyeHeight' => 1.67,
+            'panels' => [
+                $this->panel_template($this->build_panel_id($room_id, 1), [-1.5, 1.5, 3.5], [0, M_PI, 0]),
+            ],
+            'navPanel' => [
+                'enabled' => false,
+                'position' => [3.25, 1.5, 0],
+                'rotation' => [0, -M_PI / 2, 0],
+                'label' => 'Next Room ->',
+                'nextRoomId' => $room_id,
+            ],
+        ];
+    }
+
     private function get_default_rooms(): array {
         return [
             [
                 'id' => 1,
                 'glb' => '/2026/05/TestRoom1.glb',
+                'texture' => '/2026/05/TestRoom1.webp',
                 'railMin' => -2,
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
@@ -916,6 +1091,7 @@ class Portfolio_3D_Home_Plugin {
                     $this->panel_template('room1-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
+                    'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
                     'label' => 'Room 2 ->',
@@ -925,6 +1101,7 @@ class Portfolio_3D_Home_Plugin {
             [
                 'id' => 2,
                 'glb' => '/2026/05/TestRoom2.glb',
+                'texture' => '/2026/05/TestRoom2.webp',
                 'railMin' => -2,
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
@@ -933,6 +1110,7 @@ class Portfolio_3D_Home_Plugin {
                     $this->panel_template('room2-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
+                    'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
                     'label' => 'Room 3 ->',
@@ -942,6 +1120,7 @@ class Portfolio_3D_Home_Plugin {
             [
                 'id' => 3,
                 'glb' => '/2026/05/TestRoom3.glb',
+                'texture' => '/2026/05/TestRoom3.webp',
                 'railMin' => -2,
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
@@ -950,6 +1129,7 @@ class Portfolio_3D_Home_Plugin {
                     $this->panel_template('room3-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
                 ],
                 'navPanel' => [
+                    'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
                     'label' => 'Room 1 ->',

@@ -195,6 +195,7 @@ function RoomPage({
         <ThreeDScene
           mode="fps"
           url={room.glb}
+          roomTexture={room.texture}
           railMin={room.railMin}
           railMax={room.railMax}
           scrollSpeed={room.scrollSpeed}
