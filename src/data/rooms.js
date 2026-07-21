@@ -7,6 +7,16 @@ export const rooms = [
     railMax: 1,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
+    lights: [
+      {
+        id: 'room1-light1',
+        position: [0, 2.5, 0],
+        rotation: [0, 0, 0],
+        angleDeg: 45,
+        intensity: 0.6,
+        color: '#ffffff'
+      }
+    ],
     panels: [
       {
         id: 'room1-panel1',
@@ -42,6 +52,16 @@ export const rooms = [
     railMax: 1,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
+    lights: [
+      {
+        id: 'room2-light1',
+        position: [0, 2.5, 0],
+        rotation: [0, 0, 0],
+        angleDeg: 45,
+        intensity: 0.6,
+        color: '#ffffff'
+      }
+    ],
     panels: [
       {
         id: 'room2-panel1',
@@ -72,6 +92,16 @@ export const rooms = [
     railMax: 1,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
+    lights: [
+      {
+        id: 'room3-light1',
+        position: [0, 2.5, 0],
+        rotation: [0, 0, 0],
+        angleDeg: 45,
+        intensity: 0.6,
+        color: '#ffffff'
+      }
+    ],
     panels: [
       {
         id: 'room3-panel1',

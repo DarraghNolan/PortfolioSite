@@ -196,6 +196,9 @@ function RoomPage({
           mode="fps"
           url={room.glb}
           roomTexture={room.texture}
+          defaultLightEnabled={room.defaultLightEnabled}
+          shadowsEnabled={room.shadowsEnabled}
+          lights={room.lights}
           railMin={room.railMin}
           railMax={room.railMax}
           scrollSpeed={room.scrollSpeed}

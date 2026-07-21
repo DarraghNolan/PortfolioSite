@@ -24,10 +24,43 @@ function resolveUploadsUrl(url, uploadsBaseUrl) {
 function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
   if (!Array.isArray(rawRooms)) return [];
 
+  const normalizeVector3 = (value, fallback) => {
+    if (!Array.isArray(value) || value.length < 3) return fallback;
+    return [
+      Number.isFinite(Number(value[0])) ? Number(value[0]) : fallback[0],
+      Number.isFinite(Number(value[1])) ? Number(value[1]) : fallback[1],
+      Number.isFinite(Number(value[2])) ? Number(value[2]) : fallback[2]
+    ];
+  };
+
+  const clamp = (value, min, max, fallback) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
+  };
+
+  const normalizeHex = (value, fallback = '#ffffff') => {
+    if (typeof value !== 'string') return fallback;
+    const trimmed = value.trim();
+    return /^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/.test(trimmed) ? trimmed : fallback;
+  };
+
   return rawRooms.map((room) => ({
     ...room,
     glb: resolveUploadsUrl(room.glb, uploadsBaseUrl),
     texture: resolveUploadsUrl(room.texture, uploadsBaseUrl),
+    defaultLightEnabled: room.defaultLightEnabled !== false,
+    shadowsEnabled: room.shadowsEnabled === true,
+    lights: Array.isArray(room.lights)
+      ? room.lights.map((light, index) => ({
+          id: typeof light?.id === 'string' && light.id ? light.id : `room${room.id}-light${index + 1}`,
+          position: normalizeVector3(light?.position, [0, 2.5, 0]),
+          rotation: normalizeVector3(light?.rotation, [0, 0, 0]),
+          angleDeg: clamp(light?.angleDeg, 1, 89, 45),
+          intensity: clamp(light?.intensity, 0, 1, 0.6),
+          color: normalizeHex(light?.color)
+        }))
+      : [],
     panels: Array.isArray(room.panels)
       ? room.panels.map((panel) => ({
           ...panel,

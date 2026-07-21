@@ -88,6 +88,62 @@ class Portfolio_3D_Home_Plugin {
                 $notices[] = ['type' => 'success', 'text' => 'New panel added.'];
             }
 
+            $add_light_room_index = isset($_POST['portfolio_3d_home_add_light_room'])
+                ? (int) $_POST['portfolio_3d_home_add_light_room']
+                : -1;
+
+            if ($add_light_room_index >= 0 && isset($saved[$add_light_room_index])) {
+                $room_id = (int) ($saved[$add_light_room_index]['id'] ?? ($add_light_room_index + 1));
+                $next_index = count($saved[$add_light_room_index]['lights'] ?? []) + 1;
+                $seed_light = $saved[$add_light_room_index]['lights'][0] ?? [
+                    'position' => [0, 2.5, 0],
+                    'rotation' => [0, 0, 0],
+                    'angleDeg' => 45,
+                    'intensity' => 0.6,
+                    'color' => '#ffffff',
+                ];
+
+                $saved[$add_light_room_index]['lights'][] = $this->light_template(
+                    $this->build_light_id($room_id, $next_index),
+                    $seed_light['position'] ?? [0, 2.5, 0],
+                    $seed_light['rotation'] ?? [0, 0, 0],
+                    isset($seed_light['angleDeg']) ? (float) $seed_light['angleDeg'] : 45,
+                    isset($seed_light['intensity']) ? (float) $seed_light['intensity'] : 0.6,
+                    isset($seed_light['color']) ? (string) $seed_light['color'] : '#ffffff'
+                );
+                $notices[] = ['type' => 'success', 'text' => 'New light added.'];
+            }
+
+            foreach ($saved as $room_index => &$room_entry) {
+                $room_entry['defaultLightEnabled'] = !empty($posted[$room_index]['defaultLightEnabled']);
+            }
+            unset($room_entry);
+
+            $remove_light_token = isset($_POST['portfolio_3d_home_remove_light'])
+                ? sanitize_text_field((string) $_POST['portfolio_3d_home_remove_light'])
+                : '';
+
+            if ($remove_light_token !== '') {
+                $parts = explode(':', $remove_light_token);
+                $remove_light_room_index = isset($parts[0]) ? (int) $parts[0] : -1;
+                $remove_light_index = isset($parts[1]) ? (int) $parts[1] : -1;
+
+                if (
+                    $remove_light_room_index >= 0
+                    && $remove_light_index >= 0
+                    && isset($saved[$remove_light_room_index])
+                    && isset($saved[$remove_light_room_index]['lights'][$remove_light_index])
+                ) {
+                    if (count($saved[$remove_light_room_index]['lights']) <= 1) {
+                        $notices[] = ['type' => 'error', 'text' => 'At least one light is required per room. Remove was ignored.'];
+                    } else {
+                        unset($saved[$remove_light_room_index]['lights'][$remove_light_index]);
+                        $saved[$remove_light_room_index]['lights'] = array_values($saved[$remove_light_room_index]['lights']);
+                        $notices[] = ['type' => 'success', 'text' => 'Light removed.'];
+                    }
+                }
+            }
+
             $invalid_nav_count = 0;
             $saved = $this->sanitize_rooms_config_with_validation($saved, $this->get_default_rooms(), $invalid_nav_count);
 
@@ -238,6 +294,34 @@ class Portfolio_3D_Home_Plugin {
                                 <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row">Default Room Light</th>
+                            <td>
+                                <label>
+                                    <input
+                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][defaultLightEnabled]"
+                                        type="checkbox"
+                                        value="1"
+                                        <?php checked(!empty($room['defaultLightEnabled'])); ?>
+                                    />
+                                    Show the built-in default room light
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Shadows</th>
+                            <td>
+                                <label>
+                                    <input
+                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][shadowsEnabled]"
+                                        type="checkbox"
+                                        value="1"
+                                        <?php checked(!empty($room['shadowsEnabled'])); ?>
+                                    />
+                                    Enable shadows in this room
+                                </label>
+                            </td>
+                        </tr>
                     </table>
 
                     <h3>Panels</h3>
@@ -282,8 +366,65 @@ class Portfolio_3D_Home_Plugin {
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                    <h3>Lights</h3>
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Light</th>
+                                <th>Position (X Y Z)</th>
+                                <th>Rotation (X Y Z)</th>
+                                <th>Angle (deg)</th>
+                                <th>Strength (0-1)</th>
+                                <th>Color (Hex)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($room['lights'] as $light_index => $light): ?>
+                                <tr>
+                                    <td><?php echo esc_html('Light ' . ($light_index + 1)); ?></td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][2]); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][2]); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][angleDeg]" type="number" min="1" max="89" step="0.1" value="<?php echo esc_attr((string) $light['angleDeg']); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][intensity]" type="number" min="0" max="1" step="0.01" value="<?php echo esc_attr((string) $light['intensity']); ?>" />
+                                    </td>
+                                    <td>
+                                        <input
+                                            name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][color]"
+                                            type="text"
+                                            class="regular-text"
+                                            placeholder="#ffffff"
+                                            value="<?php echo esc_attr((string) $light['color']); ?>"
+                                        />
+                                    </td>
+                                    <td>
+                                        <button
+                                            type="submit"
+                                            class="button button-link-delete"
+                                            name="portfolio_3d_home_remove_light"
+                                            value="<?php echo esc_attr((string) $room_index . ':' . (string) $light_index); ?>"
+                                            onclick="return confirm('Remove this light?');"
+                                        >Remove Light</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                     <p style="margin-top:10px;">
                         <button type="submit" class="button" name="portfolio_3d_home_add_panel_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Panel</button>
+                        <button type="submit" class="button" name="portfolio_3d_home_add_light_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Light</button>
                         <button type="submit" class="button button-link-delete" name="portfolio_3d_home_remove_room" value="<?php echo esc_attr((string) $room_index); ?>" onclick="return confirm('Remove this room?');">Remove Room</button>
                     </p>
                 <?php endforeach; ?>
@@ -940,6 +1081,10 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['railMax'] = isset($room['railMax']) ? (float) $room['railMax'] : (float) $default_room['railMax'];
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
             $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
+            $sanitized_room['defaultLightEnabled'] = !isset($room['defaultLightEnabled'])
+                ? !empty($default_room['defaultLightEnabled'])
+                : !empty($room['defaultLightEnabled']);
+            $sanitized_room['shadowsEnabled'] = !empty($room['shadowsEnabled']);
 
             $nav = isset($room['navPanel']) && is_array($room['navPanel']) ? $room['navPanel'] : [];
             $next_room = isset($nav['nextRoomId']) ? (int) $nav['nextRoomId'] : (int) $default_room['navPanel']['nextRoomId'];
@@ -986,6 +1131,50 @@ class Portfolio_3D_Home_Plugin {
                 );
             }
 
+            $default_lights = isset($default_room['lights']) && is_array($default_room['lights'])
+                ? array_values(array_filter($default_room['lights'], 'is_array'))
+                : [];
+            $posted_lights = isset($room['lights']) && is_array($room['lights'])
+                ? array_values(array_filter($room['lights'], 'is_array'))
+                : [];
+
+            $light_seed = $default_lights[0] ?? $this->light_template(
+                $this->build_light_id($requested_id, 1),
+                [0, 2.5, 0],
+                [0, 0, 0],
+                45,
+                0.6,
+                '#ffffff'
+            );
+
+            $light_count = max(1, max(count($default_lights), count($posted_lights)));
+            $sanitized_room['lights'] = [];
+
+            for ($light_index = 0; $light_index < $light_count; $light_index++) {
+                $default_light = $default_lights[$light_index] ?? $light_seed;
+                $light = $posted_lights[$light_index] ?? [];
+
+                $sanitized_room['lights'][$light_index] = $default_light;
+                $sanitized_room['lights'][$light_index]['id'] = $this->build_light_id($requested_id, $light_index + 1);
+                $sanitized_room['lights'][$light_index]['position'] = $this->sanitize_vector3(
+                    $light['position'] ?? null,
+                    $default_light['position'] ?? [0, 2.5, 0]
+                );
+                $sanitized_room['lights'][$light_index]['rotation'] = $this->sanitize_vector3(
+                    $light['rotation'] ?? null,
+                    $default_light['rotation'] ?? [0, 0, 0]
+                );
+                $sanitized_room['lights'][$light_index]['angleDeg'] = $this->sanitize_light_angle_deg(
+                    $light['angleDeg'] ?? ($default_light['angleDeg'] ?? 45)
+                );
+                $sanitized_room['lights'][$light_index]['intensity'] = $this->sanitize_light_intensity(
+                    $light['intensity'] ?? ($default_light['intensity'] ?? 0.6)
+                );
+                $sanitized_room['lights'][$light_index]['color'] = $this->sanitize_light_color(
+                    isset($light['color']) ? (string) $light['color'] : (string) ($default_light['color'] ?? '#ffffff')
+                );
+            }
+
             $sanitized[] = $sanitized_room;
         }
 
@@ -1023,6 +1212,27 @@ class Portfolio_3D_Home_Plugin {
             max(0.1, isset($value[0]) ? (float) $value[0] : (float) $fallback[0]),
             max(0.1, isset($value[1]) ? (float) $value[1] : (float) $fallback[1]),
         ];
+    }
+
+    private function sanitize_light_angle_deg($value): float {
+        $angle = (float) $value;
+        if ($angle <= 0) {
+            $angle = 45;
+        }
+        return min(89, max(1, $angle));
+    }
+
+    private function sanitize_light_intensity($value): float {
+        $intensity = (float) $value;
+        return min(1, max(0, $intensity));
+    }
+
+    private function sanitize_light_color(string $value): string {
+        $color = trim($value);
+        if (preg_match('/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/', $color) === 1) {
+            return $color;
+        }
+        return '#ffffff';
     }
 
     private function merge_with_defaults(array $saved): array {
@@ -1064,8 +1274,13 @@ class Portfolio_3D_Home_Plugin {
             'railMax' => 1,
             'scrollSpeed' => 0.005,
             'eyeHeight' => 1.67,
+            'defaultLightEnabled' => true,
+            'shadowsEnabled' => false,
             'panels' => [
                 $this->panel_template($this->build_panel_id($room_id, 1), [-1.5, 1.5, 3.5], [0, M_PI, 0]),
+            ],
+            'lights' => [
+                $this->light_template($this->build_light_id($room_id, 1), [0, 2.5, 0], [0, 0, 0], 45, 0.6, '#ffffff'),
             ],
             'navPanel' => [
                 'enabled' => false,
@@ -1087,8 +1302,13 @@ class Portfolio_3D_Home_Plugin {
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'defaultLightEnabled' => true,
+                'shadowsEnabled' => false,
                 'panels' => [
                     $this->panel_template('room1-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
+                ],
+                'lights' => [
+                    $this->light_template('room1-light1', [0, 2.5, 0], [0, 0, 0], 45, 0.6, '#ffffff'),
                 ],
                 'navPanel' => [
                     'enabled' => true,
@@ -1106,8 +1326,13 @@ class Portfolio_3D_Home_Plugin {
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'defaultLightEnabled' => true,
+                'shadowsEnabled' => false,
                 'panels' => [
                     $this->panel_template('room2-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
+                ],
+                'lights' => [
+                    $this->light_template('room2-light1', [0, 2.5, 0], [0, 0, 0], 45, 0.6, '#ffffff'),
                 ],
                 'navPanel' => [
                     'enabled' => true,
@@ -1125,8 +1350,13 @@ class Portfolio_3D_Home_Plugin {
                 'railMax' => 1,
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'defaultLightEnabled' => true,
+                'shadowsEnabled' => false,
                 'panels' => [
                     $this->panel_template('room3-panel1', [-1.5, 1.5, 3.5], [0, M_PI, 0]),
+                ],
+                'lights' => [
+                    $this->light_template('room3-light1', [0, 2.5, 0], [0, 0, 0], 45, 0.6, '#ffffff'),
                 ],
                 'navPanel' => [
                     'enabled' => true,
@@ -1155,7 +1385,22 @@ class Portfolio_3D_Home_Plugin {
         ];
     }
 
+    private function light_template(string $id, array $position, array $rotation, float $angle_deg = 45, float $intensity = 0.6, string $color = '#ffffff'): array {
+        return [
+            'id' => $id,
+            'position' => $position,
+            'rotation' => $rotation,
+            'angleDeg' => $this->sanitize_light_angle_deg($angle_deg),
+            'intensity' => $this->sanitize_light_intensity($intensity),
+            'color' => $this->sanitize_light_color($color),
+        ];
+    }
+
     private function build_panel_id(int $room_id, int $panel_number): string {
         return 'room' . $room_id . '-panel' . $panel_number;
+    }
+
+    private function build_light_id(int $room_id, int $light_number): string {
+        return 'room' . $room_id . '-light' . $light_number;
     }
 }

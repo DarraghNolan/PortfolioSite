@@ -1,10 +1,48 @@
 import React, { useRef, useEffect, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
-import { AnimationMixer, Clock, TextureLoader } from 'three';
+import { AnimationMixer, Clock, Euler, MathUtils, TextureLoader, Vector3 } from 'three';
 import FPSControls from '../components/FPSControls';
 import WallPanel from '../components/WallPanel';
 import NavPanel from '../components/NavPanel';
+
+const ROOM_LIGHT_INTENSITY_MULTIPLIER = 40;
+
+function RoomSpotLight({ light }) {
+  const lightRef = useRef(null);
+  const targetRef = useRef(null);
+
+  useEffect(() => {
+    if (!lightRef.current || !targetRef.current) return;
+
+    const [px, py, pz] = light.position;
+    const [rx, ry, rz] = light.rotation;
+
+    const direction = new Vector3(0, 0, -1)
+      .applyEuler(new Euler(rx, ry, rz, 'XYZ'))
+      .normalize();
+    const targetPosition = new Vector3(px, py, pz).add(direction.multiplyScalar(5));
+
+    targetRef.current.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
+    lightRef.current.target = targetRef.current;
+  }, [light]);
+
+  return (
+    <>
+      <object3D ref={targetRef} />
+      <spotLight
+        ref={lightRef}
+        position={light.position}
+        angle={MathUtils.degToRad(light.angleDeg)}
+        intensity={light.intensity * ROOM_LIGHT_INTENSITY_MULTIPLIER}
+        color={light.color}
+        penumbra={0.2}
+        distance={0}
+        castShadow={light.castShadow}
+      />
+    </>
+  );
+}
 
 function ThreeDScene({ 
   // Existing props for model viewer mode
@@ -20,12 +58,15 @@ function ThreeDScene({
   scrollSpeed = 0.0001,
   lookSpeed = 0.002,
   eyeHeight = 1.67,
+  defaultLightEnabled = true,
+  shadowsEnabled = false,
   
   // Modal props
   modalOpen = false,
   onPanelClick = () => {},
 
   // Room content
+  lights = [],
   panels = [],
   navPanel = null,
   onNavigate = () => {}
@@ -125,7 +166,7 @@ function ThreeDScene({
     : { fov: 30, near: 0.5, far: 9999 };
 
   return (
-    <Canvas camera={cameraProps}>
+    <Canvas camera={cameraProps} shadows={shadowsEnabled}>
       {/* Lighting setup */}
       <ambientLight intensity={mode === "fps" ? 0.6 : 4} />
       <directionalLight 
@@ -140,8 +181,18 @@ function ThreeDScene({
       )}
       {mode === "fps" && (
         <>
-          <directionalLight position={[-5, 5, -5]} intensity={0.8} />
-          <pointLight position={[0, 2, 0]} intensity={0.5} />
+          {defaultLightEnabled && (
+            <>
+              <directionalLight position={[-5, 5, -5]} intensity={0.35} castShadow={shadowsEnabled} />
+              <pointLight position={[0, 2, 0]} intensity={0.2} castShadow={shadowsEnabled} />
+            </>
+          )}
+          {lights.map((light, index) => (
+            <RoomSpotLight
+              key={light.id || `room-light-${index}`}
+              light={{ ...light, castShadow: shadowsEnabled }}
+            />
+          ))}
         </>
       )}
 
@@ -151,6 +202,8 @@ function ThreeDScene({
           rotation={mode === "fps" ? [0, 0, 0] : [rotX, rotY, rotZ]}
           position={mode === "fps" ? [0, 0, 0] : [posX, posY, posZ]}
           scale={mode === "fps" ? [1, 1, 1] : [scale, scale, scale]}
+          castShadow={shadowsEnabled}
+          receiveShadow={shadowsEnabled}
         />
         
         {/* Controls based on mode */}
