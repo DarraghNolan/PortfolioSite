@@ -160,6 +160,16 @@ function ThreeDScene({
     });
   }, [scene, mode, roomTexture]);
 
+  useEffect(() => {
+    if (mode !== 'fps') return;
+
+    scene.traverse((child) => {
+      if (!child.isMesh) return;
+      child.castShadow = shadowsEnabled;
+      child.receiveShadow = shadowsEnabled;
+    });
+  }, [scene, mode, shadowsEnabled]);
+
   // Different camera settings for different modes
   const cameraProps = mode === "fps" 
     ? { fov: 75, near: 0.1, far: 1000, position: [0, eyeHeight, 0] }
