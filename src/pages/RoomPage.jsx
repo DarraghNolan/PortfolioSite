@@ -93,6 +93,7 @@ function RoomPage({
           justifyContent: 'center',
           alignItems: 'center',
           zIndex: 2000,
+          paddingTop: '20em !important',
         }}>
           <div style={{
             backgroundColor: '#1a1a1a',
@@ -101,7 +102,7 @@ function RoomPage({
             borderRadius: '10px',
             width: '680px',
             maxWidth: '92vw',
-            maxHeight: '88vh',
+            maxHeight: '80vh',
             overflow: 'auto',
             position: 'relative',
             border: '1px solid #444',
