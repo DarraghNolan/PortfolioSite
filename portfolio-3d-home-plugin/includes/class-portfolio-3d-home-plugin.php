@@ -326,7 +326,7 @@ class Portfolio_3D_Home_Plugin {
                     </table>
 
                     <h3>Room Preview</h3>
-                    <p class="description">Preview shows only the room model with orbit controls. Use Save + Refresh Preview to update this view.</p>
+                    <p class="description">Preview shows the room model with a hidden-line wireframe overlay and orbit controls. Use Save + Refresh Preview to update this view.</p>
                     <div
                         class="p3d-room-preview"
                         data-room="<?php echo esc_attr(wp_json_encode($room)); ?>"
@@ -524,6 +524,90 @@ class Portfolio_3D_Home_Plugin {
                 return normalized ? `${base}/${normalized}` : base;
             }
 
+            function numberOr(value, fallback) {
+                const n = Number(value);
+                return Number.isFinite(n) ? n : fallback;
+            }
+
+            function createPanelLabelTexture(labelText) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 256;
+                canvas.height = 64;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return null;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labelText, canvas.width / 2, canvas.height / 2);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.generateMipmaps = false;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.needsUpdate = true;
+                return texture;
+            }
+
+            function addPanelBillboards(scene, panels, roomIndex) {
+                if (!Array.isArray(panels) || panels.length === 0) {
+                    log('No panel billboards to render.', { roomIndex });
+                    return;
+                }
+
+                const planeGeometry = new THREE.PlaneGeometry(1, 1);
+                let added = 0;
+
+                panels.forEach((panel, index) => {
+                    const position = Array.isArray(panel?.position) ? panel.position : [0, 1.5, 0];
+                    const rotation = Array.isArray(panel?.rotation) ? panel.rotation : [0, Math.PI, 0];
+                    const scale = Array.isArray(panel?.scale) ? panel.scale : [2, 1.5];
+
+                    const label = `Wall Panel ${index + 1}`;
+                    const texture = createPanelLabelTexture(label);
+                    if (!texture) return;
+
+                    const material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture,
+                        side: THREE.DoubleSide,
+                        transparent: false,
+                        depthTest: true,
+                        depthWrite: true,
+                    });
+
+                    const panelMesh = new THREE.Mesh(planeGeometry, material);
+                    panelMesh.position.set(
+                        numberOr(position[0], 0),
+                        numberOr(position[1], 1.5),
+                        numberOr(position[2], 0)
+                    );
+                    panelMesh.rotation.set(
+                        numberOr(rotation[0], 0),
+                        numberOr(rotation[1], Math.PI),
+                        numberOr(rotation[2], 0)
+                    );
+                    panelMesh.scale.set(
+                        Math.max(0.1, numberOr(scale[0], 2)),
+                        Math.max(0.1, numberOr(scale[1], 1.5)),
+                        1
+                    );
+
+                    const forward = new THREE.Vector3(0, 0, 1).applyEuler(panelMesh.rotation).normalize();
+                    panelMesh.position.add(forward.multiplyScalar(0.02));
+
+                    scene.add(panelMesh);
+                    added++;
+                });
+
+                log('Panel billboards added.', { roomIndex, count: added });
+            }
+
             function initPreview(previewEl) {
                 const roomIndex = previewEl.getAttribute('data-room-index') || '?';
                 const mount = previewEl.querySelector('.p3d-room-preview-canvas');
@@ -587,8 +671,28 @@ class Portfolio_3D_Home_Plugin {
                 loader.load(
                     roomModelUrl,
                     (gltf) => {
-                        scene.add(gltf.scene);
-                        const box = new THREE.Box3().setFromObject(gltf.scene);
+                        const model = gltf.scene;
+
+                        // Add hidden-line style overlay while keeping original mesh materials visible.
+                        model.traverse((node) => {
+                            if (!node.isMesh || !node.geometry) return;
+
+                            const edges = new THREE.EdgesGeometry(node.geometry, 25);
+                            const edgeMaterial = new THREE.LineBasicMaterial({
+                                color: 0xffffff,
+                                transparent: true,
+                                opacity: 0.45,
+                                depthTest: true,
+                                depthWrite: false,
+                            });
+                            const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+                            edgeLines.renderOrder = 2;
+                            node.add(edgeLines);
+                        });
+
+                        scene.add(model);
+                        addPanelBillboards(scene, room?.panels, roomIndex);
+                        const box = new THREE.Box3().setFromObject(model);
                         const center = box.getCenter(new THREE.Vector3());
                         const size = box.getSize(new THREE.Vector3());
                         const maxDim = Math.max(size.x, size.y, size.z, 1);
@@ -606,7 +710,7 @@ class Portfolio_3D_Home_Plugin {
 
                         log('GLTF loaded successfully.', {
                             roomIndex,
-                            childCount: gltf.scene?.children?.length || 0,
+                            childCount: model?.children?.length || 0,
                             center: { x: center.x, y: center.y, z: center.z },
                             maxDim,
                         });
