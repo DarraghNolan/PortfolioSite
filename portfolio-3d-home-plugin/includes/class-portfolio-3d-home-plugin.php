@@ -160,6 +160,7 @@ class Portfolio_3D_Home_Plugin {
 
         $rooms = $this->merge_with_defaults($saved);
         $room_ids = $this->get_room_id_list($rooms);
+        $uploads_base_url = (string) (trailingslashit(wp_upload_dir()['baseurl'] ?? ''));
         ?>
         <div class="wrap">
             <h1>Portfolio 3D Rooms</h1>
@@ -324,6 +325,17 @@ class Portfolio_3D_Home_Plugin {
                         </tr>
                     </table>
 
+                    <h3>Room Preview</h3>
+                    <p class="description">Preview shows only the room model with orbit controls. Use Save + Refresh Preview to update this view.</p>
+                    <div
+                        class="p3d-room-preview"
+                        data-room="<?php echo esc_attr(wp_json_encode($room)); ?>"
+                        data-uploads-base="<?php echo esc_attr($uploads_base_url); ?>"
+                        data-room-index="<?php echo esc_attr((string) $room_index); ?>"
+                    >
+                        <div class="p3d-room-preview-canvas"></div>
+                    </div>
+
                     <h3>Panels</h3>
                     <table class="widefat striped">
                         <thead>
@@ -425,6 +437,7 @@ class Portfolio_3D_Home_Plugin {
                     <p style="margin-top:10px;">
                         <button type="submit" class="button" name="portfolio_3d_home_add_panel_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Panel</button>
                         <button type="submit" class="button" name="portfolio_3d_home_add_light_room" value="<?php echo esc_attr((string) $room_index); ?>">Add Light</button>
+                        <button type="submit" class="button button-primary" name="portfolio_3d_home_refresh_preview" value="1">Save + Refresh Preview</button>
                         <button type="submit" class="button button-link-delete" name="portfolio_3d_home_remove_room" value="<?php echo esc_attr((string) $room_index); ?>" onclick="return confirm('Remove this room?');">Remove Room</button>
                     </p>
                 <?php endforeach; ?>
@@ -432,6 +445,212 @@ class Portfolio_3D_Home_Plugin {
                 <?php submit_button('Save Rooms'); ?>
             </form>
         </div>
+
+        <style>
+            .p3d-room-preview {
+                margin: 12px 0 18px;
+            }
+
+            .p3d-room-preview-canvas {
+                width: 100%;
+                max-width: 760px;
+                height: 320px;
+                background: #000;
+                border: 1px solid #2f2f2f;
+                border-radius: 6px;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .p3d-room-preview-note {
+                color: #bbb;
+                font-size: 12px;
+                margin-top: 6px;
+            }
+        </style>
+
+        <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+            }
+        }
+        </script>
+
+        <script type="module">
+            import * as THREE from 'three';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+            const LOG_PREFIX = '[P3D Preview]';
+
+            function log(message, data) {
+                if (typeof data !== 'undefined') {
+                    console.log(LOG_PREFIX, message, data);
+                    return;
+                }
+                console.log(LOG_PREFIX, message);
+            }
+
+            function warn(message, data) {
+                if (typeof data !== 'undefined') {
+                    console.warn(LOG_PREFIX, message, data);
+                    return;
+                }
+                console.warn(LOG_PREFIX, message);
+            }
+
+            function error(message, data) {
+                if (typeof data !== 'undefined') {
+                    console.error(LOG_PREFIX, message, data);
+                    return;
+                }
+                console.error(LOG_PREFIX, message);
+            }
+
+            function resolveUploadsUrl(url, uploadsBaseUrl) {
+                if (!url || typeof url !== 'string') return '';
+                if (/^(https?:)?\/\//i.test(url)) return url;
+
+                const base = (uploadsBaseUrl || '').replace(/\/+$/, '');
+                if (!base) return url;
+
+                const normalized = url
+                    .replace(/^\/wp-content\/uploads\//i, '')
+                    .replace(/^wp-content\/uploads\//i, '')
+                    .replace(/^\//, '');
+
+                return normalized ? `${base}/${normalized}` : base;
+            }
+
+            function initPreview(previewEl) {
+                const roomIndex = previewEl.getAttribute('data-room-index') || '?';
+                const mount = previewEl.querySelector('.p3d-room-preview-canvas');
+                if (!mount) {
+                    warn('Missing preview canvas mount.', { roomIndex });
+                    return;
+                }
+
+                let room;
+                try {
+                    room = JSON.parse(previewEl.getAttribute('data-room') || '{}');
+                    log('Room JSON parsed.', { roomIndex, roomId: room?.id });
+                } catch (e) {
+                    error('Invalid room preview JSON.', { roomIndex, error: String(e) });
+                    mount.innerHTML = '<div class="p3d-room-preview-note">Invalid room preview data.</div>';
+                    return;
+                }
+
+                const uploadsBaseUrl = previewEl.getAttribute('data-uploads-base') || '';
+                const roomModelUrl = resolveUploadsUrl(room?.glb, uploadsBaseUrl);
+                log('Resolved room model URL.', { roomIndex, glb: room?.glb, roomModelUrl });
+
+                if (!roomModelUrl) {
+                    warn('No room model URL configured.', { roomIndex });
+                    mount.innerHTML = '<div class="p3d-room-preview-note">No room model path set for this room.</div>';
+                    return;
+                }
+
+                const width = mount.clientWidth || 760;
+                const height = mount.clientHeight || 320;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 3000);
+                camera.position.set(0, 0, -5);
+                camera.lookAt(0, 0, 0);
+
+                // Keep preview lighting minimal but visible for standard GLTF materials.
+                scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+                const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+                keyLight.position.set(4, 6, -3);
+                scene.add(keyLight);
+
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'low-power' });
+                renderer.setSize(width, height, false);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+                renderer.setClearColor(0x000000, 1);
+
+                mount.innerHTML = '';
+                mount.appendChild(renderer.domElement);
+                log('Renderer initialized.', { roomIndex, width, height });
+
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.08;
+                controls.target.set(0, 0, 0);
+                controls.update();
+                log('Orbit controls initialized.', { roomIndex });
+
+                const loader = new GLTFLoader();
+                log('Starting GLTF load.', { roomIndex, roomModelUrl });
+                loader.load(
+                    roomModelUrl,
+                    (gltf) => {
+                        scene.add(gltf.scene);
+                        const box = new THREE.Box3().setFromObject(gltf.scene);
+                        const center = box.getCenter(new THREE.Vector3());
+                        const size = box.getSize(new THREE.Vector3());
+                        const maxDim = Math.max(size.x, size.y, size.z, 1);
+
+                        const distance = maxDim * 1.7;
+                        camera.position.set(center.x + distance, center.y + distance * 0.65, center.z - distance);
+                        camera.near = Math.max(0.01, maxDim / 1000);
+                        camera.far = Math.max(3000, maxDim * 30);
+                        camera.updateProjectionMatrix();
+
+                        controls.target.copy(center);
+                        controls.minDistance = maxDim * 0.25;
+                        controls.maxDistance = maxDim * 10;
+                        controls.update();
+
+                        log('GLTF loaded successfully.', {
+                            roomIndex,
+                            childCount: gltf.scene?.children?.length || 0,
+                            center: { x: center.x, y: center.y, z: center.z },
+                            maxDim,
+                        });
+                    },
+                    (event) => {
+                        if (!event || !event.total) return;
+                        const pct = Math.round((event.loaded / event.total) * 100);
+                        log('GLTF loading progress.', { roomIndex, loaded: event.loaded, total: event.total, pct });
+                    },
+                    (loadError) => {
+                        error('GLTF load failed.', { roomIndex, roomModelUrl, error: loadError });
+                        mount.innerHTML = '<div class="p3d-room-preview-note">Could not load this room model. Save and check the model path.</div>';
+                    }
+                );
+
+                let started = false;
+                function animate() {
+                    if (!started) {
+                        started = true;
+                        log('Render loop started.', { roomIndex });
+                    }
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    const nextWidth = mount.clientWidth || 760;
+                    const nextHeight = mount.clientHeight || 320;
+                    camera.aspect = nextWidth / nextHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(nextWidth, nextHeight, false);
+                });
+            }
+
+            try {
+                const previews = document.querySelectorAll('.p3d-room-preview');
+                log('Found room preview elements.', { count: previews.length });
+                previews.forEach((previewEl) => initPreview(previewEl));
+            } catch (e) {
+                error('Fatal preview init error.', e);
+            }
+        </script>
         <?php
     }
 
