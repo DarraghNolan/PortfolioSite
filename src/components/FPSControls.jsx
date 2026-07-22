@@ -1,20 +1,28 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Rail-based controls: scroll moves camera along X axis, mouse look rotates freely.
+// Rail-based controls: scroll moves camera along a two-point XZ rail, mouse look rotates freely.
 function FPSControls({
   lookSpeed = 0.002,
   eyeHeight = 1.67,
   railMin = -10,     // minimum X position along the rail
   railMax = 10,      // maximum X position along the rail
+  railPoints = null, // [[startX, startZ], [endX, endZ]]
   scrollSpeed = 0.02, // units moved per scroll delta unit
   modalOpen = false   // disable scroll when modal is open
 }) {
   const { camera, gl } = useThree();
 
-  // Target X position on the rail (updated by scroll)
-  const targetX = useRef(0);
+  const railSegment = useRef({
+    start: new THREE.Vector3(railMin, eyeHeight, 0),
+    end: new THREE.Vector3(railMax, eyeHeight, 0)
+  });
+  const railLength = useRef(Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end)));
+
+  // Target percentage along the rail [0..1] updated by scroll
+  const targetT = useRef(0);
+  const smoothT = useRef(0);
   const modalOpenRef = useRef(modalOpen);
 
   // Mouse look state
@@ -26,20 +34,48 @@ function FPSControls({
   }, [modalOpen]);
 
   useEffect(() => {
+    const resolveRailPoints = () => {
+      if (Array.isArray(railPoints) && railPoints.length >= 2) {
+        const start = Array.isArray(railPoints[0]) ? railPoints[0] : [];
+        const end = Array.isArray(railPoints[1]) ? railPoints[1] : [];
+
+        const startX = Number(start[0]);
+        const startZ = Number(start[1]);
+        const endX = Number(end[0]);
+        const endZ = Number(end[1]);
+
+        if ([startX, startZ, endX, endZ].every((n) => Number.isFinite(n))) {
+          return {
+            start: new THREE.Vector3(startX, eyeHeight, startZ),
+            end: new THREE.Vector3(endX, eyeHeight, endZ)
+          };
+        }
+      }
+
+      return {
+        start: new THREE.Vector3(railMin, eyeHeight, 0),
+        end: new THREE.Vector3(railMax, eyeHeight, 0)
+      };
+    };
+
+    railSegment.current = resolveRailPoints();
+    railLength.current = Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end));
+    targetT.current = 0;
+    smoothT.current = 0;
+
     // Place camera at rail start, eye height, facing forward along Z
-    camera.position.set(targetX.current, eyeHeight, 0);
+    camera.position.copy(railSegment.current.start);
     camera.rotation.order = 'YXZ';
     camera.rotation.set(0, 0, 0);
     euler.current.set(0, 0, 0);
 
-    // Scroll drives movement along the X rail
+    // Scroll drives movement along the rail segment.
     const handleWheel = (event) => {
       if (modalOpenRef.current) return; // Don't scroll if modal is open
       event.preventDefault();
-      targetX.current = Math.max(
-        railMin,
-        Math.min(railMax, targetX.current + event.deltaY * scrollSpeed)
-      );
+      const deltaUnits = event.deltaY * scrollSpeed;
+      const deltaT = deltaUnits / railLength.current;
+      targetT.current = THREE.MathUtils.clamp(targetT.current + deltaT, 0, 1);
     };
 
     // Mouse look (only active when pointer is locked)
@@ -93,13 +129,19 @@ function FPSControls({
       gl.domElement.removeEventListener('click', handleClick);
       gl.domElement.removeEventListener('wheel', handleWheel);
     };
-  }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, scrollSpeed]);
+  }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, railPoints, scrollSpeed]);
 
-  // Each frame: smoothly lerp camera to target X, lock Z and Y
+  // Each frame: smoothly move to target percentage along rail, lock Y to eye height.
   useFrame(() => {
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX.current, 0.1);
+    smoothT.current = THREE.MathUtils.lerp(smoothT.current, targetT.current, 0.1);
+    const point = new THREE.Vector3().lerpVectors(
+      railSegment.current.start,
+      railSegment.current.end,
+      smoothT.current
+    );
+    camera.position.x = point.x;
     camera.position.y = eyeHeight;
-    camera.position.z = 0;
+    camera.position.z = point.z;
   });
 
   return null;

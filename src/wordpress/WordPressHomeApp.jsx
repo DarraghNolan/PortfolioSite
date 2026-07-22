@@ -24,6 +24,24 @@ function resolveUploadsUrl(url, uploadsBaseUrl) {
 function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
   if (!Array.isArray(rawRooms)) return [];
 
+  const normalizeRailPoints = (railPoints, railMin, railMax) => {
+    if (Array.isArray(railPoints) && railPoints.length >= 2) {
+      const start = Array.isArray(railPoints[0]) ? railPoints[0] : [];
+      const end = Array.isArray(railPoints[1]) ? railPoints[1] : [];
+      const sx = Number(start[0]);
+      const sz = Number(start[1]);
+      const ex = Number(end[0]);
+      const ez = Number(end[1]);
+      if ([sx, sz, ex, ez].every((n) => Number.isFinite(n))) {
+        return [[sx, sz], [ex, ez]];
+      }
+    }
+
+    const fallbackMin = Number.isFinite(Number(railMin)) ? Number(railMin) : -2;
+    const fallbackMax = Number.isFinite(Number(railMax)) ? Number(railMax) : 1;
+    return [[fallbackMin, 0], [fallbackMax, 0]];
+  };
+
   const normalizeVector3 = (value, fallback) => {
     if (!Array.isArray(value) || value.length < 3) return fallback;
     return [
@@ -51,6 +69,16 @@ function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
     texture: resolveUploadsUrl(room.texture, uploadsBaseUrl),
     defaultLightEnabled: room.defaultLightEnabled !== false,
     shadowsEnabled: room.shadowsEnabled === true,
+    railPoints: normalizeRailPoints(room?.railPoints, room?.railMin, room?.railMax),
+    navPanel: room?.navPanel
+      ? {
+          ...room.navPanel,
+          position: normalizeVector3(room.navPanel.position, [3.25, 1.5, 0]),
+          rotation: normalizeVector3(room.navPanel.rotation, [0, -Math.PI / 2, 0]),
+          scale: normalizeVector3(room.navPanel.scale, [2, 4, 0.2]),
+          color: normalizeHex(room.navPanel.color, '#22aaff')
+        }
+      : null,
     lights: Array.isArray(room.lights)
       ? room.lights.map((light, index) => ({
           id: typeof light?.id === 'string' && light.id ? light.id : `room${room.id}-light${index + 1}`,

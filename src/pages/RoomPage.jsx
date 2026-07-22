@@ -201,6 +201,7 @@ function RoomPage({
           lights={room.lights}
           railMin={room.railMin}
           railMax={room.railMax}
+          railPoints={room.railPoints}
           scrollSpeed={room.scrollSpeed}
           lookSpeed={0.002}
           eyeHeight={room.eyeHeight}

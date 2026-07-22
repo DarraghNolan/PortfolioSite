@@ -5,6 +5,7 @@ export const rooms = [
     texture: '/2026/05/TestRoom1.webp',
     railMin: -2,
     railMax: 1,
+    railPoints: [[-2, 0], [1, 0]],
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [
@@ -39,6 +40,8 @@ export const rooms = [
     navPanel: {
       position: [3.25, 1.5, 0],
       rotation: [0, -Math.PI / 2, 0],
+      scale: [2, 4, 0.2],
+      color: '#22aaff',
       label: 'Room 2 \u2192',
       nextRoomId: 2,
       nextRoute: '/room/2'
@@ -50,6 +53,7 @@ export const rooms = [
     texture: '/2026/05/TestRoom2.webp',
     railMin: -2,
     railMax: 1,
+    railPoints: [[-2, 0], [1, 0]],
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [
@@ -79,6 +83,8 @@ export const rooms = [
     navPanel: {
       position: [3.25, 1.5, 0],
       rotation: [0, -Math.PI / 2, 0],
+      scale: [2, 4, 0.2],
+      color: '#22aaff',
       label: 'Room 3 \u2192',
       nextRoomId: 3,
       nextRoute: '/room/3'
@@ -90,6 +96,7 @@ export const rooms = [
     texture: '/2026/05/TestRoom3.webp',
     railMin: -2,
     railMax: 1,
+    railPoints: [[-2, 0], [1, 0]],
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [
@@ -119,6 +126,8 @@ export const rooms = [
     navPanel: {
       position: [3.25, 1.5, 0],
       rotation: [0, -Math.PI / 2, 0],
+      scale: [2, 4, 0.2],
+      color: '#22aaff',
       label: 'Room 1 \u2192',
       nextRoomId: 1,
       nextRoute: '/room/1'

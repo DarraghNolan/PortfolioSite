@@ -55,6 +55,7 @@ function ThreeDScene({
   mode = "viewer", // "viewer" or "fps"
   railMin = -10,   // minimum Z camera position on the rail
   railMax = 10,    // maximum Z camera position on the rail
+  railPoints = null,
   scrollSpeed = 0.0001,
   lookSpeed = 0.002,
   eyeHeight = 1.67,
@@ -228,6 +229,7 @@ function ThreeDScene({
               eyeHeight={eyeHeight}
               railMin={railMin}
               railMax={railMax}
+              railPoints={railPoints}
               scrollSpeed={scrollSpeed}
               modalOpen={modalOpen}
             />
@@ -251,6 +253,8 @@ function ThreeDScene({
               <NavPanel
                 position={navPanel.position}
                 rotation={navPanel.rotation}
+                scale={navPanel.scale}
+                wireColor={navPanel.color}
                 label={navPanel.label}
                 modalOpen={modalOpen}
                 onNavigate={() => onNavigate(navPanel)}

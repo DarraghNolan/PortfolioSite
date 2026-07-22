@@ -234,65 +234,9 @@ class Portfolio_3D_Home_Plugin {
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Show Nav Panel</th>
-                            <td>
-                                <label>
-                                    <input
-                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][enabled]"
-                                        type="checkbox"
-                                        value="1"
-                                        <?php checked(!empty($room['navPanel']['enabled'])); ?>
-                                    />
-                                    Enable this room's navigation panel
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Label</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][label]" type="text" class="regular-text" value="<?php echo esc_attr($room['navPanel']['label']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Next Room ID</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" min="1" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
-                                <p class="description">Existing room IDs: <?php echo esc_html(implode(', ', array_map('strval', $room_ids))); ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Position (X Y Z)</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nav Rotation (X Y Z)</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][0]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][1]); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][2]); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Rail Range</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railMin]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['railMin']); ?>" />
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railMax]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['railMax']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
                             <th scope="row">Scroll Speed</th>
                             <td>
                                 <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][scrollSpeed]" type="number" step="0.0001" value="<?php echo esc_attr((string) $room['scrollSpeed']); ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Eye Height</th>
-                            <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
                             </td>
                         </tr>
                         <tr>
@@ -335,6 +279,32 @@ class Portfolio_3D_Home_Plugin {
                     >
                         <div class="p3d-room-preview-canvas"></div>
                     </div>
+
+                    <h3>Rail</h3>
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Point A (X Z)</th>
+                                <th>Point B (X Z)</th>
+                                <th>Shared Y (Eye Height)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][0]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][0] ?? $room['railMin'])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][1]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][1] ?? 0)); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][0]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][0] ?? $room['railMax'])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][1]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][1] ?? 0)); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <h3>Panels</h3>
                     <table class="widefat striped">
@@ -432,6 +402,67 @@ class Portfolio_3D_Home_Plugin {
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <h3>Navigation Panel</h3>
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Enabled</th>
+                                <th>Label</th>
+                                <th>Next Room ID</th>
+                                <th>Position (X Y Z)</th>
+                                <th>Rotation (X Y Z)</th>
+                                <th>Scale (X Y Z)</th>
+                                <th>Wireframe Color (Hex)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input
+                                            name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][enabled]"
+                                            type="checkbox"
+                                            value="1"
+                                            <?php checked(!empty($room['navPanel']['enabled'])); ?>
+                                        />
+                                        Show
+                                    </label>
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][label]" type="text" class="regular-text" value="<?php echo esc_attr($room['navPanel']['label']); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" min="1" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
+                                    <p class="description">Room IDs: <?php echo esc_html(implode(', ', array_map('strval', $room_ids))); ?></p>
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][0]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][1]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][2]); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][0]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][0] ?? 2)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][1]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][1] ?? 4)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][2]" type="number" min="0.05" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][2] ?? 0.2)); ?>" />
+                                </td>
+                                <td>
+                                    <input
+                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][color]"
+                                        type="text"
+                                        class="regular-text"
+                                        placeholder="#22aaff"
+                                        value="<?php echo esc_attr((string) ($room['navPanel']['color'] ?? '#22aaff')); ?>"
+                                    />
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <p style="margin-top:10px;">
@@ -608,6 +639,170 @@ class Portfolio_3D_Home_Plugin {
                 log('Panel billboards added.', { roomIndex, count: added });
             }
 
+            function addLightConeHelpers(scene, lights, roomIndex) {
+                if (!Array.isArray(lights) || lights.length === 0) {
+                    log('No light cone helpers to render.', { roomIndex });
+                    return;
+                }
+
+                const coneHeight = 4;
+                const circleSegments = 12;
+                let added = 0;
+
+                lights.forEach((light) => {
+                    const position = Array.isArray(light?.position) ? light.position : [0, 2.5, 0];
+                    const rotation = Array.isArray(light?.rotation) ? light.rotation : [0, 0, 0];
+                    const angleDeg = Math.max(1, Math.min(89, numberOr(light?.angleDeg, 5)));
+                    const colorValue = typeof light?.color === 'string' ? light.color : '#ffffff';
+
+                    const apex = new THREE.Vector3(
+                        numberOr(position[0], 0),
+                        numberOr(position[1], 2.5),
+                        numberOr(position[2], 0)
+                    );
+
+                    const euler = new THREE.Euler(
+                        numberOr(rotation[0], 0),
+                        numberOr(rotation[1], 0),
+                        numberOr(rotation[2], 0),
+                        'XYZ'
+                    );
+
+                    const forward = new THREE.Vector3(0, 0, -1).applyEuler(euler).normalize();
+                    const baseCenter = apex.clone().add(forward.clone().multiplyScalar(coneHeight));
+                    const radius = coneHeight * Math.tan(THREE.MathUtils.degToRad(angleDeg));
+
+                    let up = new THREE.Vector3(0, 1, 0);
+                    if (Math.abs(forward.dot(up)) > 0.98) {
+                        up = new THREE.Vector3(1, 0, 0);
+                    }
+
+                    const right = new THREE.Vector3().crossVectors(forward, up).normalize();
+                    const upPerp = new THREE.Vector3().crossVectors(right, forward).normalize();
+
+                    const lineMaterial = new THREE.LineBasicMaterial({
+                        color: new THREE.Color(colorValue),
+                        transparent: true,
+                        opacity: 0.95,
+                        depthTest: true,
+                        depthWrite: false,
+                    });
+
+                    const circlePoints = [];
+                    for (let i = 0; i < circleSegments; i++) {
+                        const t = (i / circleSegments) * Math.PI * 2;
+                        const p = baseCenter.clone()
+                            .add(right.clone().multiplyScalar(Math.cos(t) * radius))
+                            .add(upPerp.clone().multiplyScalar(Math.sin(t) * radius));
+                        circlePoints.push(p);
+                    }
+
+                    const circleGeometry = new THREE.BufferGeometry().setFromPoints(circlePoints);
+                    const circleLine = new THREE.LineLoop(circleGeometry, lineMaterial);
+                    scene.add(circleLine);
+
+                    const sideAngles = [0, Math.PI * 0.5, Math.PI, Math.PI * 1.5];
+                    sideAngles.forEach((t) => {
+                        const basePoint = baseCenter.clone()
+                            .add(right.clone().multiplyScalar(Math.cos(t) * radius))
+                            .add(upPerp.clone().multiplyScalar(Math.sin(t) * radius));
+
+                        const sideGeometry = new THREE.BufferGeometry().setFromPoints([apex, basePoint]);
+                        const sideLine = new THREE.Line(sideGeometry, lineMaterial);
+                        scene.add(sideLine);
+                    });
+
+                    added++;
+                });
+
+                log('Light cone helpers added.', { roomIndex, count: added, coneHeight });
+            }
+
+            function addNavPanelHelper(scene, navPanel, roomIndex) {
+                if (!navPanel || navPanel.enabled !== true) {
+                    log('No nav panel helper to render.', { roomIndex });
+                    return;
+                }
+
+                const position = Array.isArray(navPanel?.position) ? navPanel.position : [3.25, 1.5, 0];
+                const rotation = Array.isArray(navPanel?.rotation) ? navPanel.rotation : [0, -Math.PI / 2, 0];
+                const scale = Array.isArray(navPanel?.scale) ? navPanel.scale : [2, 4, 0.2];
+                const colorValue = typeof navPanel?.color === 'string' ? navPanel.color : '#22aaff';
+
+                const navMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 1, 1),
+                    new THREE.MeshBasicMaterial({
+                        color: 0x111111,
+                        transparent: true,
+                        opacity: 0.2,
+                        depthTest: true,
+                    })
+                );
+
+                navMesh.position.set(numberOr(position[0], 3.25), numberOr(position[1], 1.5), numberOr(position[2], 0));
+                navMesh.rotation.set(numberOr(rotation[0], 0), numberOr(rotation[1], -Math.PI / 2), numberOr(rotation[2], 0));
+                navMesh.scale.set(
+                    Math.max(0.1, numberOr(scale[0], 2)),
+                    Math.max(0.1, numberOr(scale[1], 4)),
+                    Math.max(0.05, numberOr(scale[2], 0.2))
+                );
+
+                const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1), 25);
+                const edgeLines = new THREE.LineSegments(
+                    edges,
+                    new THREE.LineBasicMaterial({
+                        color: new THREE.Color(colorValue),
+                        transparent: true,
+                        opacity: 0.95,
+                        depthTest: true,
+                        depthWrite: false,
+                    })
+                );
+                navMesh.add(edgeLines);
+
+                scene.add(navMesh);
+                log('Nav panel helper added.', { roomIndex });
+            }
+
+            function addRailHelper(scene, room, roomIndex) {
+                const eyeHeight = numberOr(room?.eyeHeight, 1.67);
+                const rawRailPoints = Array.isArray(room?.railPoints) ? room.railPoints : null;
+
+                const start = Array.isArray(rawRailPoints?.[0]) ? rawRailPoints[0] : [numberOr(room?.railMin, -2), 0];
+                const end = Array.isArray(rawRailPoints?.[1]) ? rawRailPoints[1] : [numberOr(room?.railMax, 1), 0];
+
+                const startVec = new THREE.Vector3(numberOr(start[0], -2), eyeHeight, numberOr(start[1], 0));
+                const endVec = new THREE.Vector3(numberOr(end[0], 1), eyeHeight, numberOr(end[1], 0));
+
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([startVec, endVec]);
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: 0xffcc33,
+                    transparent: true,
+                    opacity: 0.95,
+                    depthTest: true,
+                    depthWrite: false,
+                });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                scene.add(line);
+
+                const markerGeometry = new THREE.SphereGeometry(0.08, 10, 10);
+                const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc33 });
+
+                const markerA = new THREE.Mesh(markerGeometry, markerMaterial);
+                markerA.position.copy(startVec);
+                scene.add(markerA);
+
+                const markerB = new THREE.Mesh(markerGeometry, markerMaterial);
+                markerB.position.copy(endVec);
+                scene.add(markerB);
+
+                log('Rail helper added.', {
+                    roomIndex,
+                    start: [startVec.x, startVec.y, startVec.z],
+                    end: [endVec.x, endVec.y, endVec.z]
+                });
+            }
+
             function initPreview(previewEl) {
                 const roomIndex = previewEl.getAttribute('data-room-index') || '?';
                 const mount = previewEl.querySelector('.p3d-room-preview-canvas');
@@ -692,6 +887,9 @@ class Portfolio_3D_Home_Plugin {
 
                         scene.add(model);
                         addPanelBillboards(scene, room?.panels, roomIndex);
+                        addLightConeHelpers(scene, room?.lights, roomIndex);
+                        addNavPanelHelper(scene, room?.navPanel, roomIndex);
+                        addRailHelper(scene, room, roomIndex);
                         const box = new THREE.Box3().setFromObject(model);
                         const center = box.getCenter(new THREE.Vector3());
                         const size = box.getSize(new THREE.Vector3());
@@ -1404,6 +1602,20 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['railMax'] = isset($room['railMax']) ? (float) $room['railMax'] : (float) $default_room['railMax'];
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
             $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
+            $sanitized_room['railPoints'] = $this->sanitize_rail_points(
+                $room['railPoints'] ?? null,
+                $default_room['railPoints'] ?? [
+                    [(float) $default_room['railMin'], 0],
+                    [(float) $default_room['railMax'], 0],
+                ]
+            );
+
+            if (!isset($room['railMin']) && isset($sanitized_room['railPoints'][0][0])) {
+                $sanitized_room['railMin'] = (float) $sanitized_room['railPoints'][0][0];
+            }
+            if (!isset($room['railMax']) && isset($sanitized_room['railPoints'][1][0])) {
+                $sanitized_room['railMax'] = (float) $sanitized_room['railPoints'][1][0];
+            }
             $sanitized_room['defaultLightEnabled'] = !isset($room['defaultLightEnabled'])
                 ? !empty($default_room['defaultLightEnabled'])
                 : !empty($room['defaultLightEnabled']);
@@ -1421,6 +1633,16 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['navPanel']['rotation'] = $this->sanitize_vector3(
                 $nav['rotation'] ?? null,
                 $default_room['navPanel']['rotation']
+            );
+            $sanitized_room['navPanel']['scale'] = $this->sanitize_vector3(
+                $nav['scale'] ?? null,
+                $default_room['navPanel']['scale'] ?? [2, 4, 0.2]
+            );
+            $sanitized_room['navPanel']['scale'][0] = max(0.1, (float) $sanitized_room['navPanel']['scale'][0]);
+            $sanitized_room['navPanel']['scale'][1] = max(0.1, (float) $sanitized_room['navPanel']['scale'][1]);
+            $sanitized_room['navPanel']['scale'][2] = max(0.05, (float) $sanitized_room['navPanel']['scale'][2]);
+            $sanitized_room['navPanel']['color'] = $this->sanitize_light_color(
+                isset($nav['color']) ? (string) $nav['color'] : (string) ($default_room['navPanel']['color'] ?? '#22aaff')
             );
 
             $posted_panels = isset($room['panels']) && is_array($room['panels'])
@@ -1537,6 +1759,31 @@ class Portfolio_3D_Home_Plugin {
         ];
     }
 
+    private function sanitize_rail_points($value, array $fallback): array {
+        $default = [
+            [isset($fallback[0][0]) ? (float) $fallback[0][0] : -2, isset($fallback[0][1]) ? (float) $fallback[0][1] : 0],
+            [isset($fallback[1][0]) ? (float) $fallback[1][0] : 1, isset($fallback[1][1]) ? (float) $fallback[1][1] : 0],
+        ];
+
+        if (!is_array($value) || count($value) < 2) {
+            return $default;
+        }
+
+        $start = is_array($value[0] ?? null) ? $value[0] : [];
+        $end = is_array($value[1] ?? null) ? $value[1] : [];
+
+        return [
+            [
+                isset($start[0]) ? (float) $start[0] : $default[0][0],
+                isset($start[1]) ? (float) $start[1] : $default[0][1],
+            ],
+            [
+                isset($end[0]) ? (float) $end[0] : $default[1][0],
+                isset($end[1]) ? (float) $end[1] : $default[1][1],
+            ],
+        ];
+    }
+
     private function sanitize_light_angle_deg($value): float {
         $angle = (float) $value;
         if ($angle <= 0) {
@@ -1595,6 +1842,7 @@ class Portfolio_3D_Home_Plugin {
             'texture' => '',
             'railMin' => -2,
             'railMax' => 1,
+            'railPoints' => [[-2, 0], [1, 0]],
             'scrollSpeed' => 0.005,
             'eyeHeight' => 1.67,
             'defaultLightEnabled' => true,
@@ -1609,6 +1857,8 @@ class Portfolio_3D_Home_Plugin {
                 'enabled' => false,
                 'position' => [3.25, 1.5, 0],
                 'rotation' => [0, -M_PI / 2, 0],
+                'scale' => [2, 4, 0.2],
+                'color' => '#22aaff',
                 'label' => 'Next Room ->',
                 'nextRoomId' => $room_id,
             ],
@@ -1623,6 +1873,7 @@ class Portfolio_3D_Home_Plugin {
                 'texture' => '/2026/05/TestRoom1.webp',
                 'railMin' => -2,
                 'railMax' => 1,
+                'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'defaultLightEnabled' => true,
@@ -1637,6 +1888,8 @@ class Portfolio_3D_Home_Plugin {
                     'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
+                    'scale' => [2, 4, 0.2],
+                    'color' => '#22aaff',
                     'label' => 'Room 2 ->',
                     'nextRoomId' => 2,
                 ],
@@ -1647,6 +1900,7 @@ class Portfolio_3D_Home_Plugin {
                 'texture' => '/2026/05/TestRoom2.webp',
                 'railMin' => -2,
                 'railMax' => 1,
+                'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'defaultLightEnabled' => true,
@@ -1661,6 +1915,8 @@ class Portfolio_3D_Home_Plugin {
                     'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
+                    'scale' => [2, 4, 0.2],
+                    'color' => '#22aaff',
                     'label' => 'Room 3 ->',
                     'nextRoomId' => 3,
                 ],
@@ -1671,6 +1927,7 @@ class Portfolio_3D_Home_Plugin {
                 'texture' => '/2026/05/TestRoom3.webp',
                 'railMin' => -2,
                 'railMax' => 1,
+                'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'defaultLightEnabled' => true,
@@ -1685,6 +1942,8 @@ class Portfolio_3D_Home_Plugin {
                     'enabled' => true,
                     'position' => [3.25, 1.5, 0],
                     'rotation' => [0, -M_PI / 2, 0],
+                    'scale' => [2, 4, 0.2],
+                    'color' => '#22aaff',
                     'label' => 'Room 1 ->',
                     'nextRoomId' => 1,
                 ],
