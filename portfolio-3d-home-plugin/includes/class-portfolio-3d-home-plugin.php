@@ -44,7 +44,7 @@ class Portfolio_3D_Home_Plugin {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['portfolio_3d_home_nonce'])) {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
-            $saved = $this->sanitize_rooms_config($posted);
+            $saved = $this->sanitize_rooms_config($posted, true);
 
             $remove_room_index = isset($_POST['portfolio_3d_home_remove_room'])
                 ? (int) $_POST['portfolio_3d_home_remove_room']
@@ -145,7 +145,7 @@ class Portfolio_3D_Home_Plugin {
             }
 
             $invalid_nav_count = 0;
-            $saved = $this->sanitize_rooms_config_with_validation($saved, $this->get_default_rooms(), $invalid_nav_count);
+            $saved = $this->sanitize_rooms_config_with_validation($saved, $this->get_default_rooms(), $invalid_nav_count, false);
 
             if ($invalid_nav_count > 0) {
                 $notices[] = [
@@ -236,7 +236,7 @@ class Portfolio_3D_Home_Plugin {
                         <tr>
                             <th scope="row">Scroll Speed</th>
                             <td>
-                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][scrollSpeed]" type="number" step="0.0001" value="<?php echo esc_attr((string) $room['scrollSpeed']); ?>" />
+                                <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][scrollSpeed]" type="number" class="small-text p3d-num" step="0.0001" value="<?php echo esc_attr((string) $room['scrollSpeed']); ?>" />
                             </td>
                         </tr>
                         <tr>
@@ -292,15 +292,15 @@ class Portfolio_3D_Home_Plugin {
                         <tbody>
                             <tr>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][0]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][0] ?? $room['railMin'])); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][1]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][1] ?? 0)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][0] ?? $room['railMin'])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][1] ?? 0)); ?>" />
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][0]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][0] ?? $room['railMax'])); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][1]" type="number" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][1] ?? 0)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][0] ?? $room['railMax'])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][1] ?? 0)); ?>" />
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
                                 </td>
                             </tr>
                         </tbody>
@@ -313,7 +313,7 @@ class Portfolio_3D_Home_Plugin {
                                 <th>Panel</th>
                                 <th>Page Slug</th>
                                 <th>Position (X Y Z)</th>
-                                <th>Rotation (X Y Z)</th>
+                                <th>Rotation (X Y Z deg)</th>
                                 <th>Scale (X Y)</th>
                             </tr>
                         </thead>
@@ -331,18 +331,18 @@ class Portfolio_3D_Home_Plugin {
                                         />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['position'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['position'][1]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['position'][2]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $panel['position'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $panel['position'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][position][2]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $panel['position'][2]); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['rotation'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['rotation'][1]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $panel['rotation'][2]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][0]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $panel['rotation'][0])); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][1]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $panel['rotation'][1])); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][2]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $panel['rotation'][2])); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][0]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][1]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][0]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][1]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][1]); ?>" />
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -355,7 +355,7 @@ class Portfolio_3D_Home_Plugin {
                             <tr>
                                 <th>Light</th>
                                 <th>Position (X Y Z)</th>
-                                <th>Rotation (X Y Z)</th>
+                                <th>Rotation (X Y Z deg)</th>
                                 <th>Angle (deg)</th>
                                 <th>Strength (0-1)</th>
                                 <th>Color (Hex)</th>
@@ -367,20 +367,20 @@ class Portfolio_3D_Home_Plugin {
                                 <tr>
                                     <td><?php echo esc_html('Light ' . ($light_index + 1)); ?></td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][1]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['position'][2]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $light['position'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $light['position'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][position][2]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $light['position'][2]); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][1]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $light['rotation'][2]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][0]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $light['rotation'][0])); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][1]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $light['rotation'][1])); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][rotation][2]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $light['rotation'][2])); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][angleDeg]" type="number" min="1" max="89" step="0.1" value="<?php echo esc_attr((string) $light['angleDeg']); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][angleDeg]" type="number" class="small-text p3d-num" min="1" max="89" step="0.1" value="<?php echo esc_attr((string) $light['angleDeg']); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][intensity]" type="number" min="0" max="1" step="0.01" value="<?php echo esc_attr((string) $light['intensity']); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][lights][<?php echo esc_attr((string) $light_index); ?>][intensity]" type="number" class="small-text p3d-num" min="0" max="1" step="0.01" value="<?php echo esc_attr((string) $light['intensity']); ?>" />
                                     </td>
                                     <td>
                                         <input
@@ -413,7 +413,7 @@ class Portfolio_3D_Home_Plugin {
                                 <th>Label</th>
                                 <th>Next Room ID</th>
                                 <th>Position (X Y Z)</th>
-                                <th>Rotation (X Y Z)</th>
+                                <th>Rotation (X Y Z deg)</th>
                                 <th>Scale (X Y Z)</th>
                                 <th>Wireframe Color (Hex)</th>
                             </tr>
@@ -435,23 +435,23 @@ class Portfolio_3D_Home_Plugin {
                                     <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][label]" type="text" class="regular-text" value="<?php echo esc_attr($room['navPanel']['label']); ?>" />
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" min="1" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][nextRoomId]" type="number" class="small-text p3d-num" min="1" value="<?php echo esc_attr((string) $room['navPanel']['nextRoomId']); ?>" />
                                     <p class="description">Room IDs: <?php echo esc_html(implode(', ', array_map('strval', $room_ids))); ?></p>
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][0]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][1]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][position][2]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['position'][2]); ?>" />
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][0]); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][1]); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" step="0.01" value="<?php echo esc_attr((string) $room['navPanel']['rotation'][2]); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][0]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $room['navPanel']['rotation'][0])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][1]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $room['navPanel']['rotation'][1])); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][rotation][2]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $room['navPanel']['rotation'][2])); ?>" />
                                 </td>
                                 <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][0]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][0] ?? 2)); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][1]" type="number" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][1] ?? 4)); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][2]" type="number" min="0.05" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][2] ?? 0.2)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][0]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][0] ?? 2)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][1]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][1] ?? 4)); ?>" />
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][navPanel][scale][2]" type="number" class="small-text p3d-num" min="0.05" step="0.01" value="<?php echo esc_attr((string) ($room['navPanel']['scale'][2] ?? 0.2)); ?>" />
                                 </td>
                                 <td>
                                     <input
@@ -497,6 +497,10 @@ class Portfolio_3D_Home_Plugin {
                 color: #bbb;
                 font-size: 12px;
                 margin-top: 6px;
+            }
+
+            .p3d-num {
+                width: 6em;
             }
         </style>
 
@@ -1560,14 +1564,14 @@ class Portfolio_3D_Home_Plugin {
         return '';
     }
 
-    private function sanitize_rooms_config(array $posted_rooms): array {
+    private function sanitize_rooms_config(array $posted_rooms, bool $rotation_inputs_are_degrees = false): array {
         $defaults = $this->get_default_rooms();
         $invalid_nav_count = 0;
 
-        return $this->sanitize_rooms_config_with_validation($posted_rooms, $defaults, $invalid_nav_count);
+        return $this->sanitize_rooms_config_with_validation($posted_rooms, $defaults, $invalid_nav_count, $rotation_inputs_are_degrees);
     }
 
-    private function sanitize_rooms_config_with_validation(array $posted_rooms, array $defaults, int &$invalid_nav_count): array {
+    private function sanitize_rooms_config_with_validation(array $posted_rooms, array $defaults, int &$invalid_nav_count, bool $rotation_inputs_are_degrees = false): array {
         $default_map = [];
         foreach ($defaults as $default_room) {
             $default_id = (int) ($default_room['id'] ?? 0);
@@ -1630,10 +1634,15 @@ class Portfolio_3D_Home_Plugin {
                 $nav['position'] ?? null,
                 $default_room['navPanel']['position']
             );
-            $sanitized_room['navPanel']['rotation'] = $this->sanitize_vector3(
-                $nav['rotation'] ?? null,
-                $default_room['navPanel']['rotation']
-            );
+            $sanitized_room['navPanel']['rotation'] = $rotation_inputs_are_degrees
+                ? $this->sanitize_rotation_degrees_vector3(
+                    $nav['rotation'] ?? null,
+                    $default_room['navPanel']['rotation']
+                )
+                : $this->sanitize_vector3(
+                    $nav['rotation'] ?? null,
+                    $default_room['navPanel']['rotation']
+                );
             $sanitized_room['navPanel']['scale'] = $this->sanitize_vector3(
                 $nav['scale'] ?? null,
                 $default_room['navPanel']['scale'] ?? [2, 4, 0.2]
@@ -1666,10 +1675,15 @@ class Portfolio_3D_Home_Plugin {
                     $panel['position'] ?? null,
                     $default_panel['position']
                 );
-                $sanitized_room['panels'][$panel_index]['rotation'] = $this->sanitize_vector3(
-                    $panel['rotation'] ?? null,
-                    $default_panel['rotation']
-                );
+                $sanitized_room['panels'][$panel_index]['rotation'] = $rotation_inputs_are_degrees
+                    ? $this->sanitize_rotation_degrees_vector3(
+                        $panel['rotation'] ?? null,
+                        $default_panel['rotation']
+                    )
+                    : $this->sanitize_vector3(
+                        $panel['rotation'] ?? null,
+                        $default_panel['rotation']
+                    );
                 $sanitized_room['panels'][$panel_index]['scale'] = $this->sanitize_vector2(
                     $panel['scale'] ?? null,
                     $default_panel['scale'] ?? [2, 1.5]
@@ -1705,10 +1719,15 @@ class Portfolio_3D_Home_Plugin {
                     $light['position'] ?? null,
                     $default_light['position'] ?? [0, 2.5, 0]
                 );
-                $sanitized_room['lights'][$light_index]['rotation'] = $this->sanitize_vector3(
-                    $light['rotation'] ?? null,
-                    $default_light['rotation'] ?? [0, 0, 0]
-                );
+                $sanitized_room['lights'][$light_index]['rotation'] = $rotation_inputs_are_degrees
+                    ? $this->sanitize_rotation_degrees_vector3(
+                        $light['rotation'] ?? null,
+                        $default_light['rotation'] ?? [0, 0, 0]
+                    )
+                    : $this->sanitize_vector3(
+                        $light['rotation'] ?? null,
+                        $default_light['rotation'] ?? [0, 0, 0]
+                    );
                 $sanitized_room['lights'][$light_index]['angleDeg'] = $this->sanitize_light_angle_deg(
                     $light['angleDeg'] ?? ($default_light['angleDeg'] ?? 45)
                 );
@@ -1757,6 +1776,31 @@ class Portfolio_3D_Home_Plugin {
             max(0.1, isset($value[0]) ? (float) $value[0] : (float) $fallback[0]),
             max(0.1, isset($value[1]) ? (float) $value[1] : (float) $fallback[1]),
         ];
+    }
+
+    private function sanitize_rotation_degrees_vector3($value, array $fallback_radians): array {
+        if (!is_array($value) || count($value) < 3) {
+            return [(float) $fallback_radians[0], (float) $fallback_radians[1], (float) $fallback_radians[2]];
+        }
+
+        return [
+            $this->degrees_to_radians($this->normalize_rotation_degrees(isset($value[0]) ? (float) $value[0] : $this->radians_to_degrees((float) $fallback_radians[0]))),
+            $this->degrees_to_radians($this->normalize_rotation_degrees(isset($value[1]) ? (float) $value[1] : $this->radians_to_degrees((float) $fallback_radians[1]))),
+            $this->degrees_to_radians($this->normalize_rotation_degrees(isset($value[2]) ? (float) $value[2] : $this->radians_to_degrees((float) $fallback_radians[2]))),
+        ];
+    }
+
+    private function radians_to_degrees(float $radians): float {
+        return (float) round($radians * (180 / M_PI));
+    }
+
+    private function degrees_to_radians(float $degrees): float {
+        return $degrees * (M_PI / 180);
+    }
+
+    private function normalize_rotation_degrees(float $degrees): float {
+        $rounded = round($degrees);
+        return (float) min(360, max(0, $rounded));
     }
 
     private function sanitize_rail_points($value, array $fallback): array {
