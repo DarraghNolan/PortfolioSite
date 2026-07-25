@@ -69,6 +69,7 @@ function WallPanel({
   modalOpen = false,
   onPanelClick = () => {}
 }) {
+  const groupRef = useRef();
   const meshRef = useRef();
   const titleRef = useRef();
   const captionRef = useRef();
@@ -177,8 +178,19 @@ function WallPanel({
     return () => gl.domElement.removeEventListener('click', handleCanvasClick);
   }, [gl, onPanelClick, title, caption, description, videoUrl, links, modalOpen]);
 
+  useEffect(() => {
+    if (!groupRef.current) return;
+    groupRef.current.rotation.order = 'YXZ';
+    groupRef.current.rotation.set(
+      Number(rotation?.[0] ?? 0),
+      Number(rotation?.[1] ?? 0),
+      Number(rotation?.[2] ?? 0),
+      'YXZ'
+    );
+  }, [rotation]);
+
   return (
-    <group position={position} rotation={rotation}>
+    <group ref={groupRef} position={position}>
       {/* Panel face */}
       <mesh ref={meshRef}>
         <planeGeometry args={[width, height]} />

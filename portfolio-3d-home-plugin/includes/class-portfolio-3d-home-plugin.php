@@ -589,6 +589,48 @@ class Portfolio_3D_Home_Plugin {
                 return texture;
             }
 
+            function createAxisLabelTexture(labelText) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return null;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labelText, canvas.width / 2, canvas.height / 2);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.generateMipmaps = false;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.needsUpdate = true;
+                return texture;
+            }
+
+            function createAxisLabelSprite(labelText, colorValue) {
+                const texture = createAxisLabelTexture(labelText);
+                if (!texture) return null;
+
+                const material = new THREE.SpriteMaterial({
+                    map: texture,
+                    color: new THREE.Color(colorValue),
+                    transparent: true,
+                    depthTest: true,
+                    depthWrite: false,
+                });
+
+                const sprite = new THREE.Sprite(material);
+                sprite.scale.set(1.2, 1.2, 1);
+                return sprite;
+            }
+
             function addPanelBillboards(scene, panels, roomIndex) {
                 if (!Array.isArray(panels) || panels.length === 0) {
                     log('No panel billboards to render.', { roomIndex });
@@ -622,10 +664,12 @@ class Portfolio_3D_Home_Plugin {
                         numberOr(position[1], 1.5),
                         numberOr(position[2], 0)
                     );
+                    panelMesh.rotation.order = 'YXZ';
                     panelMesh.rotation.set(
                         numberOr(rotation[0], 0),
                         numberOr(rotation[1], Math.PI),
-                        numberOr(rotation[2], 0)
+                        numberOr(rotation[2], 0),
+                        'YXZ'
                     );
                     panelMesh.scale.set(
                         Math.max(0.1, numberOr(scale[0], 2)),
@@ -807,6 +851,60 @@ class Portfolio_3D_Home_Plugin {
                 });
             }
 
+            function addAxisOriginHelper(scene, roomIndex) {
+                const origin = new THREE.Vector3(-3, -3, -3);
+                const axisLength = 2.5;
+                const axisConfigs = [
+                    {
+                        label: 'X',
+                        color: '#64ff8a',
+                        end: origin.clone().add(new THREE.Vector3(axisLength, 0, 0)),
+                    },
+                    {
+                        label: 'Y',
+                        color: '#8cffb0',
+                        end: origin.clone().add(new THREE.Vector3(0, axisLength, 0)),
+                    },
+                    {
+                        label: 'Z',
+                        color: '#2fcf6b',
+                        end: origin.clone().add(new THREE.Vector3(0, 0, axisLength)),
+                    },
+                ];
+
+                axisConfigs.forEach((axis) => {
+                    const lineGeometry = new THREE.BufferGeometry().setFromPoints([origin, axis.end]);
+                    const lineMaterial = new THREE.LineBasicMaterial({
+                        color: new THREE.Color(axis.color),
+                        transparent: true,
+                        opacity: 0.95,
+                        depthTest: true,
+                        depthWrite: false,
+                    });
+
+                    scene.add(new THREE.Line(lineGeometry, lineMaterial));
+
+                    const labelSprite = createAxisLabelSprite(axis.label, axis.color);
+                    if (labelSprite) {
+                        labelSprite.position.copy(axis.end.clone().add(new THREE.Vector3(0.12, 0.12, 0.12)));
+                        scene.add(labelSprite);
+                    }
+                });
+
+                const originMarker = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.06, 10, 10),
+                    new THREE.MeshBasicMaterial({ color: 0x64ff8a })
+                );
+                originMarker.position.copy(origin);
+                scene.add(originMarker);
+
+                log('Axis origin helper added.', {
+                    roomIndex,
+                    origin: [origin.x, origin.y, origin.z],
+                    axisLength,
+                });
+            }
+
             function initPreview(previewEl) {
                 const roomIndex = previewEl.getAttribute('data-room-index') || '?';
                 const mount = previewEl.querySelector('.p3d-room-preview-canvas');
@@ -894,6 +992,7 @@ class Portfolio_3D_Home_Plugin {
                         addLightConeHelpers(scene, room?.lights, roomIndex);
                         addNavPanelHelper(scene, room?.navPanel, roomIndex);
                         addRailHelper(scene, room, roomIndex);
+                        addAxisOriginHelper(scene, roomIndex);
                         const box = new THREE.Box3().setFromObject(model);
                         const center = box.getCenter(new THREE.Vector3());
                         const size = box.getSize(new THREE.Vector3());
