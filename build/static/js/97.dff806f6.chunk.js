@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_threejs_app=self.webpackChunkmy_threejs_app||[]).push([[97],{97:(e,t,s)=>{s.r(t),s.d(t,{default:()=>r});s(43);var a=s(216),n=s(655),p=s(579);const r=function(){const{id:e}=(0,a.g)(),t=(0,a.Zp)();return(0,p.jsx)(n.A,{roomId:e,onNavigateRoute:e=>t(e)})}}}]);
+//# sourceMappingURL=97.dff806f6.chunk.js.map

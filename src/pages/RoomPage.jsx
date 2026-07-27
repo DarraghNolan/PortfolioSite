@@ -1,10 +1,125 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import ThreeDScene from './ThreeDScene';
 import { getRoomById } from '../data/rooms';
+import { useProgress } from '@react-three/drei';
+
+function LoadingOverlay({ loadingScreenImage = '' }) {
+  const { active, progress } = useProgress();
+
+  if (!active) return null;
+
+  const clamped = Math.max(0, Math.min(100, Number.isFinite(progress) ? progress : 0));
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 3000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#000000',
+      }}
+    >
+      {loadingScreenImage ? (
+        <picture
+          className="p3d-loading-picture"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            margin: 'auto',
+            width: '100vw',
+            height: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            className="p3d-loading-img"
+            src={loadingScreenImage}
+            alt="Loading"
+            style={{
+              width: '100vw',
+              height: 'auto',
+              objectFit: 'contain',
+              objectPosition: 'center center',
+            }}
+          />
+        </picture>
+      ) : null}
+
+      <div
+        className="p3d-loading-progress"
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '50vw',
+          maxWidth: '900px',
+          minWidth: '220px',
+          height: '2em',
+          borderRadius: '999px',
+          border: '2px solid rgba(255,255,255,0.75)',
+          backgroundColor: 'rgba(0,0,0,0.45)',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            width: `${clamped}%`,
+            height: '100%',
+            background: 'linear-gradient(90deg, #4fd1ff 0%, #7bff98 100%)',
+            transition: 'width 140ms ease-out',
+          }}
+        />
+      </div>
+
+      {!loadingScreenImage ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(50% + 2.3em)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 2,
+            color: 'rgba(255,255,255,0.9)',
+            fontSize: '0.95rem',
+            letterSpacing: '0.02em',
+            fontWeight: 600,
+            textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+            pointerEvents: 'none',
+          }}
+        >
+          Loading room...
+        </div>
+      ) : null}
+
+      <style>{`
+        @media (max-width: 1024px) {
+          .p3d-loading-img {
+            width: auto;
+            height: 100vh;
+          }
+          .p3d-loading-progress {
+            width: 50vw;
+          }
+        }
+        @media (max-width: 767px) {
+          .p3d-loading-progress {
+            width: 80vw;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 function RoomPage({
   roomId = 1,
   roomData = null,
+  loadingScreenImage = '',
   onNavigateRoom = () => {},
   onNavigateRoute = () => {}
 }) {
@@ -51,6 +166,7 @@ function RoomPage({
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden' }}>
+      <LoadingOverlay loadingScreenImage={loadingScreenImage} />
 
       {/* Crosshair */}
       <div style={{

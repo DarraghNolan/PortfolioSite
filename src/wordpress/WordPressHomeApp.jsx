@@ -226,6 +226,7 @@ function WordPressHomeApp() {
     <RoomPage
       roomId={activeRoom.id}
       roomData={activeRoom}
+      loadingScreenImage={resolveUploadsUrl(settings.loadingScreenImage, settings.uploadsBaseUrl)}
       onNavigateRoom={(nextRoomId) => {
         log('Navigating to room', { nextRoomId });
         setCurrentRoomId(nextRoomId);

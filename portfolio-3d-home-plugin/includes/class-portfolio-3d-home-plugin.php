@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 
 class Portfolio_3D_Home_Plugin {
     private const OPTION_KEY = 'portfolio_3d_home_rooms_config';
+    private const OPTION_LOADING_IMAGE = 'portfolio_3d_home_loading_image';
     private const SHORTCODE = 'portfolio_3d_home';
     private const REST_NAMESPACE = 'portfolio-3d-home/v1';
 
@@ -39,11 +40,14 @@ class Portfolio_3D_Home_Plugin {
         }
 
         $saved = get_option(self::OPTION_KEY, []);
+        $loading_screen_image = (string) get_option(self::OPTION_LOADING_IMAGE, '');
         $notices = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['portfolio_3d_home_nonce'])) {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
+            $posted_loading_screen_image = isset($_POST['loadingScreenImage']) ? wp_unslash($_POST['loadingScreenImage']) : '';
+            $loading_screen_image = $this->sanitize_loading_image_value($posted_loading_screen_image);
             $saved = $this->sanitize_rooms_config($posted, true);
 
             $remove_room_index = isset($_POST['portfolio_3d_home_remove_room'])
@@ -155,6 +159,7 @@ class Portfolio_3D_Home_Plugin {
             }
 
             update_option(self::OPTION_KEY, $saved, false);
+            update_option(self::OPTION_LOADING_IMAGE, $loading_screen_image, false);
             $notices[] = ['type' => 'success', 'text' => 'Saved room panel mappings.'];
         }
 
@@ -185,6 +190,23 @@ class Portfolio_3D_Home_Plugin {
 
             <form method="post">
                 <?php wp_nonce_field('portfolio_3d_home_save', 'portfolio_3d_home_nonce'); ?>
+
+                <h2>Global Loading Screen</h2>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row"><label for="p3d-loading-screen-image">Loading image path or URL</label></th>
+                        <td>
+                            <input
+                                id="p3d-loading-screen-image"
+                                name="loadingScreenImage"
+                                type="text"
+                                class="regular-text"
+                                value="<?php echo esc_attr($loading_screen_image); ?>"
+                            />
+                            <p class="description">Shown before rooms load. Use uploads-relative path like <code>/2026/05/loading.gif</code> or a full URL.</p>
+                        </td>
+                    </tr>
+                </table>
 
                 <p>
                     <button type="submit" class="button button-secondary" name="portfolio_3d_home_add_room" value="1">Add Room</button>
@@ -1203,6 +1225,7 @@ class Portfolio_3D_Home_Plugin {
                 'apiEndpoint' => esc_url_raw(rest_url(self::REST_NAMESPACE . '/rooms')),
                 'debugEnabled' => defined('WP_DEBUG') && WP_DEBUG,
                 'uploadsBaseUrl' => esc_url_raw(trailingslashit(wp_upload_dir()['baseurl'] ?? '')),
+                'loadingScreenImage' => (string) get_option(self::OPTION_LOADING_IMAGE, ''),
             ]
         );
     }
@@ -1647,6 +1670,13 @@ class Portfolio_3D_Home_Plugin {
         $clean_params = array_intersect_key($params, array_flip($keep));
         $query = $clean_params ? '?' . http_build_query($clean_params) : '';
         return esc_url_raw($base . $query);
+    }
+
+    private function sanitize_loading_image_value($value): string {
+        if (!is_string($value)) {
+            return '';
+        }
+        return sanitize_text_field(trim($value));
     }
 
     private function youtube_url_to_embed(string $url): string {
