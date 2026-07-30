@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 class Portfolio_3D_Home_Plugin {
     private const OPTION_KEY = 'portfolio_3d_home_rooms_config';
     private const OPTION_LOADING_IMAGE = 'portfolio_3d_home_loading_image';
+    private const OPTION_PAGE_CHROME = 'portfolio_3d_home_page_chrome';
     private const SHORTCODE = 'portfolio_3d_home';
     private const REST_NAMESPACE = 'portfolio-3d-home/v1';
 
@@ -41,13 +42,21 @@ class Portfolio_3D_Home_Plugin {
 
         $saved = get_option(self::OPTION_KEY, []);
         $loading_screen_image = (string) get_option(self::OPTION_LOADING_IMAGE, '');
+        $page_chrome_settings = wp_parse_args(
+            get_option(self::OPTION_PAGE_CHROME, []),
+            $this->get_page_chrome_defaults()
+        );
         $notices = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['portfolio_3d_home_nonce'])) {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
             $posted_loading_screen_image = isset($_POST['loadingScreenImage']) ? wp_unslash($_POST['loadingScreenImage']) : '';
+            $posted_page_chrome_settings = isset($_POST['pageChrome']) && is_array($_POST['pageChrome'])
+                ? wp_unslash($_POST['pageChrome'])
+                : [];
             $loading_screen_image = $this->sanitize_loading_image_value($posted_loading_screen_image);
+            $page_chrome_settings = $this->sanitize_page_chrome_settings($posted_page_chrome_settings);
             $saved = $this->sanitize_rooms_config($posted, true);
 
             $remove_room_index = isset($_POST['portfolio_3d_home_remove_room'])
@@ -160,6 +169,7 @@ class Portfolio_3D_Home_Plugin {
 
             update_option(self::OPTION_KEY, $saved, false);
             update_option(self::OPTION_LOADING_IMAGE, $loading_screen_image, false);
+            update_option(self::OPTION_PAGE_CHROME, $page_chrome_settings, false);
             $notices[] = ['type' => 'success', 'text' => 'Saved room panel mappings.'];
         }
 
@@ -204,6 +214,61 @@ class Portfolio_3D_Home_Plugin {
                                 value="<?php echo esc_attr($loading_screen_image); ?>"
                             />
                             <p class="description">Shown before rooms load. Use uploads-relative path like <code>/2026/05/loading.gif</code> or a full URL.</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <h2>Page Chrome Visibility</h2>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row">Header</th>
+                        <td>
+                            <label>
+                                <input
+                                    name="pageChrome[hideHeader]"
+                                    type="checkbox"
+                                    value="1"
+                                    <?php checked(!empty($page_chrome_settings['hideHeader'])); ?>
+                                />
+                                Hide header while 3D scene is active
+                            </label>
+                            <p style="margin-top:8px;">
+                                <label for="p3d-header-element-id">Header element ID</label><br />
+                                <input
+                                    id="p3d-header-element-id"
+                                    name="pageChrome[headerElementId]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr((string) ($page_chrome_settings['headerElementId'] ?? '')); ?>"
+                                    placeholder="site-header"
+                                />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Footer</th>
+                        <td>
+                            <label>
+                                <input
+                                    name="pageChrome[hideFooter]"
+                                    type="checkbox"
+                                    value="1"
+                                    <?php checked(!empty($page_chrome_settings['hideFooter'])); ?>
+                                />
+                                Hide footer while 3D scene is active
+                            </label>
+                            <p style="margin-top:8px;">
+                                <label for="p3d-footer-element-id">Footer element ID</label><br />
+                                <input
+                                    id="p3d-footer-element-id"
+                                    name="pageChrome[footerElementId]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr((string) ($page_chrome_settings['footerElementId'] ?? '')); ?>"
+                                    placeholder="site-footer"
+                                />
+                            </p>
+                            <p class="description">Enter IDs only (without #). Elements are hidden only while the 3D scene is mounted.</p>
                         </td>
                     </tr>
                 </table>
@@ -1226,6 +1291,10 @@ class Portfolio_3D_Home_Plugin {
                 'debugEnabled' => defined('WP_DEBUG') && WP_DEBUG,
                 'uploadsBaseUrl' => esc_url_raw(trailingslashit(wp_upload_dir()['baseurl'] ?? '')),
                 'loadingScreenImage' => (string) get_option(self::OPTION_LOADING_IMAGE, ''),
+                'pageChrome' => wp_parse_args(
+                    get_option(self::OPTION_PAGE_CHROME, []),
+                    $this->get_page_chrome_defaults()
+                ),
             ]
         );
     }
@@ -1677,6 +1746,32 @@ class Portfolio_3D_Home_Plugin {
             return '';
         }
         return sanitize_text_field(trim($value));
+    }
+
+    private function get_page_chrome_defaults(): array {
+        return [
+            'hideHeader' => false,
+            'headerElementId' => '',
+            'hideFooter' => false,
+            'footerElementId' => '',
+        ];
+    }
+
+    private function sanitize_page_chrome_settings($value): array {
+        $defaults = $this->get_page_chrome_defaults();
+        if (!is_array($value)) {
+            return $defaults;
+        }
+
+        $header_id = isset($value['headerElementId']) ? sanitize_text_field((string) $value['headerElementId']) : '';
+        $footer_id = isset($value['footerElementId']) ? sanitize_text_field((string) $value['footerElementId']) : '';
+
+        return [
+            'hideHeader' => !empty($value['hideHeader']),
+            'headerElementId' => ltrim(trim($header_id), '#'),
+            'hideFooter' => !empty($value['hideFooter']),
+            'footerElementId' => ltrim(trim($footer_id), '#'),
+        ];
     }
 
     private function youtube_url_to_embed(string $url): string {

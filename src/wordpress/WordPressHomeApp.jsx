@@ -104,6 +104,19 @@ function WordPressHomeApp() {
     ? window.Portfolio3DHomeSettings
     : {};
 
+  const pageChromeSettings = useMemo(() => {
+    const pageChrome = (settings && typeof settings.pageChrome === 'object' && settings.pageChrome)
+      ? settings.pageChrome
+      : {};
+
+    return {
+      hideHeader: pageChrome.hideHeader === true,
+      hideFooter: pageChrome.hideFooter === true,
+      headerElementId: typeof pageChrome.headerElementId === 'string' ? pageChrome.headerElementId.trim().replace(/^#/, '') : '',
+      footerElementId: typeof pageChrome.footerElementId === 'string' ? pageChrome.footerElementId.trim().replace(/^#/, '') : ''
+    };
+  }, [settings]);
+
   const debugEnabled = Boolean(settings.debugEnabled)
     || (typeof window !== 'undefined' && window.location.search.includes('p3d-debug=1'))
     || (typeof window !== 'undefined' && window.localStorage.getItem('p3dDebug') === '1');
@@ -125,6 +138,40 @@ function WordPressHomeApp() {
 
   const [rooms, setRooms] = useState(normalizeRoomAssets(fallbackRooms, settings.uploadsBaseUrl));
   const [currentRoomId, setCurrentRoomId] = useState(1);
+
+  useEffect(() => {
+    const entries = [];
+    const seen = new Set();
+
+    const hideById = (id) => {
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (!el || seen.has(el)) return;
+
+      seen.add(el);
+      entries.push({
+        el,
+        display: el.style.display,
+      });
+
+      el.style.display = 'none';
+    };
+
+    if (pageChromeSettings.hideHeader) hideById(pageChromeSettings.headerElementId);
+    if (pageChromeSettings.hideFooter) hideById(pageChromeSettings.footerElementId);
+
+    return () => {
+      entries.forEach(({ el, display }) => {
+        if (!el) return;
+        el.style.display = display;
+      });
+    };
+  }, [
+    pageChromeSettings.hideHeader,
+    pageChromeSettings.hideFooter,
+    pageChromeSettings.headerElementId,
+    pageChromeSettings.footerElementId
+  ]);
 
   useEffect(() => {
     const endpoint = settings.apiEndpoint;
