@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 class Portfolio_3D_Home_Plugin {
     private const OPTION_KEY = 'portfolio_3d_home_rooms_config';
     private const OPTION_LOADING_IMAGE = 'portfolio_3d_home_loading_image';
+    private const OPTION_LOADING_BAR_OFFSET = 'portfolio_3d_home_loading_bar_offset';
     private const OPTION_PAGE_CHROME = 'portfolio_3d_home_page_chrome';
     private const SHORTCODE = 'portfolio_3d_home';
     private const REST_NAMESPACE = 'portfolio-3d-home/v1';
@@ -42,6 +43,7 @@ class Portfolio_3D_Home_Plugin {
 
         $saved = get_option(self::OPTION_KEY, []);
         $loading_screen_image = (string) get_option(self::OPTION_LOADING_IMAGE, '');
+        $loading_bar_offset = (float) get_option(self::OPTION_LOADING_BAR_OFFSET, 0);
         $page_chrome_settings = wp_parse_args(
             get_option(self::OPTION_PAGE_CHROME, []),
             $this->get_page_chrome_defaults()
@@ -52,10 +54,12 @@ class Portfolio_3D_Home_Plugin {
             check_admin_referer('portfolio_3d_home_save', 'portfolio_3d_home_nonce');
             $posted = isset($_POST['rooms']) && is_array($_POST['rooms']) ? wp_unslash($_POST['rooms']) : [];
             $posted_loading_screen_image = isset($_POST['loadingScreenImage']) ? wp_unslash($_POST['loadingScreenImage']) : '';
+            $posted_loading_bar_offset = isset($_POST['loadingBarOffset']) ? wp_unslash($_POST['loadingBarOffset']) : 0;
             $posted_page_chrome_settings = isset($_POST['pageChrome']) && is_array($_POST['pageChrome'])
                 ? wp_unslash($_POST['pageChrome'])
                 : [];
             $loading_screen_image = $this->sanitize_loading_image_value($posted_loading_screen_image);
+            $loading_bar_offset = $this->sanitize_loading_bar_offset_value($posted_loading_bar_offset);
             $page_chrome_settings = $this->sanitize_page_chrome_settings($posted_page_chrome_settings);
             $saved = $this->sanitize_rooms_config($posted, true);
 
@@ -169,13 +173,14 @@ class Portfolio_3D_Home_Plugin {
 
             update_option(self::OPTION_KEY, $saved, false);
             update_option(self::OPTION_LOADING_IMAGE, $loading_screen_image, false);
+            update_option(self::OPTION_LOADING_BAR_OFFSET, $loading_bar_offset, false);
             update_option(self::OPTION_PAGE_CHROME, $page_chrome_settings, false);
             $notices[] = ['type' => 'success', 'text' => 'Saved room panel mappings.'];
         }
 
         $rooms = $this->merge_with_defaults($saved);
         $room_ids = $this->get_room_id_list($rooms);
-        $uploads_base_url = (string) (trailingslashit(wp_upload_dir()['baseurl'] ?? ''));
+        $uploads_base_url = (string) (trailingslashit(home_url('')));
         ?>
         <div class="wrap">
             <h1>Portfolio 3D Rooms</h1>
@@ -216,7 +221,34 @@ class Portfolio_3D_Home_Plugin {
                             <p class="description">Shown before rooms load. Use uploads-relative path like <code>/2026/05/loading.gif</code> or a full URL.</p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row"><label for="p3d-loading-bar-offset">Loading bar vertical offset (vh)</label></th>
+                        <td>
+                            <input
+                                id="p3d-loading-bar-offset"
+                                name="loadingBarOffset"
+                                type="number"
+                                class="small-text p3d-num"
+                                step="1"
+                                value="<?php echo esc_attr((string) $loading_bar_offset); ?>"
+                            />
+                            <p class="description">Positive moves bar down. Negative moves bar up. Value is applied as viewport height units.</p>
+                        </td>
+                    </tr>
                 </table>
+
+                <div class="p3d-loading-preview-controls" role="group" aria-label="Loading preview device">
+                    <button type="button" class="button button-secondary p3d-loading-device is-active" data-device="desktop">Desktop</button>
+                    <button type="button" class="button button-secondary p3d-loading-device" data-device="tablet">Tablet</button>
+                    <button type="button" class="button button-secondary p3d-loading-device" data-device="mobile">Mobile</button>
+                </div>
+                <div class="p3d-loading-preview" data-p3d-loading-preview data-device="desktop">
+                    <img class="p3d-loading-preview-image" alt="Loading screen preview" />
+                    <div class="p3d-loading-preview-progress-wrap">
+                        <div class="p3d-loading-preview-progress"></div>
+                    </div>
+                    <div class="p3d-loading-preview-text">Loading room...</div>
+                </div>
 
                 <h2>Page Chrome Visibility</h2>
                 <table class="form-table" role="presentation">
@@ -374,6 +406,7 @@ class Portfolio_3D_Home_Plugin {
                                 <th>Point A (X Z)</th>
                                 <th>Point B (X Z)</th>
                                 <th>Shared Y (Eye Height)</th>
+                                <th>Start Position (0-1)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -388,6 +421,9 @@ class Portfolio_3D_Home_Plugin {
                                 </td>
                                 <td>
                                     <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
+                                </td>
+                                <td>
+                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railStartPos]" type="number" class="small-text p3d-num" min="0" max="1" step="0.01" value="<?php echo esc_attr((string) ($room['railStartPos'] ?? 0)); ?>" />
                                 </td>
                             </tr>
                         </tbody>
@@ -589,7 +625,134 @@ class Portfolio_3D_Home_Plugin {
             .p3d-num {
                 width: 6em;
             }
+
+            .p3d-loading-preview-controls {
+                display: flex;
+                gap: 8px;
+                margin: 8px 0 10px;
+            }
+
+            .p3d-loading-preview-controls .is-active {
+                box-shadow: inset 0 0 0 1px #2271b1;
+            }
+
+            .p3d-loading-preview {
+                position: relative;
+                width: 560px;
+                height: 320px;
+                max-width: 100%;
+                background: #000;
+                border: 1px solid #2f2f2f;
+                border-radius: 6px;
+                overflow: hidden;
+                margin-bottom: 16px;
+            }
+
+            .p3d-loading-preview[data-device="tablet"] {
+                width: 420px;
+                height: 560px;
+            }
+
+            .p3d-loading-preview[data-device="mobile"] {
+                width: 280px;
+                height: 560px;
+            }
+
+            .p3d-loading-preview-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center center;
+                display: none;
+            }
+
+            .p3d-loading-preview-progress-wrap {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 50%;
+                height: 2em;
+                border-radius: 999px;
+                border: 2px solid rgba(255, 255, 255, 0.75);
+                background: rgba(0, 0, 0, 0.45);
+                overflow: hidden;
+                z-index: 2;
+            }
+
+            .p3d-loading-preview[data-device="mobile"] .p3d-loading-preview-progress-wrap {
+                width: 80%;
+            }
+
+            .p3d-loading-preview-progress {
+                width: 62%;
+                height: 100%;
+                background: linear-gradient(90deg, #4fd1ff 0%, #7bff98 100%);
+            }
+
+            .p3d-loading-preview-text {
+                position: absolute;
+                left: 50%;
+                top: calc(50% + 2.3em);
+                transform: translateX(-50%);
+                color: rgba(255, 255, 255, 0.9);
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+                font-weight: 600;
+                letter-spacing: 0.02em;
+                z-index: 2;
+            }
         </style>
+
+        <script>
+            (function () {
+                const imageInput = document.getElementById('p3d-loading-screen-image');
+                const offsetInput = document.getElementById('p3d-loading-bar-offset');
+                const preview = document.querySelector('[data-p3d-loading-preview]');
+                const image = preview ? preview.querySelector('.p3d-loading-preview-image') : null;
+                const progressWrap = preview ? preview.querySelector('.p3d-loading-preview-progress-wrap') : null;
+                const fallbackText = preview ? preview.querySelector('.p3d-loading-preview-text') : null;
+                const deviceButtons = Array.from(document.querySelectorAll('.p3d-loading-device'));
+
+                if (!imageInput || !offsetInput || !preview || !image || !progressWrap || !fallbackText || deviceButtons.length === 0) {
+                    return;
+                }
+
+                function setDevice(device) {
+                    preview.setAttribute('data-device', device);
+                    deviceButtons.forEach((button) => {
+                        button.classList.toggle('is-active', button.getAttribute('data-device') === device);
+                    });
+                }
+
+                function applyPreview() {
+                    const src = (imageInput.value || '').trim();
+                    if (src) {
+                        image.src = src;
+                        image.style.display = 'block';
+                        fallbackText.style.display = 'none';
+                    } else {
+                        image.removeAttribute('src');
+                        image.style.display = 'none';
+                        fallbackText.style.display = 'block';
+                    }
+
+                    const parsed = Number(offsetInput.value);
+                    const offset = Number.isFinite(parsed) ? parsed : 0;
+                    progressWrap.style.top = `calc(50% + ${offset}vh)`;
+                    fallbackText.style.top = `calc(50% + ${offset}vh + 2.3em)`;
+                }
+
+                deviceButtons.forEach((button) => {
+                    button.addEventListener('click', () => setDevice(button.getAttribute('data-device') || 'desktop'));
+                });
+
+                imageInput.addEventListener('input', applyPreview);
+                offsetInput.addEventListener('input', applyPreview);
+                applyPreview();
+            })();
+        </script>
 
         <script type="importmap">
         {
@@ -643,7 +806,7 @@ class Portfolio_3D_Home_Plugin {
                     .replace(/^wp-content\/uploads\//i, '')
                     .replace(/^\//, '');
 
-                return normalized ? `${base}/${normalized}` : base;
+                return normalized ? `${base}/wp-content/uploads/${normalized}` : `${base}/wp-content/uploads`;
             }
 
             function numberOr(value, fallback) {
@@ -1289,8 +1452,9 @@ class Portfolio_3D_Home_Plugin {
             [
                 'apiEndpoint' => esc_url_raw(rest_url(self::REST_NAMESPACE . '/rooms')),
                 'debugEnabled' => defined('WP_DEBUG') && WP_DEBUG,
-                'uploadsBaseUrl' => esc_url_raw(trailingslashit(wp_upload_dir()['baseurl'] ?? '')),
+                'uploadsBaseUrl' => esc_url_raw(trailingslashit(home_url(''))),
                 'loadingScreenImage' => (string) get_option(self::OPTION_LOADING_IMAGE, ''),
+                'loadingBarOffset' => (float) get_option(self::OPTION_LOADING_BAR_OFFSET, 0),
                 'pageChrome' => wp_parse_args(
                     get_option(self::OPTION_PAGE_CHROME, []),
                     $this->get_page_chrome_defaults()
@@ -1748,6 +1912,14 @@ class Portfolio_3D_Home_Plugin {
         return sanitize_text_field(trim($value));
     }
 
+    private function sanitize_loading_bar_offset_value($value): float {
+        $offset = (float) $value;
+        if (!is_finite($offset)) {
+            return 0;
+        }
+        return max(-1000, min(1000, $offset));
+    }
+
     private function get_page_chrome_defaults(): array {
         return [
             'hideHeader' => false,
@@ -1830,6 +2002,9 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['railMax'] = isset($room['railMax']) ? (float) $room['railMax'] : (float) $default_room['railMax'];
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
             $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
+            $sanitized_room['railStartPos'] = $this->sanitize_rail_start_pos(
+                $room['railStartPos'] ?? ($default_room['railStartPos'] ?? 0)
+            );
             $sanitized_room['railPoints'] = $this->sanitize_rail_points(
                 $room['railPoints'] ?? null,
                 $default_room['railPoints'] ?? [
@@ -2052,6 +2227,14 @@ class Portfolio_3D_Home_Plugin {
         ];
     }
 
+    private function sanitize_rail_start_pos($value): float {
+        $start_pos = (float) $value;
+        if (!is_finite($start_pos)) {
+            return 0;
+        }
+        return min(1, max(0, $start_pos));
+    }
+
     private function sanitize_light_angle_deg($value): float {
         $angle = (float) $value;
         if ($angle <= 0) {
@@ -2113,6 +2296,7 @@ class Portfolio_3D_Home_Plugin {
             'railPoints' => [[-2, 0], [1, 0]],
             'scrollSpeed' => 0.005,
             'eyeHeight' => 1.67,
+            'railStartPos' => 0,
             'defaultLightEnabled' => true,
             'shadowsEnabled' => false,
             'panels' => [
@@ -2144,6 +2328,7 @@ class Portfolio_3D_Home_Plugin {
                 'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'railStartPos' => 0,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [
@@ -2171,6 +2356,7 @@ class Portfolio_3D_Home_Plugin {
                 'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'railStartPos' => 0,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [
@@ -2198,6 +2384,7 @@ class Portfolio_3D_Home_Plugin {
                 'railPoints' => [[-2, 0], [1, 0]],
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
+                'railStartPos' => 0,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [

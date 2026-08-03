@@ -3,22 +3,21 @@ import ThreeDScene from './ThreeDScene';
 import { getRoomById } from '../data/rooms';
 import { useProgress } from '@react-three/drei';
 
-function LoadingOverlay({ loadingScreenImage = '' }) {
+function LoadingOverlay({ loadingScreenImage = '', loadingBarOffset = 0 }) {
   const { active, progress } = useProgress();
 
   if (!active) return null;
 
   const clamped = Math.max(0, Math.min(100, Number.isFinite(progress) ? progress : 0));
+  const barOffset = Number.isFinite(Number(loadingBarOffset)) ? Number(loadingBarOffset) : 0;
 
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
+        overflow: 'hidden',
         zIndex: 3000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: '#000000',
       }}
     >
@@ -43,8 +42,8 @@ function LoadingOverlay({ loadingScreenImage = '' }) {
             alt="Loading"
             style={{
               width: '100vw',
-              height: 'auto',
-              objectFit: 'contain',
+              height: '100%',
+              objectFit: 'cover',
               objectPosition: 'center center',
             }}
           />
@@ -54,7 +53,10 @@ function LoadingOverlay({ loadingScreenImage = '' }) {
       <div
         className="p3d-loading-progress"
         style={{
-          position: 'relative',
+          position: 'absolute',
+          left: '50%',
+          top: `calc(50% + ${barOffset}vh)`,
+          transform: 'translate(-50%, -50%)',
           zIndex: 2,
           width: '50vw',
           maxWidth: '900px',
@@ -80,7 +82,7 @@ function LoadingOverlay({ loadingScreenImage = '' }) {
         <div
           style={{
             position: 'absolute',
-            top: 'calc(50% + 2.3em)',
+            top: `calc(50% + ${barOffset}vh + 2.3em)`,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 2,
@@ -99,8 +101,9 @@ function LoadingOverlay({ loadingScreenImage = '' }) {
       <style>{`
         @media (max-width: 1024px) {
           .p3d-loading-img {
-            width: auto;
+            width: 100%;
             height: 100vh;
+            object-fit: cover;
           }
           .p3d-loading-progress {
             width: 50vw;
@@ -120,15 +123,27 @@ function RoomPage({
   roomId = 1,
   roomData = null,
   loadingScreenImage = '',
+  loadingBarOffset = 0,
   onNavigateRoom = () => {},
   onNavigateRoute = () => {}
 }) {
   const room = roomData || getRoomById(roomId || 1);
+  const clampRailPos = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(0, Math.min(1, n));
+  };
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [railPosition, setRailPosition] = useState(0);
+  const initialRailStartPos = Math.max(0, Math.min(1, Number(room?.railStartPos ?? 0) || 0));
   const [modalContent, setModalContent] = useState({
     title: '', description: '', videoUrl: '', links: []
   });
+
+  useEffect(() => {
+    setRailPosition(initialRailStartPos);
+  }, [room?.id, initialRailStartPos]);
 
   useEffect(() => {
     if (modalOpen && document.pointerLockElement) {
@@ -166,7 +181,7 @@ function RoomPage({
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden' }}>
-      <LoadingOverlay loadingScreenImage={loadingScreenImage} />
+      <LoadingOverlay loadingScreenImage={loadingScreenImage} loadingBarOffset={loadingBarOffset} />
 
       {/* Crosshair */}
       <div style={{
@@ -196,7 +211,43 @@ function RoomPage({
       }}>
         <div>Scroll to move along the corridor</div>
         <div>Click to enable mouse look</div>
-        <div>ESC to exit mouse look</div>
+        <div>ESC to exit mouse look and use rail slider</div>
+      </div>
+
+      <div
+        style={{
+          position: 'fixed',
+          left: '50%',
+          bottom: '18px',
+          transform: 'translateX(-50%)',
+          zIndex: 1200,
+          width: 'min(720px, calc(100vw - 32px))',
+          background: 'rgba(0, 0, 0, 0.72)',
+          border: '1px solid rgba(255, 255, 255, 0.25)',
+          borderRadius: '999px',
+          padding: '10px 14px',
+          boxSizing: 'border-box',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          pointerEvents: modalOpen ? 'none' : 'auto',
+          opacity: modalOpen ? 0.45 : 1,
+        }}
+      >
+        <span style={{ color: '#ffffff', fontSize: '12px', whiteSpace: 'nowrap' }}>Rail</span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.001"
+          value={railPosition}
+          onChange={(event) => setRailPosition(clampRailPos(event.target.value))}
+          style={{ width: '100%' }}
+          aria-label="Rail position"
+        />
+        <span style={{ color: '#c7d9ff', fontSize: '12px', minWidth: '42px', textAlign: 'right' }}>
+          {Math.round(railPosition * 100)}%
+        </span>
       </div>
 
       {/* Modal Overlay */}
@@ -318,6 +369,9 @@ function RoomPage({
           railMin={room.railMin}
           railMax={room.railMax}
           railPoints={room.railPoints}
+          railStartPos={room.railStartPos ?? 0}
+          railPosition={railPosition}
+          onRailPositionChange={setRailPosition}
           scrollSpeed={room.scrollSpeed}
           lookSpeed={0.002}
           eyeHeight={room.eyeHeight}

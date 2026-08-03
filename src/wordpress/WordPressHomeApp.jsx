@@ -6,7 +6,7 @@ function resolveUploadsUrl(url, uploadsBaseUrl) {
   if (!url || typeof url !== 'string') return '';
   if (/^(https?:)?\/\//i.test(url)) return url;
 
-  const uploadsBase = (uploadsBaseUrl || '').replace(/\/+$/, '');
+  const uploadsBase = (uploadsBaseUrl || window.location.origin).replace(/\/+$/, '');
   if (!uploadsBase) return url;
 
   const normalizedPath = url
@@ -18,7 +18,7 @@ function resolveUploadsUrl(url, uploadsBaseUrl) {
     return uploadsBase;
   }
 
-  return `${uploadsBase}/${normalizedPath}`;
+  return `${uploadsBase}/wp-content/uploads/${normalizedPath}`;
 }
 
 function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
@@ -67,6 +67,7 @@ function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
     ...room,
     glb: resolveUploadsUrl(room.glb, uploadsBaseUrl),
     texture: resolveUploadsUrl(room.texture, uploadsBaseUrl),
+    railStartPos: clamp(room?.railStartPos, 0, 1, 0),
     defaultLightEnabled: room.defaultLightEnabled !== false,
     shadowsEnabled: room.shadowsEnabled === true,
     railPoints: normalizeRailPoints(room?.railPoints, room?.railMin, room?.railMax),
@@ -100,9 +101,11 @@ function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
 }
 
 function WordPressHomeApp() {
-  const settings = (typeof window !== 'undefined' && window.Portfolio3DHomeSettings)
-    ? window.Portfolio3DHomeSettings
-    : {};
+  const settings = useMemo(() => (
+    (typeof window !== 'undefined' && window.Portfolio3DHomeSettings)
+      ? window.Portfolio3DHomeSettings
+      : {}
+  ), []);
 
   const pageChromeSettings = useMemo(() => {
     const pageChrome = (settings && typeof settings.pageChrome === 'object' && settings.pageChrome)
@@ -274,6 +277,7 @@ function WordPressHomeApp() {
       roomId={activeRoom.id}
       roomData={activeRoom}
       loadingScreenImage={resolveUploadsUrl(settings.loadingScreenImage, settings.uploadsBaseUrl)}
+      loadingBarOffset={Number(settings.loadingBarOffset || 0)}
       onNavigateRoom={(nextRoomId) => {
         log('Navigating to room', { nextRoomId });
         setCurrentRoomId(nextRoomId);
