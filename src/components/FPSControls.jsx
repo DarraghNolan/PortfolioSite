@@ -10,7 +10,9 @@ function FPSControls({
   railMax = 10,      // maximum X position along the rail
   railPoints = null, // [[startX, startZ], [endX, endZ]]
   scrollSpeed = 0.02, // units moved per scroll delta unit
-  modalOpen = false   // disable scroll when modal is open
+  modalOpen = false,   // disable scroll when modal is open
+  railPosition = 0,
+  onRailPositionChange = () => {}
 }) {
   const { camera, gl } = useThree();
 
@@ -21,9 +23,10 @@ function FPSControls({
   const railLength = useRef(Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end)));
 
   // Target percentage along the rail [0..1] updated by scroll
-  const targetT = useRef(0);
-  const smoothT = useRef(0);
+  const targetT = useRef(THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1));
+  const smoothT = useRef(THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1));
   const modalOpenRef = useRef(modalOpen);
+  const onRailPositionChangeRef = useRef(onRailPositionChange);
 
   // Mouse look state
   const euler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
@@ -32,6 +35,10 @@ function FPSControls({
   useEffect(() => {
     modalOpenRef.current = modalOpen;
   }, [modalOpen]);
+
+  useEffect(() => {
+    onRailPositionChangeRef.current = onRailPositionChange;
+  }, [onRailPositionChange]);
 
   useEffect(() => {
     const resolveRailPoints = () => {
@@ -60,8 +67,9 @@ function FPSControls({
 
     railSegment.current = resolveRailPoints();
     railLength.current = Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end));
-    targetT.current = 0;
-    smoothT.current = 0;
+    const startT = THREE.MathUtils.clamp(targetT.current, 0, 1);
+    targetT.current = startT;
+    smoothT.current = startT;
 
     // Place camera at rail start, eye height, facing forward along Z
     camera.position.copy(railSegment.current.start);
@@ -70,12 +78,18 @@ function FPSControls({
     euler.current.set(0, 0, 0);
 
     // Scroll drives movement along the rail segment.
+    const setRailTarget = (nextValue) => {
+      const nextT = THREE.MathUtils.clamp(nextValue, 0, 1);
+      targetT.current = nextT;
+      onRailPositionChangeRef.current(nextT);
+    };
+
     const handleWheel = (event) => {
       if (modalOpenRef.current) return; // Don't scroll if modal is open
       event.preventDefault();
       const deltaUnits = event.deltaY * scrollSpeed;
       const deltaT = deltaUnits / railLength.current;
-      targetT.current = THREE.MathUtils.clamp(targetT.current + deltaT, 0, 1);
+      setRailTarget(targetT.current + deltaT);
     };
 
     // Mouse look (only active when pointer is locked)
@@ -130,6 +144,11 @@ function FPSControls({
       gl.domElement.removeEventListener('wheel', handleWheel);
     };
   }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, railPoints, scrollSpeed]);
+
+  useEffect(() => {
+    const nextT = THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1);
+    targetT.current = nextT;
+  }, [railPosition]);
 
   // Each frame: smoothly move to target percentage along rail, lock Y to eye height.
   useFrame(() => {

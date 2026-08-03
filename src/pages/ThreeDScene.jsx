@@ -56,6 +56,9 @@ function ThreeDScene({
   railMin = -10,   // minimum Z camera position on the rail
   railMax = 10,    // maximum Z camera position on the rail
   railPoints = null,
+  railStartPos = 0,
+  railPosition = 0,
+  onRailPositionChange = () => {},
   scrollSpeed = 0.0001,
   lookSpeed = 0.002,
   eyeHeight = 1.67,
@@ -230,6 +233,8 @@ function ThreeDScene({
               railMin={railMin}
               railMax={railMax}
               railPoints={railPoints}
+              railPosition={railPosition ?? railStartPos}
+              onRailPositionChange={onRailPositionChange}
               scrollSpeed={scrollSpeed}
               modalOpen={modalOpen}
             />
