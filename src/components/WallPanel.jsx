@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -67,7 +67,8 @@ function WallPanel({
   videoUrl = '',
   links = [],
   modalOpen = false,
-  onPanelClick = () => {}
+  onPanelClick = () => {},
+  interactionMode = 'desktop'
 }) {
   const groupRef = useRef();
   const meshRef = useRef();
@@ -75,7 +76,8 @@ function WallPanel({
   const captionRef = useRef();
   const { camera, gl } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
-  const centerScreen = new THREE.Vector2(0, 0);
+  const centerScreen = useMemo(() => new THREE.Vector2(0, 0), []);
+  const mobileTapStart = useRef(null);
 
   const width = Math.max(0.1, Number(scale?.[0] ?? 2));
   const height = Math.max(0.1, Number(scale?.[1] ?? 1.5));
@@ -164,19 +166,88 @@ function WallPanel({
     if (captionRef.current) captionRef.current.visible = hit;
   });
 
-  // Tier 3: open modal on click
-  const handleCanvasClick = () => {
+  const getPointerNdc = useCallback((clientX, clientY) => {
+    const rect = gl.domElement.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return centerScreen;
+    }
+
+    return new THREE.Vector2(
+      ((clientX - rect.left) / rect.width) * 2 - 1,
+      -(((clientY - rect.top) / rect.height) * 2 - 1)
+    );
+  }, [centerScreen, gl.domElement]);
+
+  // Tier 3: open modal on click/tap
+  const handleCanvasClick = useCallback(() => {
     if (modalOpen) return;
-    if (document.pointerLockElement !== gl.domElement) return;
+    if (interactionMode !== 'mobile' && document.pointerLockElement !== gl.domElement) return;
     raycaster.current.setFromCamera(centerScreen, camera);
     const hit = raycaster.current.intersectObject(meshRef.current).length > 0;
     if (hit) onPanelClick({ title, caption, description, videoUrl, links });
-  };
+  }, [camera, centerScreen, gl.domElement, interactionMode, links, modalOpen, onPanelClick, title, caption, description, videoUrl]);
+
+  const handleMobilePointerDown = useCallback((event) => {
+    if (interactionMode !== 'mobile') return;
+    if (event.pointerType !== 'touch') return;
+
+    mobileTapStart.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+    };
+  }, [interactionMode]);
+
+  const handleMobilePointerUp = useCallback((event) => {
+    if (interactionMode !== 'mobile') return;
+    if (event.pointerType !== 'touch') return;
+    if (!mobileTapStart.current || mobileTapStart.current.pointerId !== event.pointerId) return;
+    if (modalOpen) return;
+
+    const deltaX = event.clientX - mobileTapStart.current.x;
+    const deltaY = event.clientY - mobileTapStart.current.y;
+    const movedDistance = Math.hypot(deltaX, deltaY);
+    mobileTapStart.current = null;
+
+    if (movedDistance > 12) return;
+
+    const pointerNdc = getPointerNdc(event.clientX, event.clientY);
+    raycaster.current.setFromCamera(pointerNdc, camera);
+    const hit = raycaster.current.intersectObject(meshRef.current).length > 0;
+    if (hit) onPanelClick({ title, caption, description, videoUrl, links });
+  }, [camera, getPointerNdc, interactionMode, links, modalOpen, onPanelClick, title, caption, description, videoUrl]);
+
+  const handleMobilePointerCancel = useCallback(() => {
+    mobileTapStart.current = null;
+  }, []);
 
   useEffect(() => {
     gl.domElement.addEventListener('click', handleCanvasClick);
-    return () => gl.domElement.removeEventListener('click', handleCanvasClick);
-  }, [gl, onPanelClick, title, caption, description, videoUrl, links, modalOpen]);
+    gl.domElement.addEventListener('pointerdown', handleMobilePointerDown);
+    gl.domElement.addEventListener('pointerup', handleMobilePointerUp);
+    gl.domElement.addEventListener('pointercancel', handleMobilePointerCancel);
+
+    return () => {
+      gl.domElement.removeEventListener('click', handleCanvasClick);
+      gl.domElement.removeEventListener('pointerdown', handleMobilePointerDown);
+      gl.domElement.removeEventListener('pointerup', handleMobilePointerUp);
+      gl.domElement.removeEventListener('pointercancel', handleMobilePointerCancel);
+    };
+  }, [
+    gl,
+    handleCanvasClick,
+    handleMobilePointerDown,
+    handleMobilePointerUp,
+    handleMobilePointerCancel,
+    interactionMode,
+    modalOpen,
+    onPanelClick,
+    title,
+    caption,
+    description,
+    videoUrl,
+    links,
+  ]);
 
   useEffect(() => {
     if (!groupRef.current) return;

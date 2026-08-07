@@ -136,6 +136,7 @@ function RoomPage({
 
   const [modalOpen, setModalOpen] = useState(false);
   const [railPosition, setRailPosition] = useState(0);
+  const [isMobileControls, setIsMobileControls] = useState(false);
   const initialRailStartPos = Math.max(0, Math.min(1, Number(room?.railStartPos ?? 0) || 0));
   const [modalContent, setModalContent] = useState({
     title: '', description: '', videoUrl: '', links: []
@@ -151,6 +152,38 @@ function RoomPage({
     }
   }, [modalOpen]);
 
+  useEffect(() => {
+    const coarseQuery = window.matchMedia('(pointer: coarse)');
+    const hoverQuery = window.matchMedia('(hover: none)');
+
+    const updateMode = () => {
+      const hasTouch = (navigator.maxTouchPoints || 0) > 0;
+      setIsMobileControls(hasTouch && (coarseQuery.matches || hoverQuery.matches));
+    };
+
+    updateMode();
+
+    if (coarseQuery.addEventListener) {
+      coarseQuery.addEventListener('change', updateMode);
+      hoverQuery.addEventListener('change', updateMode);
+    } else {
+      coarseQuery.addListener(updateMode);
+      hoverQuery.addListener(updateMode);
+    }
+    window.addEventListener('resize', updateMode);
+
+    return () => {
+      if (coarseQuery.removeEventListener) {
+        coarseQuery.removeEventListener('change', updateMode);
+        hoverQuery.removeEventListener('change', updateMode);
+      } else {
+        coarseQuery.removeListener(updateMode);
+        hoverQuery.removeListener(updateMode);
+      }
+      window.removeEventListener('resize', updateMode);
+    };
+  }, []);
+
   const handlePanelClick = (content) => {
     setModalContent(content);
     setModalOpen(true);
@@ -159,7 +192,7 @@ function RoomPage({
   const closeModal = () => {
     setModalOpen(false);
     const canvas = document.querySelector('canvas');
-    if (canvas && canvas.requestPointerLock) canvas.requestPointerLock();
+    if (!isMobileControls && canvas && canvas.requestPointerLock) canvas.requestPointerLock();
   };
 
   const handleNavigate = (navPanel) => {
@@ -180,22 +213,24 @@ function RoomPage({
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden', overscrollBehavior: 'none' }}>
       <LoadingOverlay loadingScreenImage={loadingScreenImage} loadingBarOffset={loadingBarOffset} />
 
       {/* Crosshair */}
-      <div style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '10px',
-        height: '10px',
-        borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.55)',
-        pointerEvents: 'none',
-        zIndex: 1000,
-      }} />
+      {!isMobileControls && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '10px',
+          height: '10px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255, 255, 255, 0.55)',
+          pointerEvents: 'none',
+          zIndex: 1000,
+        }} />
+      )}
 
       {/* Instructions */}
       <div style={{
@@ -209,23 +244,34 @@ function RoomPage({
         borderRadius: '5px',
         fontSize: '14px'
       }}>
-        <div>Scroll to move along the corridor</div>
-        <div>Click to enable mouse look</div>
-        <div>ESC to exit mouse look and use rail slider</div>
+        {isMobileControls ? (
+          <>
+            <div>Drag in top 90% to look around</div>
+            <div>Use bottom rail bar to move</div>
+            <div>Tap panel/nav target to interact</div>
+          </>
+        ) : (
+          <>
+            <div>Scroll to move along the corridor</div>
+            <div>Click to enable mouse look</div>
+            <div>ESC to exit mouse look and use rail slider</div>
+          </>
+        )}
       </div>
 
       <div
         style={{
           position: 'fixed',
-          left: '50%',
-          bottom: '18px',
-          transform: 'translateX(-50%)',
+          left: isMobileControls ? 0 : '50%',
+          bottom: 0,
+          transform: isMobileControls ? 'none' : 'translateX(-50%)',
           zIndex: 1200,
-          width: 'min(720px, calc(100vw - 32px))',
+          width: isMobileControls ? '100vw' : 'min(720px, calc(100vw - 32px))',
+          height: isMobileControls ? '10dvh' : 'auto',
           background: 'rgba(0, 0, 0, 0.72)',
           border: '1px solid rgba(255, 255, 255, 0.25)',
-          borderRadius: '999px',
-          padding: '10px 14px',
+          borderRadius: isMobileControls ? 0 : '999px',
+          padding: isMobileControls ? '12px 14px' : '10px 14px',
           boxSizing: 'border-box',
           display: 'flex',
           alignItems: 'center',
@@ -372,6 +418,8 @@ function RoomPage({
           railStartPos={room.railStartPos ?? 0}
           railPosition={railPosition}
           onRailPositionChange={setRailPosition}
+          interactionMode={isMobileControls ? 'mobile' : 'desktop'}
+          mobileLookSensitivity={0.006}
           scrollSpeed={room.scrollSpeed}
           lookSpeed={0.002}
           eyeHeight={room.eyeHeight}

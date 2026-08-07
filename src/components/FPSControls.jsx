@@ -12,7 +12,9 @@ function FPSControls({
   scrollSpeed = 0.02, // units moved per scroll delta unit
   modalOpen = false,   // disable scroll when modal is open
   railPosition = 0,
-  onRailPositionChange = () => {}
+  onRailPositionChange = () => {},
+  interactionMode = 'desktop',
+  mobileLookSensitivity = 0.006
 }) {
   const { camera, gl } = useThree();
 
@@ -31,6 +33,9 @@ function FPSControls({
   // Mouse look state
   const euler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
   const pointerLocked = useRef(false);
+  const activeTouchId = useRef(null);
+  const touchLast = useRef({ x: 0, y: 0 });
+  const isTouchDragging = useRef(false);
 
   useEffect(() => {
     modalOpenRef.current = modalOpen;
@@ -92,6 +97,15 @@ function FPSControls({
       setRailTarget(targetT.current + deltaT);
     };
 
+    // Shared look math for desktop mouse and mobile touch drag.
+    const applyLookDelta = (deltaX, deltaY, sensitivity) => {
+      euler.current.setFromQuaternion(camera.quaternion);
+      euler.current.y -= deltaX * sensitivity;
+      euler.current.x -= deltaY * sensitivity;
+      euler.current.x = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, euler.current.x));
+      camera.quaternion.setFromEuler(euler.current);
+    };
+
     // Mouse look (only active when pointer is locked)
     const handleMouseMove = (event) => {
       if (modalOpenRef.current) return;
@@ -99,13 +113,7 @@ function FPSControls({
 
       const movementX = event.movementX || 0;
       const movementY = event.movementY || 0;
-
-      euler.current.setFromQuaternion(camera.quaternion);
-      euler.current.y -= movementX * lookSpeed;
-      euler.current.x -= movementY * lookSpeed;
-      euler.current.x = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, euler.current.x));
-
-      camera.quaternion.setFromEuler(euler.current);
+      applyLookDelta(movementX, movementY, lookSpeed);
     };
 
     // Click canvas to lock pointer for mouse look
@@ -129,21 +137,95 @@ function FPSControls({
       pointerLocked.current = false;
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
-    window.addEventListener('blur', handleWindowBlur);
-    gl.domElement.addEventListener('click', handleClick);
-    // Use the canvas element for wheel so it only fires when over the 3D view
-    gl.domElement.addEventListener('wheel', handleWheel, { passive: false });
+    // Mobile drag-look: top 90% of screen controls camera, bottom 10% is reserved for rail UI.
+    const handlePointerDown = (event) => {
+      if (modalOpenRef.current) return;
+      if (event.pointerType !== 'touch') return;
+      const touchBoundaryY = window.innerHeight * 0.9;
+      if (event.clientY > touchBoundaryY) return;
+
+      activeTouchId.current = event.pointerId;
+      touchLast.current = { x: event.clientX, y: event.clientY };
+      isTouchDragging.current = false;
+
+      if (typeof gl.domElement.setPointerCapture === 'function') {
+        try {
+          gl.domElement.setPointerCapture(event.pointerId);
+        } catch {
+          // Ignore capture failures on browsers that reject late capture.
+        }
+      }
+    };
+
+    const handlePointerMove = (event) => {
+      if (modalOpenRef.current) return;
+      if (event.pointerType !== 'touch') return;
+      if (activeTouchId.current !== event.pointerId) return;
+
+      event.preventDefault();
+
+      const deltaX = event.clientX - touchLast.current.x;
+      const deltaY = event.clientY - touchLast.current.y;
+      touchLast.current = { x: event.clientX, y: event.clientY };
+
+      if (Math.abs(deltaX) > 0 || Math.abs(deltaY) > 0) {
+        isTouchDragging.current = true;
+      }
+
+      applyLookDelta(deltaX, deltaY, mobileLookSensitivity);
+    };
+
+    const handlePointerUp = (event) => {
+      if (event.pointerType !== 'touch') return;
+      if (activeTouchId.current === event.pointerId) {
+        if (typeof gl.domElement.releasePointerCapture === 'function') {
+          try {
+            gl.domElement.releasePointerCapture(event.pointerId);
+          } catch {
+            // Ignore release failures when capture is already cleared.
+          }
+        }
+        activeTouchId.current = null;
+        isTouchDragging.current = false;
+      }
+    };
+
+    if (interactionMode === 'mobile') {
+      if (document.pointerLockElement === gl.domElement) {
+        document.exitPointerLock();
+      }
+      pointerLocked.current = false;
+      gl.domElement.style.touchAction = 'none';
+      gl.domElement.style.userSelect = 'none';
+      gl.domElement.addEventListener('pointerdown', handlePointerDown);
+      gl.domElement.addEventListener('pointermove', handlePointerMove, { passive: false });
+      gl.domElement.addEventListener('pointerup', handlePointerUp);
+      gl.domElement.addEventListener('pointercancel', handlePointerUp);
+    } else {
+      gl.domElement.style.touchAction = '';
+      gl.domElement.style.userSelect = '';
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('pointerlockchange', handlePointerLockChange);
+      window.addEventListener('blur', handleWindowBlur);
+      gl.domElement.addEventListener('click', handleClick);
+      // Use the canvas element for wheel so it only fires when over the 3D view
+      gl.domElement.addEventListener('wheel', handleWheel, { passive: false });
+    }
 
     return () => {
+      gl.domElement.style.touchAction = '';
+      gl.domElement.style.userSelect = '';
+      gl.domElement.removeEventListener('pointerdown', handlePointerDown);
+      gl.domElement.removeEventListener('pointermove', handlePointerMove);
+      gl.domElement.removeEventListener('pointerup', handlePointerUp);
+      gl.domElement.removeEventListener('pointercancel', handlePointerUp);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       window.removeEventListener('blur', handleWindowBlur);
       gl.domElement.removeEventListener('click', handleClick);
       gl.domElement.removeEventListener('wheel', handleWheel);
     };
-  }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, railPoints, scrollSpeed]);
+  }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, railPoints, scrollSpeed, interactionMode, mobileLookSensitivity]);
 
   useEffect(() => {
     const nextT = THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1);

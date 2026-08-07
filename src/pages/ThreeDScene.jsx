@@ -59,6 +59,8 @@ function ThreeDScene({
   railStartPos = 0,
   railPosition = 0,
   onRailPositionChange = () => {},
+  interactionMode = 'desktop',
+  mobileLookSensitivity = 0.006,
   scrollSpeed = 0.0001,
   lookSpeed = 0.002,
   eyeHeight = 1.67,
@@ -235,6 +237,8 @@ function ThreeDScene({
               railPoints={railPoints}
               railPosition={railPosition ?? railStartPos}
               onRailPositionChange={onRailPositionChange}
+              interactionMode={interactionMode}
+              mobileLookSensitivity={mobileLookSensitivity}
               scrollSpeed={scrollSpeed}
               modalOpen={modalOpen}
             />
@@ -251,6 +255,7 @@ function ThreeDScene({
                 videoUrl={p.videoUrl}
                 links={p.links}
                 modalOpen={modalOpen}
+                interactionMode={interactionMode}
                 onPanelClick={onPanelClick}
               />
             ))}
@@ -262,6 +267,7 @@ function ThreeDScene({
                 wireColor={navPanel.color}
                 label={navPanel.label}
                 modalOpen={modalOpen}
+                interactionMode={interactionMode}
                 onNavigate={() => onNavigate(navPanel)}
               />
             )}
