@@ -3,10 +3,8 @@ import ThreeDScene from './ThreeDScene';
 import { getRoomById } from '../data/rooms';
 import { useProgress } from '@react-three/drei';
 
-function LoadingOverlay({ loadingScreenImage = '', loadingBarOffset = 0 }) {
-  const { active, progress } = useProgress();
-
-  if (!active) return null;
+function LoadingOverlay({ isVisible = false, progress = 0, loadingBarOffset = 0 }) {
+  if (!isVisible) return null;
 
   const clamped = Math.max(0, Math.min(100, Number.isFinite(progress) ? progress : 0));
   const barOffset = Number.isFinite(Number(loadingBarOffset)) ? Number(loadingBarOffset) : 0;
@@ -18,38 +16,9 @@ function LoadingOverlay({ loadingScreenImage = '', loadingBarOffset = 0 }) {
         inset: 0,
         overflow: 'hidden',
         zIndex: 3000,
-        backgroundColor: '#000000',
+        pointerEvents: 'none',
       }}
     >
-      {loadingScreenImage ? (
-        <picture
-          className="p3d-loading-picture"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            margin: 'auto',
-            width: '100vw',
-            height: 'auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-          }}
-        >
-          <img
-            className="p3d-loading-img"
-            src={loadingScreenImage}
-            alt="Loading"
-            style={{
-              width: '100vw',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center center',
-            }}
-          />
-        </picture>
-      ) : null}
-
       <div
         className="p3d-loading-progress"
         style={{
@@ -78,43 +47,23 @@ function LoadingOverlay({ loadingScreenImage = '', loadingBarOffset = 0 }) {
         />
       </div>
 
-      {!loadingScreenImage ? (
-        <div
-          style={{
-            position: 'absolute',
-            top: `calc(50% + ${barOffset}vh + 2.3em)`,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 2,
-            color: 'rgba(255,255,255,0.9)',
-            fontSize: '0.95rem',
-            letterSpacing: '0.02em',
-            fontWeight: 600,
-            textShadow: '0 1px 3px rgba(0,0,0,0.7)',
-            pointerEvents: 'none',
-          }}
-        >
-          Loading room...
-        </div>
-      ) : null}
-
-      <style>{`
-        @media (max-width: 1024px) {
-          .p3d-loading-img {
-            width: 100%;
-            height: 100vh;
-            object-fit: cover;
-          }
-          .p3d-loading-progress {
-            width: 50vw;
-          }
-        }
-        @media (max-width: 767px) {
-          .p3d-loading-progress {
-            width: 80vw;
-          }
-        }
-      `}</style>
+      <div
+        style={{
+          position: 'absolute',
+          top: `calc(50% + ${barOffset}vh + 2.3em)`,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 2,
+          color: 'rgba(255,255,255,0.9)',
+          fontSize: '0.95rem',
+          letterSpacing: '0.02em',
+          fontWeight: 600,
+          textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+          pointerEvents: 'none',
+        }}
+      >
+        {/* took away the loading text - Daz */}
+      </div>
     </div>
   );
 }
@@ -122,12 +71,12 @@ function LoadingOverlay({ loadingScreenImage = '', loadingBarOffset = 0 }) {
 function RoomPage({
   roomId = 1,
   roomData = null,
-  loadingScreenImage = '',
   loadingBarOffset = 0,
   onNavigateRoom = () => {},
   onNavigateRoute = () => {}
 }) {
   const room = roomData || getRoomById(roomId || 1);
+  const { active: loadingActive, progress } = useProgress();
   const clampRailPos = (value) => {
     const n = Number(value);
     if (!Number.isFinite(n)) return 0;
@@ -137,14 +86,37 @@ function RoomPage({
   const [modalOpen, setModalOpen] = useState(false);
   const [railPosition, setRailPosition] = useState(0);
   const [isMobileControls, setIsMobileControls] = useState(false);
+  const [isRoomTransitioning, setIsRoomTransitioning] = useState(true);
+  const [transitionStartedAt, setTransitionStartedAt] = useState(Date.now());
   const initialRailStartPos = Math.max(0, Math.min(1, Number(room?.railStartPos ?? 0) || 0));
   const [modalContent, setModalContent] = useState({
     title: '', description: '', videoUrl: '', links: []
   });
+  const showLoadingOverlay = isRoomTransitioning || loadingActive;
+  const sceneVisible = !showLoadingOverlay;
 
   useEffect(() => {
     setRailPosition(initialRailStartPos);
   }, [room?.id, initialRailStartPos]);
+
+  useEffect(() => {
+    setModalOpen(false);
+    setIsRoomTransitioning(true);
+    setTransitionStartedAt(Date.now());
+  }, [room?.id]);
+
+  useEffect(() => {
+    if (!isRoomTransitioning) return undefined;
+    if (loadingActive) return undefined;
+
+    const elapsed = Date.now() - transitionStartedAt;
+    const delay = Math.max(0, 250 - elapsed);
+    const timerId = window.setTimeout(() => {
+      setIsRoomTransitioning(false);
+    }, delay);
+
+    return () => window.clearTimeout(timerId);
+  }, [isRoomTransitioning, loadingActive, transitionStartedAt]);
 
   useEffect(() => {
     if (modalOpen && document.pointerLockElement) {
@@ -213,11 +185,15 @@ function RoomPage({
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden', overscrollBehavior: 'none' }}>
-      <LoadingOverlay loadingScreenImage={loadingScreenImage} loadingBarOffset={loadingBarOffset} />
+    <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, margin: 0, padding: 0, overflow: 'hidden', overscrollBehavior: 'none', background: 'transparent' }}>
+      <LoadingOverlay
+        isVisible={showLoadingOverlay}
+        progress={progress}
+        loadingBarOffset={loadingBarOffset}
+      />
 
       {/* Crosshair */}
-      {!isMobileControls && (
+      {sceneVisible && !isMobileControls && (
         <div style={{
           position: 'fixed',
           top: '50%',
@@ -233,7 +209,7 @@ function RoomPage({
       )}
 
       {/* Instructions */}
-      <div style={{
+      {sceneVisible && <div style={{
         position: 'absolute',
         top: '10px',
         left: '10px',
@@ -257,9 +233,9 @@ function RoomPage({
             <div>ESC to exit mouse look and use rail slider</div>
           </>
         )}
-      </div>
+      </div>}
 
-      <div
+      {sceneVisible && <div
         style={{
           position: 'fixed',
           left: isMobileControls ? 0 : '50%',
@@ -294,7 +270,7 @@ function RoomPage({
         <span style={{ color: '#c7d9ff', fontSize: '12px', minWidth: '42px', textAlign: 'right' }}>
           {Math.round(railPosition * 100)}%
         </span>
-      </div>
+      </div>}
 
       {/* Modal Overlay */}
       {modalOpen && (
@@ -404,31 +380,43 @@ function RoomPage({
       )}
 
       {/* 3D Scene */}
-      <Suspense fallback={<div style={{ color: '#fff', padding: '20px' }}>Loading room...</div>}>
-        <ThreeDScene
-          mode="fps"
-          url={room.glb}
-          roomTexture={room.texture}
-          defaultLightEnabled={room.defaultLightEnabled}
-          shadowsEnabled={room.shadowsEnabled}
-          lights={room.lights}
-          railMin={room.railMin}
-          railMax={room.railMax}
-          railPoints={room.railPoints}
-          railStartPos={room.railStartPos ?? 0}
-          railPosition={railPosition}
-          onRailPositionChange={setRailPosition}
-          interactionMode={isMobileControls ? 'mobile' : 'desktop'}
-          mobileLookSensitivity={0.006}
-          scrollSpeed={room.scrollSpeed}
-          lookSpeed={0.002}
-          eyeHeight={room.eyeHeight}
-          panels={room.panels}
-          navPanel={room.navPanel}
-          modalOpen={modalOpen}
-          onPanelClick={handlePanelClick}
-          onNavigate={handleNavigate}
-        />
+      <Suspense fallback={null}>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            visibility: sceneVisible ? 'visible' : 'hidden',
+            opacity: sceneVisible ? 1 : 0,
+            transition: 'opacity 220ms ease',
+            pointerEvents: sceneVisible ? 'auto' : 'none',
+          }}
+        >
+          <ThreeDScene
+            key={room.id}
+            mode="fps"
+            url={room.glb}
+            roomTexture={room.texture}
+            defaultLightEnabled={room.defaultLightEnabled}
+            shadowsEnabled={room.shadowsEnabled}
+            lights={room.lights}
+            railMin={room.railMin}
+            railMax={room.railMax}
+            railPoints={room.railPoints}
+            railStartPos={room.railStartPos ?? 0}
+            railPosition={railPosition}
+            onRailPositionChange={setRailPosition}
+            interactionMode={isMobileControls ? 'mobile' : 'desktop'}
+            mobileLookSensitivity={0.006}
+            scrollSpeed={room.scrollSpeed}
+            lookSpeed={0.002}
+            eyeHeight={room.eyeHeight}
+            panels={room.panels}
+            navPanel={room.navPanel}
+            modalOpen={modalOpen}
+            onPanelClick={handlePanelClick}
+            onNavigate={handleNavigate}
+          />
+        </div>
       </Suspense>
     </div>
   );
