@@ -272,6 +272,36 @@ class Portfolio_3D_Home_Plugin {
                             <p class="description">Enter IDs only (without #). Elements are hidden only while the 3D scene is mounted.</p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">UI Top Margin (em)</th>
+                        <td>
+                            <input
+                                name="pageChrome[uiTopMarginEm]"
+                                type="number"
+                                class="small-text p3d-num"
+                                min="0"
+                                max="50"
+                                step="0.25"
+                                value="<?php echo esc_attr((string) ($page_chrome_settings['uiTopMarginEm'] ?? 0)); ?>"
+                            />
+                            <p class="description">Applies to overlay UI and content modal only when header is visible.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">UI Bottom Margin (em)</th>
+                        <td>
+                            <input
+                                name="pageChrome[uiBottomMarginEm]"
+                                type="number"
+                                class="small-text p3d-num"
+                                min="0"
+                                max="50"
+                                step="0.25"
+                                value="<?php echo esc_attr((string) ($page_chrome_settings['uiBottomMarginEm'] ?? 0)); ?>"
+                            />
+                            <p class="description">Applies to overlay UI and content modal only when header is visible.</p>
+                        </td>
+                    </tr>
                 </table>
 
                 <p>
@@ -367,6 +397,25 @@ class Portfolio_3D_Home_Plugin {
                     >
                         <div class="p3d-room-preview-canvas"></div>
                     </div>
+
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-fov">Camera FOV</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-fov"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][fov]"
+                                    type="number"
+                                    class="small-text p3d-num"
+                                    min="40"
+                                    max="140"
+                                    step="1"
+                                    value="<?php echo esc_attr((string) ($room['fov'] ?? 90)); ?>"
+                                />
+                                <p class="description">Field of view in degrees for this room's camera. Range 40-140.</p>
+                            </td>
+                        </tr>
+                    </table>
 
                     <h3>Rail</h3>
                     <table class="widefat striped">
@@ -1760,6 +1809,8 @@ class Portfolio_3D_Home_Plugin {
             'headerElementId' => '',
             'hideFooter' => false,
             'footerElementId' => '',
+            'uiTopMarginEm' => 0,
+            'uiBottomMarginEm' => 0,
         ];
     }
 
@@ -1771,12 +1822,16 @@ class Portfolio_3D_Home_Plugin {
 
         $header_id = isset($value['headerElementId']) ? sanitize_text_field((string) $value['headerElementId']) : '';
         $footer_id = isset($value['footerElementId']) ? sanitize_text_field((string) $value['footerElementId']) : '';
+        $ui_top_margin_em = isset($value['uiTopMarginEm']) ? (float) $value['uiTopMarginEm'] : 0;
+        $ui_bottom_margin_em = isset($value['uiBottomMarginEm']) ? (float) $value['uiBottomMarginEm'] : 0;
 
         return [
             'hideHeader' => !empty($value['hideHeader']),
             'headerElementId' => ltrim(trim($header_id), '#'),
             'hideFooter' => !empty($value['hideFooter']),
             'footerElementId' => ltrim(trim($footer_id), '#'),
+            'uiTopMarginEm' => min(50, max(0, $ui_top_margin_em)),
+            'uiBottomMarginEm' => min(50, max(0, $ui_bottom_margin_em)),
         ];
     }
 
@@ -1838,6 +1893,9 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
             $sanitized_room['railStartPos'] = $this->sanitize_rail_start_pos(
                 $room['railStartPos'] ?? ($default_room['railStartPos'] ?? 0)
+            );
+            $sanitized_room['fov'] = $this->sanitize_fov_value(
+                $room['fov'] ?? ($default_room['fov'] ?? 90)
             );
             $sanitized_room['railPoints'] = $this->sanitize_rail_points(
                 $room['railPoints'] ?? null,
@@ -2069,6 +2127,14 @@ class Portfolio_3D_Home_Plugin {
         return min(1, max(0, $start_pos));
     }
 
+    private function sanitize_fov_value($value): float {
+        $fov = (float) $value;
+        if (!is_finite($fov) || $fov <= 0) {
+            return 90;
+        }
+        return min(140, max(40, $fov));
+    }
+
     private function sanitize_light_angle_deg($value): float {
         $angle = (float) $value;
         if ($angle <= 0) {
@@ -2131,6 +2197,7 @@ class Portfolio_3D_Home_Plugin {
             'scrollSpeed' => 0.005,
             'eyeHeight' => 1.67,
             'railStartPos' => 0,
+            'fov' => 90,
             'defaultLightEnabled' => true,
             'shadowsEnabled' => false,
             'panels' => [
@@ -2163,6 +2230,7 @@ class Portfolio_3D_Home_Plugin {
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'railStartPos' => 0,
+                'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [
@@ -2191,6 +2259,7 @@ class Portfolio_3D_Home_Plugin {
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'railStartPos' => 0,
+                'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [
@@ -2219,6 +2288,7 @@ class Portfolio_3D_Home_Plugin {
                 'scrollSpeed' => 0.005,
                 'eyeHeight' => 1.67,
                 'railStartPos' => 0,
+                'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
                 'panels' => [

@@ -64,6 +64,7 @@ function ThreeDScene({
   scrollSpeed = 0.0001,
   lookSpeed = 0.002,
   eyeHeight = 1.67,
+  fov = 90,
   defaultLightEnabled = true,
   shadowsEnabled = false,
   
@@ -178,7 +179,7 @@ function ThreeDScene({
 
   // Different camera settings for different modes
   const cameraProps = mode === "fps" 
-    ? { fov: 75, near: 0.1, far: 1000, position: [0, eyeHeight, 0] }
+    ? { fov, near: 0.1, far: 1000, position: [0, eyeHeight, 0] }
     : { fov: 30, near: 0.5, far: 9999 };
 
   return (

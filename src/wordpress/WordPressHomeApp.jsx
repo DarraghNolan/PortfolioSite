@@ -68,6 +68,7 @@ function normalizeRoomAssets(rawRooms, uploadsBaseUrl) {
     glb: resolveUploadsUrl(room.glb, uploadsBaseUrl),
     texture: resolveUploadsUrl(room.texture, uploadsBaseUrl),
     railStartPos: clamp(room?.railStartPos, 0, 1, 0),
+    fov: clamp(room?.fov, 40, 140, 90),
     defaultLightEnabled: room.defaultLightEnabled !== false,
     shadowsEnabled: room.shadowsEnabled === true,
     railPoints: normalizeRailPoints(room?.railPoints, room?.railMin, room?.railMax),
@@ -116,7 +117,9 @@ function WordPressHomeApp() {
       hideHeader: pageChrome.hideHeader === true,
       hideFooter: pageChrome.hideFooter === true,
       headerElementId: typeof pageChrome.headerElementId === 'string' ? pageChrome.headerElementId.trim().replace(/^#/, '') : '',
-      footerElementId: typeof pageChrome.footerElementId === 'string' ? pageChrome.footerElementId.trim().replace(/^#/, '') : ''
+      footerElementId: typeof pageChrome.footerElementId === 'string' ? pageChrome.footerElementId.trim().replace(/^#/, '') : '',
+      uiTopMarginEm: Number.isFinite(Number(pageChrome.uiTopMarginEm)) ? Number(pageChrome.uiTopMarginEm) : 0,
+      uiBottomMarginEm: Number.isFinite(Number(pageChrome.uiBottomMarginEm)) ? Number(pageChrome.uiBottomMarginEm) : 0,
     };
   }, [settings]);
 
@@ -277,6 +280,7 @@ function WordPressHomeApp() {
       roomId={activeRoom.id}
       roomData={activeRoom}
       loadingBarOffset={Number(settings.loadingBarOffset || 0)}
+      pageChrome={pageChromeSettings}
       onNavigateRoom={(nextRoomId) => {
         log('Navigating to room', { nextRoomId });
         setCurrentRoomId(nextRoomId);

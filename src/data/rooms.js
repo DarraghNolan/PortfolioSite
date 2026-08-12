@@ -7,6 +7,7 @@ export const rooms = [
     railMax: 1,
     railPoints: [[-2, 0], [1, 0]],
     railStartPos: 0,
+    fov: 90,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [
@@ -56,6 +57,7 @@ export const rooms = [
     railMax: 1,
     railPoints: [[-2, 0], [1, 0]],
     railStartPos: 0,
+    fov: 90,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [
@@ -100,6 +102,7 @@ export const rooms = [
     railMax: 1,
     railPoints: [[-2, 0], [1, 0]],
     railStartPos: 0,
+    fov: 90,
     scrollSpeed: 0.005,
     eyeHeight: 1.67,
     lights: [

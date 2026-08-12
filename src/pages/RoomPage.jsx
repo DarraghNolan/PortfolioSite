@@ -72,6 +72,7 @@ function RoomPage({
   roomId = 1,
   roomData = null,
   loadingBarOffset = 0,
+  pageChrome = null,
   onNavigateRoom = () => {},
   onNavigateRoute = () => {}
 }) {
@@ -94,6 +95,11 @@ function RoomPage({
   });
   const showLoadingOverlay = isRoomTransitioning || loadingActive;
   const sceneVisible = !showLoadingOverlay;
+  const headerHidden = Boolean(pageChrome?.hideHeader);
+  const configuredTopMarginEm = Number.isFinite(Number(pageChrome?.uiTopMarginEm)) ? Number(pageChrome.uiTopMarginEm) : 0;
+  const configuredBottomMarginEm = Number.isFinite(Number(pageChrome?.uiBottomMarginEm)) ? Number(pageChrome.uiBottomMarginEm) : 0;
+  const effectiveTopMarginEm = headerHidden ? 0 : Math.max(0, configuredTopMarginEm);
+  const effectiveBottomMarginEm = headerHidden ? 0 : Math.max(0, configuredBottomMarginEm);
 
   useEffect(() => {
     setRailPosition(initialRailStartPos);
@@ -211,7 +217,7 @@ function RoomPage({
       {/* Instructions */}
       {sceneVisible && <div style={{
         position: 'absolute',
-        top: '10px',
+        top: `calc(10px + ${effectiveTopMarginEm}em)`,
         left: '10px',
         zIndex: 1000,
         background: 'rgba(0,0,0,0.7)',
@@ -239,7 +245,7 @@ function RoomPage({
         style={{
           position: 'fixed',
           left: isMobileControls ? 0 : '50%',
-          bottom: 0,
+          bottom: `${effectiveBottomMarginEm}em`,
           transform: isMobileControls ? 'none' : 'translateX(-50%)',
           zIndex: 1200,
           width: isMobileControls ? '100vw' : 'min(720px, calc(100vw - 32px))',
@@ -281,8 +287,10 @@ function RoomPage({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          zIndex: 2000,
-          paddingTop: '20em !important',
+          zIndex: 5000,
+          paddingTop: `calc(1.2em + ${effectiveTopMarginEm}em)`,
+          paddingBottom: `calc(1.2em + ${effectiveBottomMarginEm}em)`,
+          boxSizing: 'border-box',
         }}>
           <div style={{
             backgroundColor: '#1a1a1a',
@@ -291,7 +299,7 @@ function RoomPage({
             borderRadius: '10px',
             width: '680px',
             maxWidth: '92vw',
-            maxHeight: '80vh',
+            maxHeight: `calc(100vh - ${effectiveTopMarginEm + effectiveBottomMarginEm + 3}em)`,
             overflow: 'auto',
             position: 'relative',
             border: '1px solid #444',
@@ -410,6 +418,7 @@ function RoomPage({
             scrollSpeed={room.scrollSpeed}
             lookSpeed={0.002}
             eyeHeight={room.eyeHeight}
+            fov={room.fov ?? 90}
             panels={room.panels}
             navPanel={room.navPanel}
             modalOpen={modalOpen}
