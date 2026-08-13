@@ -416,7 +416,7 @@ class Portfolio_3D_Home_Plugin {
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture">Room texture path or URL</label></th>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture">Room texture path or URL (Albedo)</label></th>
                             <td>
                                 <input
                                     id="room-<?php echo esc_attr((string) $room_index); ?>-texture"
@@ -426,6 +426,115 @@ class Portfolio_3D_Home_Plugin {
                                     value="<?php echo esc_attr($room['texture'] ?? ''); ?>"
                                 />
                                 <p class="description">Example: <code>/2026/05/WellsFlat.webp</code></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture-normal">Normal map path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture-normal"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][textureNormal]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['textureNormal'] ?? ''); ?>"
+                                />
+                                <p class="description">Leave blank to skip normal mapping.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture-opacity">Opacity/alpha map path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture-opacity"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][textureOpacity]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['textureOpacity'] ?? ''); ?>"
+                                />
+                                <p class="description">Leave blank to skip transparency.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture-roughness">Roughness map path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture-roughness"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][textureRoughness]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['textureRoughness'] ?? ''); ?>"
+                                />
+                                <p class="description">Leave blank to use the model's default roughness.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture-metalness">Metalness map path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture-metalness"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][textureMetalness]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['textureMetalness'] ?? ''); ?>"
+                                />
+                                <p class="description">Leave blank to use the model's default metalness.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-texture-emissive">Emissive map path or URL</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-texture-emissive"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][textureEmissive]"
+                                    type="text"
+                                    class="regular-text"
+                                    value="<?php echo esc_attr($room['textureEmissive'] ?? ''); ?>"
+                                />
+                                <p class="description">Leave blank to skip glow. Pairs with emissive color/intensity below.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-emissive-color">Emissive color (Hex)</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-emissive-color"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][emissiveColor]"
+                                    type="text"
+                                    class="regular-text"
+                                    placeholder="#000000"
+                                    value="<?php echo esc_attr((string) ($room['emissiveColor'] ?? '#000000')); ?>"
+                                />
+                                <p class="description">Keep black (#000000) for no glow, even if an emissive map is set.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-emissive-intensity">Emissive intensity</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-emissive-intensity"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][emissiveIntensity]"
+                                    type="number"
+                                    class="small-text p3d-num"
+                                    min="0"
+                                    max="5"
+                                    step="0.1"
+                                    value="<?php echo esc_attr((string) ($room['emissiveIntensity'] ?? 1)); ?>"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-normal-scale">Normal map scale</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-normal-scale"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][normalScale]"
+                                    type="number"
+                                    class="small-text p3d-num"
+                                    min="0"
+                                    max="5"
+                                    step="0.1"
+                                    value="<?php echo esc_attr((string) ($room['normalScale'] ?? 1)); ?>"
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -2032,6 +2141,20 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['id'] = $requested_id;
             $sanitized_room['glb'] = isset($room['glb']) ? sanitize_text_field((string) $room['glb']) : $default_room['glb'];
             $sanitized_room['texture'] = isset($room['texture']) ? sanitize_text_field((string) $room['texture']) : ($default_room['texture'] ?? '');
+            $sanitized_room['textureNormal'] = isset($room['textureNormal']) ? sanitize_text_field((string) $room['textureNormal']) : ($default_room['textureNormal'] ?? '');
+            $sanitized_room['textureOpacity'] = isset($room['textureOpacity']) ? sanitize_text_field((string) $room['textureOpacity']) : ($default_room['textureOpacity'] ?? '');
+            $sanitized_room['textureRoughness'] = isset($room['textureRoughness']) ? sanitize_text_field((string) $room['textureRoughness']) : ($default_room['textureRoughness'] ?? '');
+            $sanitized_room['textureMetalness'] = isset($room['textureMetalness']) ? sanitize_text_field((string) $room['textureMetalness']) : ($default_room['textureMetalness'] ?? '');
+            $sanitized_room['textureEmissive'] = isset($room['textureEmissive']) ? sanitize_text_field((string) $room['textureEmissive']) : ($default_room['textureEmissive'] ?? '');
+            $sanitized_room['emissiveColor'] = $this->sanitize_emissive_color(
+                isset($room['emissiveColor']) ? (string) $room['emissiveColor'] : (string) ($default_room['emissiveColor'] ?? '#000000')
+            );
+            $sanitized_room['emissiveIntensity'] = $this->sanitize_emissive_intensity(
+                $room['emissiveIntensity'] ?? ($default_room['emissiveIntensity'] ?? 1)
+            );
+            $sanitized_room['normalScale'] = $this->sanitize_normal_scale(
+                $room['normalScale'] ?? ($default_room['normalScale'] ?? 1)
+            );
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
             $sanitized_room['fov'] = $this->sanitize_fov_value(
                 $room['fov'] ?? ($default_room['fov'] ?? 90)
@@ -2332,6 +2455,30 @@ class Portfolio_3D_Home_Plugin {
         return '#ffffff';
     }
 
+    private function sanitize_emissive_color(string $value): string {
+        $color = trim($value);
+        if (preg_match('/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/', $color) === 1) {
+            return $color;
+        }
+        return '#000000';
+    }
+
+    private function sanitize_emissive_intensity($value): float {
+        $intensity = (float) $value;
+        if (!is_finite($intensity)) {
+            return 1;
+        }
+        return min(5, max(0, $intensity));
+    }
+
+    private function sanitize_normal_scale($value): float {
+        $scale = (float) $value;
+        if (!is_finite($scale)) {
+            return 1;
+        }
+        return min(5, max(0, $scale));
+    }
+
     private function merge_with_defaults(array $saved): array {
         if (empty($saved)) {
             return $this->get_default_rooms();
@@ -2367,6 +2514,14 @@ class Portfolio_3D_Home_Plugin {
             'id' => $room_id,
             'glb' => '',
             'texture' => '',
+            'textureNormal' => '',
+            'textureOpacity' => '',
+            'textureRoughness' => '',
+            'textureMetalness' => '',
+            'textureEmissive' => '',
+            'emissiveColor' => '#000000',
+            'emissiveIntensity' => 1,
+            'normalScale' => 1,
             'railPoints' => [
                 ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
                 ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
@@ -2401,6 +2556,14 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 1,
                 'glb' => '/2026/05/TestRoom1.glb',
                 'texture' => '/2026/05/TestRoom1.webp',
+                'textureNormal' => '',
+                'textureOpacity' => '',
+                'textureRoughness' => '',
+                'textureMetalness' => '',
+                'textureEmissive' => '',
+                'emissiveColor' => '#000000',
+                'emissiveIntensity' => 1,
+                'normalScale' => 1,
                 'railPoints' => [
                     ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
                     ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
@@ -2431,6 +2594,14 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 2,
                 'glb' => '/2026/05/TestRoom2.glb',
                 'texture' => '/2026/05/TestRoom2.webp',
+                'textureNormal' => '',
+                'textureOpacity' => '',
+                'textureRoughness' => '',
+                'textureMetalness' => '',
+                'textureEmissive' => '',
+                'emissiveColor' => '#000000',
+                'emissiveIntensity' => 1,
+                'normalScale' => 1,
                 'railPoints' => [
                     ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
                     ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
@@ -2461,6 +2632,14 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 3,
                 'glb' => '/2026/05/TestRoom3.glb',
                 'texture' => '/2026/05/TestRoom3.webp',
+                'textureNormal' => '',
+                'textureOpacity' => '',
+                'textureRoughness' => '',
+                'textureMetalness' => '',
+                'textureEmissive' => '',
+                'emissiveColor' => '#000000',
+                'emissiveIntensity' => 1,
+                'normalScale' => 1,
                 'railPoints' => [
                     ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
                     ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],

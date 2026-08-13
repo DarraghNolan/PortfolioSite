@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
-import { AnimationMixer, Clock, Euler, MathUtils, TextureLoader, Vector3 } from 'three';
+import { AnimationMixer, Clock, Color, Euler, MathUtils, SRGBColorSpace, TextureLoader, Vector3 } from 'three';
 import FPSControls from '../components/FPSControls';
 import WallPanel from '../components/WallPanel';
 import NavPanel from '../components/NavPanel';
@@ -50,6 +50,14 @@ function ThreeDScene({
   rotX, rotY, rotZ, posX, posY, posZ, scale, 
   isAnimating, animSpeed, camPosY,
   roomTexture = '',
+  roomTextureNormal = '',
+  roomTextureOpacity = '',
+  roomTextureRoughness = '',
+  roomTextureMetalness = '',
+  roomTextureEmissive = '',
+  emissiveColor = '#000000',
+  emissiveIntensity = 1,
+  normalScale = 1,
   
   // New props for FPS room mode
   mode = "viewer", // "viewer" or "fps"
@@ -143,27 +151,99 @@ function ThreeDScene({
 
   useEffect(() => {
     if (mode !== 'fps') return;
-    if (!roomTexture) return;
 
     const textureLoader = new TextureLoader();
-    textureLoader.load(roomTexture, (tex) => {
-      tex.flipY = false;
+
+    const applyToMaterials = (mutate) => {
       scene.traverse((child) => {
         if (!child.isMesh || !child.material) return;
-
-        if (Array.isArray(child.material)) {
-          child.material.forEach((mat) => {
-            if (!mat) return;
-            mat.map = tex;
-            mat.needsUpdate = true;
-          });
-        } else {
-          child.material.map = tex;
-          child.material.needsUpdate = true;
-        }
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
+        materials.forEach((mat) => {
+          if (!mat) return;
+          mutate(mat);
+          mat.needsUpdate = true;
+        });
       });
-    });
-  }, [scene, mode, roomTexture]);
+    };
+
+    if (roomTexture) {
+      textureLoader.load(roomTexture, (tex) => {
+        tex.flipY = false;
+        tex.colorSpace = SRGBColorSpace;
+        applyToMaterials((mat) => { mat.map = tex; });
+      });
+    }
+
+    if (roomTextureOpacity) {
+      textureLoader.load(roomTextureOpacity, (tex) => {
+        tex.flipY = false;
+        applyToMaterials((mat) => { mat.alphaMap = tex; mat.transparent = true; });
+      });
+    }
+
+    if (roomTextureNormal) {
+      textureLoader.load(roomTextureNormal, (tex) => {
+        tex.flipY = false;
+        applyToMaterials((mat) => {
+          if (!mat.normalScale || typeof mat.normalScale.set !== 'function') return;
+          mat.normalMap = tex;
+          mat.normalScale.set(normalScale, normalScale);
+        });
+      });
+    }
+
+    if (roomTextureRoughness) {
+      textureLoader.load(roomTextureRoughness, (tex) => {
+        tex.flipY = false;
+        applyToMaterials((mat) => {
+          if (!('roughness' in mat)) return;
+          mat.roughnessMap = tex;
+        });
+      });
+    }
+
+    if (roomTextureMetalness) {
+      textureLoader.load(roomTextureMetalness, (tex) => {
+        tex.flipY = false;
+        applyToMaterials((mat) => {
+          if (!('metalness' in mat)) return;
+          mat.metalnessMap = tex;
+        });
+      });
+    }
+
+    const applyEmissiveTuning = (mat) => {
+      if (!('emissive' in mat)) return;
+      mat.emissive = new Color(emissiveColor);
+      mat.emissiveIntensity = emissiveIntensity;
+    };
+
+    if (roomTextureEmissive) {
+      textureLoader.load(roomTextureEmissive, (tex) => {
+        tex.flipY = false;
+        tex.colorSpace = SRGBColorSpace;
+        applyToMaterials((mat) => {
+          if (!('emissive' in mat)) return;
+          mat.emissiveMap = tex;
+          applyEmissiveTuning(mat);
+        });
+      });
+    } else if (emissiveColor && emissiveColor !== '#000000') {
+      applyToMaterials(applyEmissiveTuning);
+    }
+  }, [
+    scene,
+    mode,
+    roomTexture,
+    roomTextureNormal,
+    roomTextureOpacity,
+    roomTextureRoughness,
+    roomTextureMetalness,
+    roomTextureEmissive,
+    emissiveColor,
+    emissiveIntensity,
+    normalScale
+  ]);
 
   useEffect(() => {
     if (mode !== 'fps') return;

@@ -421,6 +421,14 @@ function RoomPage({
             mode="fps"
             url={room.glb}
             roomTexture={room.texture}
+            roomTextureNormal={room.textureNormal}
+            roomTextureOpacity={room.textureOpacity}
+            roomTextureRoughness={room.textureRoughness}
+            roomTextureMetalness={room.textureMetalness}
+            roomTextureEmissive={room.textureEmissive}
+            emissiveColor={room.emissiveColor ?? '#000000'}
+            emissiveIntensity={room.emissiveIntensity ?? 1}
+            normalScale={room.normalScale ?? 1}
             defaultLightEnabled={room.defaultLightEnabled}
             shadowsEnabled={room.shadowsEnabled}
             lights={room.lights}

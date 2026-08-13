@@ -3,6 +3,14 @@ export const rooms = [
     id: 1,
     glb: '/2026/05/TestRoom1.glb',
     texture: '/2026/05/TestRoom1.webp',
+    textureNormal: '',
+    textureOpacity: '',
+    textureRoughness: '',
+    textureMetalness: '',
+    textureEmissive: '',
+    emissiveColor: '#000000',
+    emissiveIntensity: 1,
+    normalScale: 1,
     railPoints: [
       { x: -2, y: 1.67, z: 0, order: 1 },
       { x: 1, y: 1.67, z: 0, order: 2 }
@@ -54,6 +62,14 @@ export const rooms = [
     id: 2,
     glb: '/2026/05/TestRoom2.glb',
     texture: '/2026/05/TestRoom2.webp',
+    textureNormal: '',
+    textureOpacity: '',
+    textureRoughness: '',
+    textureMetalness: '',
+    textureEmissive: '',
+    emissiveColor: '#000000',
+    emissiveIntensity: 1,
+    normalScale: 1,
     railPoints: [
       { x: -2, y: 1.67, z: 0, order: 1 },
       { x: 1, y: 1.67, z: 0, order: 2 }
@@ -100,6 +116,14 @@ export const rooms = [
     id: 3,
     glb: '/2026/05/TestRoom3.glb',
     texture: '/2026/05/TestRoom3.webp',
+    textureNormal: '',
+    textureOpacity: '',
+    textureRoughness: '',
+    textureMetalness: '',
+    textureEmissive: '',
+    emissiveColor: '#000000',
+    emissiveIntensity: 1,
+    normalScale: 1,
     railPoints: [
       { x: -2, y: 1.67, z: 0, order: 1 },
       { x: 1, y: 1.67, z: 0, order: 2 }
