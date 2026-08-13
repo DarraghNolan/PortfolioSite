@@ -1,14 +1,14 @@
 import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { normalizeRailPointsList, buildRailPath, samplePathAtProgress } from '../utils/railPath';
 
-// Rail-based controls: scroll moves camera along a two-point XZ rail, mouse look rotates freely.
+// Rail-based controls: scroll moves camera along a multi-point 3D path, mouse look rotates freely.
 function FPSControls({
   lookSpeed = 0.002,
   eyeHeight = 1.67,
-  railMin = -10,     // minimum X position along the rail
-  railMax = 10,      // maximum X position along the rail
-  railPoints = null, // [[startX, startZ], [endX, endZ]]
+  railPoints = null, // [{ x, y, z, order }]
+  railLoop = false,
   scrollSpeed = 0.02, // units moved per scroll delta unit
   modalOpen = false,   // disable scroll when modal is open
   railPosition = 0,
@@ -18,11 +18,7 @@ function FPSControls({
 }) {
   const { camera, gl } = useThree();
 
-  const railSegment = useRef({
-    start: new THREE.Vector3(railMin, eyeHeight, 0),
-    end: new THREE.Vector3(railMax, eyeHeight, 0)
-  });
-  const railLength = useRef(Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end)));
+  const railPath = useRef(buildRailPath(normalizeRailPointsList(railPoints), railLoop));
 
   // Target percentage along the rail [0..1] updated by scroll
   const targetT = useRef(THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1));
@@ -46,43 +42,19 @@ function FPSControls({
   }, [onRailPositionChange]);
 
   useEffect(() => {
-    const resolveRailPoints = () => {
-      if (Array.isArray(railPoints) && railPoints.length >= 2) {
-        const start = Array.isArray(railPoints[0]) ? railPoints[0] : [];
-        const end = Array.isArray(railPoints[1]) ? railPoints[1] : [];
-
-        const startX = Number(start[0]);
-        const startZ = Number(start[1]);
-        const endX = Number(end[0]);
-        const endZ = Number(end[1]);
-
-        if ([startX, startZ, endX, endZ].every((n) => Number.isFinite(n))) {
-          return {
-            start: new THREE.Vector3(startX, eyeHeight, startZ),
-            end: new THREE.Vector3(endX, eyeHeight, endZ)
-          };
-        }
-      }
-
-      return {
-        start: new THREE.Vector3(railMin, eyeHeight, 0),
-        end: new THREE.Vector3(railMax, eyeHeight, 0)
-      };
-    };
-
-    railSegment.current = resolveRailPoints();
-    railLength.current = Math.max(0.001, railSegment.current.start.distanceTo(railSegment.current.end));
+    railPath.current = buildRailPath(normalizeRailPointsList(railPoints), railLoop);
     const startT = THREE.MathUtils.clamp(targetT.current, 0, 1);
     targetT.current = startT;
     smoothT.current = startT;
 
-    // Place camera at rail start, eye height, facing forward along Z
-    camera.position.copy(railSegment.current.start);
+    // Place camera at rail start, facing forward along Z
+    const startPoint = samplePathAtProgress(railPath.current, startT);
+    camera.position.set(startPoint.x, startPoint.y, startPoint.z);
     camera.rotation.order = 'YXZ';
     camera.rotation.set(0, 0, 0);
     euler.current.set(0, 0, 0);
 
-    // Scroll drives movement along the rail segment.
+    // Scroll drives movement along the rail path.
     const setRailTarget = (nextValue) => {
       const nextT = THREE.MathUtils.clamp(nextValue, 0, 1);
       targetT.current = nextT;
@@ -93,7 +65,7 @@ function FPSControls({
       if (modalOpenRef.current) return; // Don't scroll if modal is open
       event.preventDefault();
       const deltaUnits = event.deltaY * scrollSpeed;
-      const deltaT = deltaUnits / railLength.current;
+      const deltaT = deltaUnits / railPath.current.totalLength;
       setRailTarget(targetT.current + deltaT);
     };
 
@@ -225,23 +197,19 @@ function FPSControls({
       gl.domElement.removeEventListener('click', handleClick);
       gl.domElement.removeEventListener('wheel', handleWheel);
     };
-  }, [camera, gl, lookSpeed, eyeHeight, railMin, railMax, railPoints, scrollSpeed, interactionMode, mobileLookSensitivity]);
+  }, [camera, gl, lookSpeed, eyeHeight, railPoints, railLoop, scrollSpeed, interactionMode, mobileLookSensitivity]);
 
   useEffect(() => {
     const nextT = THREE.MathUtils.clamp(Number(railPosition) || 0, 0, 1);
     targetT.current = nextT;
   }, [railPosition]);
 
-  // Each frame: smoothly move to target percentage along rail, lock Y to eye height.
+  // Each frame: smoothly move to target percentage along the rail path.
   useFrame(() => {
     smoothT.current = THREE.MathUtils.lerp(smoothT.current, targetT.current, 0.1);
-    const point = new THREE.Vector3().lerpVectors(
-      railSegment.current.start,
-      railSegment.current.end,
-      smoothT.current
-    );
+    const point = samplePathAtProgress(railPath.current, smoothT.current);
     camera.position.x = point.x;
-    camera.position.y = eyeHeight;
+    camera.position.y = point.y;
     camera.position.z = point.z;
   });
 

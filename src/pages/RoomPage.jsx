@@ -1,7 +1,8 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useMemo } from 'react';
 import ThreeDScene from './ThreeDScene';
 import { getRoomById } from '../data/rooms';
 import { useProgress } from '@react-three/drei';
+import { normalizeRailPointsList, buildRailPath, progressForOrder } from '../utils/railPath';
 
 function LoadingOverlay({ isVisible = false, progress = 0, loadingBarOffset = 0 }) {
   if (!isVisible) return null;
@@ -89,7 +90,23 @@ function RoomPage({
   const [isMobileControls, setIsMobileControls] = useState(false);
   const [isRoomTransitioning, setIsRoomTransitioning] = useState(true);
   const [transitionStartedAt, setTransitionStartedAt] = useState(Date.now());
-  const initialRailStartPos = Math.max(0, Math.min(1, Number(room?.railStartPos ?? 0) || 0));
+  // Memoized so scroll-driven re-renders don't hand FPSControls a new array
+  // reference each frame, which previously reset its camera/rotation state.
+  const railPointsKey = JSON.stringify(room?.railPoints ?? null);
+  const normalizedRailPoints = useMemo(
+    () => normalizeRailPointsList(room?.railPoints),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed by content, not reference
+    [railPointsKey]
+  );
+  const railLoop = Boolean(room?.railLoop);
+  const railPath = useMemo(
+    () => buildRailPath(normalizedRailPoints, railLoop),
+    [normalizedRailPoints, railLoop]
+  );
+  const initialRailStartPos = useMemo(
+    () => progressForOrder(railPath, room?.railStartOrder ?? 1),
+    [railPath, room?.railStartOrder]
+  );
   const [modalContent, setModalContent] = useState({
     title: '', description: '', videoUrl: '', links: []
   });
@@ -407,17 +424,14 @@ function RoomPage({
             defaultLightEnabled={room.defaultLightEnabled}
             shadowsEnabled={room.shadowsEnabled}
             lights={room.lights}
-            railMin={room.railMin}
-            railMax={room.railMax}
-            railPoints={room.railPoints}
-            railStartPos={room.railStartPos ?? 0}
+            railPoints={normalizedRailPoints}
+            railLoop={railLoop}
             railPosition={railPosition}
             onRailPositionChange={setRailPosition}
             interactionMode={isMobileControls ? 'mobile' : 'desktop'}
             mobileLookSensitivity={0.006}
             scrollSpeed={room.scrollSpeed}
             lookSpeed={0.002}
-            eyeHeight={room.eyeHeight}
             fov={room.fov ?? 90}
             panels={room.panels}
             navPanel={room.navPanel}

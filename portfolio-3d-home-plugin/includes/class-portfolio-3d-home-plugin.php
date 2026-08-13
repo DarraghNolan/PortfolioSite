@@ -129,6 +129,7 @@ class Portfolio_3D_Home_Plugin {
 
             foreach ($saved as $room_index => &$room_entry) {
                 $room_entry['defaultLightEnabled'] = !empty($posted[$room_index]['defaultLightEnabled']);
+                $room_entry['railLoop'] = !empty($posted[$room_index]['railLoop']);
             }
             unset($room_entry);
 
@@ -153,6 +154,82 @@ class Portfolio_3D_Home_Plugin {
                         unset($saved[$remove_light_room_index]['lights'][$remove_light_index]);
                         $saved[$remove_light_room_index]['lights'] = array_values($saved[$remove_light_room_index]['lights']);
                         $notices[] = ['type' => 'success', 'text' => 'Light removed.'];
+                    }
+                }
+            }
+
+            $add_rail_point_room_index = isset($_POST['portfolio_3d_home_add_rail_point'])
+                ? (int) $_POST['portfolio_3d_home_add_rail_point']
+                : -1;
+
+            if ($add_rail_point_room_index >= 0 && isset($saved[$add_rail_point_room_index])) {
+                $points = $saved[$add_rail_point_room_index]['railPoints'];
+                $last_point = $points[count($points) - 1] ?? ['x' => 0, 'y' => 1.67, 'z' => 0, 'order' => count($points)];
+                $max_order = 0;
+                foreach ($points as $existing_point) {
+                    $max_order = max($max_order, (int) ($existing_point['order'] ?? 0));
+                }
+
+                $points[] = [
+                    'x' => (float) ($last_point['x'] ?? 0),
+                    'y' => (float) ($last_point['y'] ?? 1.67),
+                    'z' => (float) ($last_point['z'] ?? 0),
+                    'order' => $max_order + 1,
+                ];
+                $saved[$add_rail_point_room_index]['railPoints'] = $points;
+                $notices[] = ['type' => 'success', 'text' => 'Rail point added.'];
+            }
+
+            $remove_rail_point_token = isset($_POST['portfolio_3d_home_remove_rail_point'])
+                ? sanitize_text_field((string) $_POST['portfolio_3d_home_remove_rail_point'])
+                : '';
+
+            if ($remove_rail_point_token !== '') {
+                $parts = explode(':', $remove_rail_point_token);
+                $remove_rail_room_index = isset($parts[0]) ? (int) $parts[0] : -1;
+                $remove_rail_point_index = isset($parts[1]) ? (int) $parts[1] : -1;
+
+                if (
+                    $remove_rail_room_index >= 0
+                    && $remove_rail_point_index >= 0
+                    && isset($saved[$remove_rail_room_index])
+                    && isset($saved[$remove_rail_room_index]['railPoints'][$remove_rail_point_index])
+                ) {
+                    if (count($saved[$remove_rail_room_index]['railPoints']) <= 2) {
+                        $notices[] = ['type' => 'error', 'text' => 'At least two rail points are required. Remove was ignored.'];
+                    } else {
+                        unset($saved[$remove_rail_room_index]['railPoints'][$remove_rail_point_index]);
+                        $saved[$remove_rail_room_index]['railPoints'] = array_values($saved[$remove_rail_room_index]['railPoints']);
+                        $notices[] = ['type' => 'success', 'text' => 'Rail point removed.'];
+                    }
+                }
+            }
+
+            $move_rail_point_token = isset($_POST['portfolio_3d_home_move_rail_point'])
+                ? sanitize_text_field((string) $_POST['portfolio_3d_home_move_rail_point'])
+                : '';
+
+            if ($move_rail_point_token !== '') {
+                $parts = explode(':', $move_rail_point_token);
+                $move_rail_room_index = isset($parts[0]) ? (int) $parts[0] : -1;
+                $move_rail_point_index = isset($parts[1]) ? (int) $parts[1] : -1;
+                $move_direction = isset($parts[2]) ? (string) $parts[2] : '';
+
+                if (
+                    $move_rail_room_index >= 0
+                    && $move_rail_point_index >= 0
+                    && isset($saved[$move_rail_room_index]['railPoints'][$move_rail_point_index])
+                ) {
+                    $points = $saved[$move_rail_room_index]['railPoints'];
+                    $neighbor_index = $move_direction === 'up' ? $move_rail_point_index - 1 : $move_rail_point_index + 1;
+
+                    if (isset($points[$neighbor_index])) {
+                        $current_order = $points[$move_rail_point_index]['order'] ?? ($move_rail_point_index + 1);
+                        $neighbor_order = $points[$neighbor_index]['order'] ?? ($neighbor_index + 1);
+                        $points[$move_rail_point_index]['order'] = $neighbor_order;
+                        $points[$neighbor_index]['order'] = $current_order;
+                        $saved[$move_rail_room_index]['railPoints'] = $points;
+                        $notices[] = ['type' => 'success', 'text' => 'Rail point moved.'];
                     }
                 }
             }
@@ -418,33 +495,86 @@ class Portfolio_3D_Home_Plugin {
                     </table>
 
                     <h3>Rail</h3>
+                    <p class="description">Rail points define the camera path in sequence. Order determines position (top = first, bottom = last). Use the arrows to reorder, or type an order number directly.</p>
                     <table class="widefat striped">
                         <thead>
                             <tr>
-                                <th>Point A (X Z)</th>
-                                <th>Point B (X Z)</th>
-                                <th>Shared Y (Eye Height)</th>
-                                <th>Start Position (0-1)</th>
+                                <th>Order</th>
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>Z</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][0] ?? $room['railMin'])); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][0][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][0][1] ?? 0)); ?>" />
-                                </td>
-                                <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][0]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][0] ?? $room['railMax'])); ?>" />
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][1][1]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($room['railPoints'][1][1] ?? 0)); ?>" />
-                                </td>
-                                <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][eyeHeight]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) $room['eyeHeight']); ?>" />
-                                </td>
-                                <td>
-                                    <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railStartPos]" type="number" class="small-text p3d-num" min="0" max="1" step="0.01" value="<?php echo esc_attr((string) ($room['railStartPos'] ?? 0)); ?>" />
-                                </td>
-                            </tr>
+                            <?php $rail_point_count = count($room['railPoints']); ?>
+                            <?php foreach ($room['railPoints'] as $point_index => $point): ?>
+                                <tr>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][<?php echo esc_attr((string) $point_index); ?>][order]" type="number" class="small-text p3d-num" min="1" step="1" value="<?php echo esc_attr((string) ($point['order'] ?? ($point_index + 1))); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][<?php echo esc_attr((string) $point_index); ?>][x]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($point['x'] ?? 0)); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][<?php echo esc_attr((string) $point_index); ?>][y]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($point['y'] ?? 1.67)); ?>" />
+                                    </td>
+                                    <td>
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][railPoints][<?php echo esc_attr((string) $point_index); ?>][z]" type="number" class="small-text p3d-num" step="0.01" value="<?php echo esc_attr((string) ($point['z'] ?? 0)); ?>" />
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="button" name="portfolio_3d_home_move_rail_point" value="<?php echo esc_attr((string) $room_index . ':' . (string) $point_index . ':up'); ?>" <?php disabled($point_index === 0); ?>>&uarr;</button>
+                                        <button type="submit" class="button" name="portfolio_3d_home_move_rail_point" value="<?php echo esc_attr((string) $room_index . ':' . (string) $point_index . ':down'); ?>" <?php disabled($point_index === $rail_point_count - 1); ?>>&darr;</button>
+                                        <button type="submit" class="button button-link-delete" name="portfolio_3d_home_remove_rail_point" value="<?php echo esc_attr((string) $room_index . ':' . (string) $point_index); ?>" onclick="return confirm('Remove this rail point?');">Remove</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if (!empty($room['railLoop']) && $rail_point_count > 0): ?>
+                                <?php $loop_point = $room['railPoints'][0]; ?>
+                                <tr style="opacity:0.5;">
+                                    <td><input type="number" class="small-text p3d-num" value="<?php echo esc_attr((string) ($loop_point['order'] ?? 1)); ?>" disabled /></td>
+                                    <td><input type="number" class="small-text p3d-num" value="<?php echo esc_attr((string) ($loop_point['x'] ?? 0)); ?>" disabled /></td>
+                                    <td><input type="number" class="small-text p3d-num" value="<?php echo esc_attr((string) ($loop_point['y'] ?? 1.67)); ?>" disabled /></td>
+                                    <td><input type="number" class="small-text p3d-num" value="<?php echo esc_attr((string) ($loop_point['z'] ?? 0)); ?>" disabled /></td>
+                                    <td><span class="description">Loop return point</span></td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
+                    </table>
+                    <p>
+                        <button type="submit" class="button" name="portfolio_3d_home_add_rail_point" value="<?php echo esc_attr((string) $room_index); ?>">Add Rail Point</button>
+                    </p>
+
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Loop Rail</th>
+                            <td>
+                                <label>
+                                    <input
+                                        name="rooms[<?php echo esc_attr((string) $room_index); ?>][railLoop]"
+                                        type="checkbox"
+                                        value="1"
+                                        <?php checked(!empty($room['railLoop'])); ?>
+                                    />
+                                    Connect the last rail point back to the first
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="room-<?php echo esc_attr((string) $room_index); ?>-rail-start-order">Start Position (rail point order)</label></th>
+                            <td>
+                                <input
+                                    id="room-<?php echo esc_attr((string) $room_index); ?>-rail-start-order"
+                                    name="rooms[<?php echo esc_attr((string) $room_index); ?>][railStartOrder]"
+                                    type="number"
+                                    class="small-text p3d-num"
+                                    min="1"
+                                    step="1"
+                                    value="<?php echo esc_attr((string) ($room['railStartOrder'] ?? 1)); ?>"
+                                />
+                                <p class="description">Enter the order number of the rail point where the camera should start.</p>
+                            </td>
+                        </tr>
                     </table>
 
                     <h3>Panels</h3>
@@ -954,16 +1084,28 @@ class Portfolio_3D_Home_Plugin {
             }
 
             function addRailHelper(scene, room, roomIndex) {
-                const eyeHeight = numberOr(room?.eyeHeight, 1.67);
-                const rawRailPoints = Array.isArray(room?.railPoints) ? room.railPoints : null;
+                const rawPoints = Array.isArray(room?.railPoints) ? room.railPoints : [];
 
-                const start = Array.isArray(rawRailPoints?.[0]) ? rawRailPoints[0] : [numberOr(room?.railMin, -2), 0];
-                const end = Array.isArray(rawRailPoints?.[1]) ? rawRailPoints[1] : [numberOr(room?.railMax, 1), 0];
+                if (rawPoints.length === 0) {
+                    log('No rail points to render.', { roomIndex });
+                    return;
+                }
 
-                const startVec = new THREE.Vector3(numberOr(start[0], -2), eyeHeight, numberOr(start[1], 0));
-                const endVec = new THREE.Vector3(numberOr(end[0], 1), eyeHeight, numberOr(end[1], 0));
+                const normalized = rawPoints
+                    .map((p, i) => ({
+                        x: numberOr(p?.x, 0),
+                        y: numberOr(p?.y, 1.67),
+                        z: numberOr(p?.z, 0),
+                        order: Number.isFinite(Number(p?.order)) ? Number(p.order) : i + 1,
+                    }))
+                    .sort((a, b) => a.order - b.order);
 
-                const lineGeometry = new THREE.BufferGeometry().setFromPoints([startVec, endVec]);
+                const vectors = normalized.map((p) => new THREE.Vector3(p.x, p.y, p.z));
+                if (room?.railLoop && vectors.length > 1) {
+                    vectors.push(vectors[0].clone());
+                }
+
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints(vectors);
                 const lineMaterial = new THREE.LineBasicMaterial({
                     color: 0xffcc33,
                     transparent: true,
@@ -971,24 +1113,27 @@ class Portfolio_3D_Home_Plugin {
                     depthTest: true,
                     depthWrite: false,
                 });
-                const line = new THREE.Line(lineGeometry, lineMaterial);
-                scene.add(line);
+                scene.add(new THREE.Line(lineGeometry, lineMaterial));
 
                 const markerGeometry = new THREE.SphereGeometry(0.08, 10, 10);
                 const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc33 });
 
-                const markerA = new THREE.Mesh(markerGeometry, markerMaterial);
-                markerA.position.copy(startVec);
-                scene.add(markerA);
+                normalized.forEach((point) => {
+                    const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+                    marker.position.set(point.x, point.y, point.z);
+                    scene.add(marker);
 
-                const markerB = new THREE.Mesh(markerGeometry, markerMaterial);
-                markerB.position.copy(endVec);
-                scene.add(markerB);
+                    const labelSprite = createAxisLabelSprite(String(point.order), '#ffcc33');
+                    if (labelSprite) {
+                        labelSprite.position.set(point.x + 0.12, point.y + 0.12, point.z + 0.12);
+                        scene.add(labelSprite);
+                    }
+                });
 
                 log('Rail helper added.', {
                     roomIndex,
-                    start: [startVec.x, startVec.y, startVec.z],
-                    end: [endVec.x, endVec.y, endVec.z]
+                    pointCount: normalized.length,
+                    loop: Boolean(room?.railLoop)
                 });
             }
 
@@ -1887,30 +2032,21 @@ class Portfolio_3D_Home_Plugin {
             $sanitized_room['id'] = $requested_id;
             $sanitized_room['glb'] = isset($room['glb']) ? sanitize_text_field((string) $room['glb']) : $default_room['glb'];
             $sanitized_room['texture'] = isset($room['texture']) ? sanitize_text_field((string) $room['texture']) : ($default_room['texture'] ?? '');
-            $sanitized_room['railMin'] = isset($room['railMin']) ? (float) $room['railMin'] : (float) $default_room['railMin'];
-            $sanitized_room['railMax'] = isset($room['railMax']) ? (float) $room['railMax'] : (float) $default_room['railMax'];
             $sanitized_room['scrollSpeed'] = isset($room['scrollSpeed']) ? (float) $room['scrollSpeed'] : (float) $default_room['scrollSpeed'];
-            $sanitized_room['eyeHeight'] = isset($room['eyeHeight']) ? (float) $room['eyeHeight'] : (float) $default_room['eyeHeight'];
-            $sanitized_room['railStartPos'] = $this->sanitize_rail_start_pos(
-                $room['railStartPos'] ?? ($default_room['railStartPos'] ?? 0)
-            );
             $sanitized_room['fov'] = $this->sanitize_fov_value(
                 $room['fov'] ?? ($default_room['fov'] ?? 90)
             );
             $sanitized_room['railPoints'] = $this->sanitize_rail_points(
                 $room['railPoints'] ?? null,
-                $default_room['railPoints'] ?? [
-                    [(float) $default_room['railMin'], 0],
-                    [(float) $default_room['railMax'], 0],
-                ]
+                $default_room['railPoints'] ?? null
             );
-
-            if (!isset($room['railMin']) && isset($sanitized_room['railPoints'][0][0])) {
-                $sanitized_room['railMin'] = (float) $sanitized_room['railPoints'][0][0];
-            }
-            if (!isset($room['railMax']) && isset($sanitized_room['railPoints'][1][0])) {
-                $sanitized_room['railMax'] = (float) $sanitized_room['railPoints'][1][0];
-            }
+            $sanitized_room['railLoop'] = !isset($room['railLoop'])
+                ? !empty($default_room['railLoop'])
+                : !empty($room['railLoop']);
+            $sanitized_room['railStartOrder'] = $this->sanitize_rail_start_order(
+                $room['railStartOrder'] ?? ($default_room['railStartOrder'] ?? 1),
+                count($sanitized_room['railPoints'])
+            );
             $sanitized_room['defaultLightEnabled'] = !isset($room['defaultLightEnabled'])
                 ? !empty($default_room['defaultLightEnabled'])
                 : !empty($room['defaultLightEnabled']);
@@ -2094,37 +2230,77 @@ class Portfolio_3D_Home_Plugin {
         return (float) min(360, max(0, $rounded));
     }
 
-    private function sanitize_rail_points($value, array $fallback): array {
-        $default = [
-            [isset($fallback[0][0]) ? (float) $fallback[0][0] : -2, isset($fallback[0][1]) ? (float) $fallback[0][1] : 0],
-            [isset($fallback[1][0]) ? (float) $fallback[1][0] : 1, isset($fallback[1][1]) ? (float) $fallback[1][1] : 0],
+    private function sanitize_rail_points($value, $fallback): array {
+        $default_fallback = [
+            ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
+            ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
         ];
+        $fallback_points = is_array($fallback) && count($fallback) >= 2 ? $fallback : $default_fallback;
 
-        if (!is_array($value) || count($value) < 2) {
-            return $default;
+        $source = is_array($value) && count($value) >= 1 ? $value : $fallback_points;
+
+        $points = [];
+        foreach (array_values($source) as $index => $raw_point) {
+            if (!is_array($raw_point)) {
+                continue;
+            }
+
+            if (array_key_exists('x', $raw_point) || array_key_exists('y', $raw_point) || array_key_exists('z', $raw_point)) {
+                // New format: associative point with x/y/z/order.
+                $points[] = [
+                    'x' => isset($raw_point['x']) ? (float) $raw_point['x'] : 0.0,
+                    'y' => isset($raw_point['y']) ? (float) $raw_point['y'] : 1.67,
+                    'z' => isset($raw_point['z']) ? (float) $raw_point['z'] : 0.0,
+                    'order' => isset($raw_point['order']) ? (int) round((float) $raw_point['order']) : ($index + 1),
+                ];
+            } else {
+                // Legacy format: flat [x, z] pair sharing a single eye height.
+                $points[] = [
+                    'x' => isset($raw_point[0]) ? (float) $raw_point[0] : 0.0,
+                    'y' => 1.67,
+                    'z' => isset($raw_point[1]) ? (float) $raw_point[1] : 0.0,
+                    'order' => $index + 1,
+                ];
+            }
         }
 
-        $start = is_array($value[0] ?? null) ? $value[0] : [];
-        $end = is_array($value[1] ?? null) ? $value[1] : [];
+        if (count($points) < 2) {
+            $points = array_map(function ($p) {
+                return [
+                    'x' => (float) $p['x'],
+                    'y' => (float) $p['y'],
+                    'z' => (float) $p['z'],
+                    'order' => (int) $p['order'],
+                ];
+            }, $default_fallback);
+        }
 
-        return [
-            [
-                isset($start[0]) ? (float) $start[0] : $default[0][0],
-                isset($start[1]) ? (float) $start[1] : $default[0][1],
-            ],
-            [
-                isset($end[0]) ? (float) $end[0] : $default[1][0],
-                isset($end[1]) ? (float) $end[1] : $default[1][1],
-            ],
-        ];
+        foreach ($points as &$point) {
+            $point['order'] = max(1, (int) $point['order']);
+        }
+        unset($point);
+
+        usort($points, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+
+        $sequential = [];
+        foreach (array_values($points) as $index => $point) {
+            $sequential[] = [
+                'x' => (float) $point['x'],
+                'y' => (float) $point['y'],
+                'z' => (float) $point['z'],
+                'order' => $index + 1,
+            ];
+        }
+
+        return $sequential;
     }
 
-    private function sanitize_rail_start_pos($value): float {
-        $start_pos = (float) $value;
-        if (!is_finite($start_pos)) {
-            return 0;
-        }
-        return min(1, max(0, $start_pos));
+    private function sanitize_rail_start_order($value, int $point_count): int {
+        $order = (int) round((float) $value);
+        $max_order = max(1, $point_count);
+        return min($max_order, max(1, $order));
     }
 
     private function sanitize_fov_value($value): float {
@@ -2191,12 +2367,13 @@ class Portfolio_3D_Home_Plugin {
             'id' => $room_id,
             'glb' => '',
             'texture' => '',
-            'railMin' => -2,
-            'railMax' => 1,
-            'railPoints' => [[-2, 0], [1, 0]],
+            'railPoints' => [
+                ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
+                ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
+            ],
+            'railLoop' => false,
+            'railStartOrder' => 1,
             'scrollSpeed' => 0.005,
-            'eyeHeight' => 1.67,
-            'railStartPos' => 0,
             'fov' => 90,
             'defaultLightEnabled' => true,
             'shadowsEnabled' => false,
@@ -2224,12 +2401,13 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 1,
                 'glb' => '/2026/05/TestRoom1.glb',
                 'texture' => '/2026/05/TestRoom1.webp',
-                'railMin' => -2,
-                'railMax' => 1,
-                'railPoints' => [[-2, 0], [1, 0]],
+                'railPoints' => [
+                    ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
+                    ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
+                ],
+                'railLoop' => false,
+                'railStartOrder' => 1,
                 'scrollSpeed' => 0.005,
-                'eyeHeight' => 1.67,
-                'railStartPos' => 0,
                 'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
@@ -2253,12 +2431,13 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 2,
                 'glb' => '/2026/05/TestRoom2.glb',
                 'texture' => '/2026/05/TestRoom2.webp',
-                'railMin' => -2,
-                'railMax' => 1,
-                'railPoints' => [[-2, 0], [1, 0]],
+                'railPoints' => [
+                    ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
+                    ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
+                ],
+                'railLoop' => false,
+                'railStartOrder' => 1,
                 'scrollSpeed' => 0.005,
-                'eyeHeight' => 1.67,
-                'railStartPos' => 0,
                 'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,
@@ -2282,12 +2461,13 @@ class Portfolio_3D_Home_Plugin {
                 'id' => 3,
                 'glb' => '/2026/05/TestRoom3.glb',
                 'texture' => '/2026/05/TestRoom3.webp',
-                'railMin' => -2,
-                'railMax' => 1,
-                'railPoints' => [[-2, 0], [1, 0]],
+                'railPoints' => [
+                    ['x' => -2, 'y' => 1.67, 'z' => 0, 'order' => 1],
+                    ['x' => 1, 'y' => 1.67, 'z' => 0, 'order' => 2],
+                ],
+                'railLoop' => false,
+                'railStartOrder' => 1,
                 'scrollSpeed' => 0.005,
-                'eyeHeight' => 1.67,
-                'railStartPos' => 0,
                 'fov' => 90,
                 'defaultLightEnabled' => true,
                 'shadowsEnabled' => false,

@@ -3,13 +3,14 @@ export const rooms = [
     id: 1,
     glb: '/2026/05/TestRoom1.glb',
     texture: '/2026/05/TestRoom1.webp',
-    railMin: -2,
-    railMax: 1,
-    railPoints: [[-2, 0], [1, 0]],
-    railStartPos: 0,
+    railPoints: [
+      { x: -2, y: 1.67, z: 0, order: 1 },
+      { x: 1, y: 1.67, z: 0, order: 2 }
+    ],
+    railLoop: false,
+    railStartOrder: 1,
     fov: 90,
     scrollSpeed: 0.005,
-    eyeHeight: 1.67,
     lights: [
       {
         id: 'room1-light1',
@@ -53,13 +54,14 @@ export const rooms = [
     id: 2,
     glb: '/2026/05/TestRoom2.glb',
     texture: '/2026/05/TestRoom2.webp',
-    railMin: -2,
-    railMax: 1,
-    railPoints: [[-2, 0], [1, 0]],
-    railStartPos: 0,
+    railPoints: [
+      { x: -2, y: 1.67, z: 0, order: 1 },
+      { x: 1, y: 1.67, z: 0, order: 2 }
+    ],
+    railLoop: false,
+    railStartOrder: 1,
     fov: 90,
     scrollSpeed: 0.005,
-    eyeHeight: 1.67,
     lights: [
       {
         id: 'room2-light1',
@@ -98,13 +100,14 @@ export const rooms = [
     id: 3,
     glb: '/2026/05/TestRoom3.glb',
     texture: '/2026/05/TestRoom3.webp',
-    railMin: -2,
-    railMax: 1,
-    railPoints: [[-2, 0], [1, 0]],
-    railStartPos: 0,
+    railPoints: [
+      { x: -2, y: 1.67, z: 0, order: 1 },
+      { x: 1, y: 1.67, z: 0, order: 2 }
+    ],
+    railLoop: false,
+    railStartOrder: 1,
     fov: 90,
     scrollSpeed: 0.005,
-    eyeHeight: 1.67,
     lights: [
       {
         id: 'room3-light1',
