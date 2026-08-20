@@ -177,7 +177,13 @@ function ThreeDScene({
     if (roomTextureOpacity) {
       textureLoader.load(roomTextureOpacity, (tex) => {
         tex.flipY = false;
-        applyToMaterials((mat) => { mat.alphaMap = tex; mat.transparent = true; });
+        applyToMaterials((mat) => {
+          mat.alphaMap = tex;
+          // Hard cutout: discard fully-transparent fragments instead of
+          // blending, so opaque areas stay opaque and depth-writing intact.
+          mat.alphaTest = 0.5;
+          mat.transparent = false;
+        });
       });
     }
 
@@ -267,7 +273,9 @@ function ThreeDScene({
     : { fov: 30, near: 0.5, far: 9999 };
 
   return (
-    <Canvas camera={cameraProps} shadows={shadowsEnabled}>
+    <Canvas camera={cameraProps} shadows={shadowsEnabled} gl={{ alpha: mode !== 'fps' }}>
+      {/* Opaque backdrop so alpha-mapped cutouts reveal this instead of the page behind the canvas. */}
+      {mode === 'fps' && <color attach="background" args={['#000000']} />}
       {/* Lighting setup */}
       <ambientLight intensity={mode === "fps" ? 0.6 : 4} />
       <directionalLight 
