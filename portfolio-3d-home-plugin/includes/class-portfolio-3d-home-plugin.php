@@ -721,8 +721,8 @@ class Portfolio_3D_Home_Plugin {
                                         <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][rotation][2]" type="number" class="small-text p3d-num" min="0" max="360" step="1" value="<?php echo esc_attr((string) $this->radians_to_degrees((float) $panel['rotation'][2])); ?>" />
                                     </td>
                                     <td>
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][0]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][0]); ?>" />
-                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][1]" type="number" class="small-text p3d-num" min="0.1" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][1]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][0]" type="number" class="small-text p3d-num" min="0.05" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][0]); ?>" />
+                                        <input name="rooms[<?php echo esc_attr((string) $room_index); ?>][panels][<?php echo esc_attr((string) $panel_index); ?>][scale][1]" type="number" class="small-text p3d-num" min="0.05" step="0.01" value="<?php echo esc_attr((string) $panel['scale'][1]); ?>" />
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -1052,8 +1052,8 @@ class Portfolio_3D_Home_Plugin {
                         'YXZ'
                     );
                     panelMesh.scale.set(
-                        Math.max(0.1, numberOr(scale[0], 2)),
-                        Math.max(0.1, numberOr(scale[1], 1.5)),
+                        Math.max(0.05, numberOr(scale[0], 2)),
+                        Math.max(0.05, numberOr(scale[1], 1.5)),
                         1
                     );
 
@@ -1170,8 +1170,8 @@ class Portfolio_3D_Home_Plugin {
                 navMesh.position.set(numberOr(position[0], 3.25), numberOr(position[1], 1.5), numberOr(position[2], 0));
                 navMesh.rotation.set(numberOr(rotation[0], 0), numberOr(rotation[1], -Math.PI / 2), numberOr(rotation[2], 0));
                 navMesh.scale.set(
-                    Math.max(0.1, numberOr(scale[0], 2)),
-                    Math.max(0.1, numberOr(scale[1], 4)),
+                    Math.max(0.05, numberOr(scale[0], 2)),
+                    Math.max(0.05, numberOr(scale[1], 4)),
                     Math.max(0.05, numberOr(scale[2], 0.2))
                 );
 
@@ -2319,12 +2319,12 @@ class Portfolio_3D_Home_Plugin {
 
     private function sanitize_vector2($value, array $fallback): array {
         if (!is_array($value) || count($value) < 2) {
-            return [max(0.1, (float) $fallback[0]), max(0.1, (float) $fallback[1])];
+            return [max(0.05, (float) $fallback[0]), max(0.05, (float) $fallback[1])];
         }
 
         return [
-            max(0.1, isset($value[0]) ? (float) $value[0] : (float) $fallback[0]),
-            max(0.1, isset($value[1]) ? (float) $value[1] : (float) $fallback[1]),
+            max(0.05, isset($value[0]) ? (float) $value[0] : (float) $fallback[0]),
+            max(0.05, isset($value[1]) ? (float) $value[1] : (float) $fallback[1]),
         ];
     }
 

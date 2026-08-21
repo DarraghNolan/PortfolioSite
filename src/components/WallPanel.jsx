@@ -79,8 +79,8 @@ function WallPanel({
   const centerScreen = useMemo(() => new THREE.Vector2(0, 0), []);
   const mobileTapStart = useRef(null);
 
-  const width = Math.max(0.1, Number(scale?.[0] ?? 2));
-  const height = Math.max(0.1, Number(scale?.[1] ?? 1.5));
+  const width = Math.max(0.05, Number(scale?.[0] ?? 2));
+  const height = Math.max(0.05, Number(scale?.[1] ?? 1.5));
 
   // Layout zones: heading gets top 1/4, caption gets bottom 3/4.
   const panelPaddingX = width * 0.05;
